@@ -1,0 +1,17 @@
+{
+  "name": "actiguide",
+  "version": "0.0.1",
+  "dependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-less": "^0.11.0",
+    "grunt-contrib-watch": "^0.6.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tansky/actiguide.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tansky/actiguide/issues"
+  },
+  "homepage": "https://github.com/tansky/actiguide"
+}
