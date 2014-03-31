@@ -2,7 +2,9 @@
 
 
 
-// Fonts
+/**
+* Шрифты
+*/
 
 @font-face {
 	font-family: 'Proxima Nova';
@@ -30,13 +32,37 @@
 
 
 
-// Basics
+/**
+* Цвета
+*
+* На выходе мы имеем классы вида .c-1, .c-2, ... с единственным свойством color, соответствующим значению из _vars.less
+*/
+
+.define(@var) {
+	@colorSet: 'c-@{var}';
+}
+
+.mixin-loop (@index) when (@index > 0) {
+	.c-@{index} {
+		.define(@index);
+		color: @@colorSet;
+	}
+
+	.mixin-loop(@index - 1);
+}
+
+.mixin-loop(@count-colors);
+
+
+
+/**
+* Основные обозначения
+*/
 
 BODY {
 	color: #333;
 	background: #fff;
-}
-
-H1 {
 	font-family: 'Proxima Nova';
+	font-size: 16px;
+	line-height: 22px;
 }

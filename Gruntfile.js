@@ -8,9 +8,9 @@ module.exports = function (grunt) {
 				files: [
 					{
 						expand: true,
-						cwd: 'css/less',
+						cwd: 'less',
 						src: ['*.less', '**/*.less', '!_vars.less'],
-						dest: 'css/',
+						dest: 'out/css/',
 						ext: '.css'
 					}
 				]
@@ -20,22 +20,22 @@ module.exports = function (grunt) {
 		cssmin: {
 			default: {
 				files: {
-					'css/style.min.css': ['css/style.css']
+					'out/style.min.css': ['out/css/_style.css']
 				}
 			}
 		},
 
 		watch: {
 			css: {
-				files: ['css/*.less', 'css/**/*.less'],
+				files: ['less/*.less', 'less/**/*.less'],
 				tasks: ['less', 'cssmin']
 			}
 		}
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.registerTask('default', ['less', 'cssmin', 'watch']);
 
