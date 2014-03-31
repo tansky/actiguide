@@ -9,7 +9,7 @@ module.exports = function (grunt) {
 					{
 						expand: true,
 						cwd: 'css/less',
-						src: ['*.less', '**/*.less'],
+						src: ['*.less', '**/*.less', '!_vars.less'],
 						dest: 'css/',
 						ext: '.css'
 					}

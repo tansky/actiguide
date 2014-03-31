@@ -1,4 +1,42 @@
+@import "_vars";
+
+
+
+// Fonts
+
+@font-face {
+	font-family: 'Proxima Nova';
+	src: url('@{dir-fonts}proxima-nova-regular.eot?#iefix') format('embedded-opentype'),
+	url('@{dir-fonts}proxima-nova-regular.svg') format('svg'),
+	url('@{dir-fonts}proxima-nova-regular.woff') format('woff'),
+	url('@{dir-fonts}proxima-nova-regular.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Proxima Nova Bold';
+	src: url('@{dir-fonts}proxima-nova-bold.eot?#iefix') format('embedded-opentype'),
+	url('@{dir-fonts}proxima-nova-bold.svg') format('svg'),
+	url('@{dir-fonts}proxima-nova-bold.woff') format('woff'),
+	url('@{dir-fonts}proxima-nova-bold.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Web Symbols';
+	src: url('@{dir-fonts}web-symbols-liga-regular.eot?#iefix') format('embedded-opentype'),
+	url('@{dir-fonts}web-symbols-liga-regular.svg') format('svg'),
+	url('@{dir-fonts}web-symbols-liga-regular.woff') format('woff'),
+	url('@{dir-fonts}web-symbols-liga-regular.ttf') format('truetype');
+}
+
+
+
+// Basics
+
 BODY {
 	color: #333;
 	background: #fff;
+}
+
+H1 {
+	font-family: 'Proxima Nova';
 }
