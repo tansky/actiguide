@@ -1,0 +1,1 @@
+console.log('this is temporary file. just put js files to this folder');
