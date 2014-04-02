@@ -128,21 +128,22 @@
 * Сетка
 */
 
-.box .grid_p {
+.box .grid-p {
 	background: none repeat scroll 0 0 #EFEFEF;
-	height: 5000px;
+	height: 100%;
 	opacity: 0.5;
 	width: 100%;
 }
 
-#in_guidelines {
-	margin: 0 30px;
-	padding: 15px 0 0;
-	position: relative;
+#in-guidelines {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100%;
 }
 
 #guidelines {
-	height: 0;
+	height: 100%;
 	margin: 0 auto;
 	max-width: 1150px;
 	min-height: 0;
@@ -154,25 +155,30 @@
 #guidelines .col-1 .box,
 #guidelines .col-edge-1 .box {
 	background: none repeat scroll 0 0 #717171;
-	height: 3000px;
+	height: 100%;
 	opacity: 0.25;
 }
 
-.for_guidelines {
+.for-guidelines {
 	position: absolute;
 	width: 100%;
+	height: 100%;
+
+	DIV {
+		height: 100%;
+	}
 }
 
-.for_guidelines .col-1,
-.for_guidelines .col-edge-1 {
+.for-guidelines .col-1,
+.for-guidelines .col-edge-1 {
 	position: relative;
 }
 
-.for_guidelines .col-1 b,
-.for_guidelines .col-edge-1 b {
+.for-guidelines .col-1 b,
+.for-guidelines .col-edge-1 b {
 	color: #000000;
 	display: block;
-	font-family: 'proxima_novabold', sans-serif;
+	font-family: 'Proxima Nova Bold';
 	font-size: 24px;
 	font-weight: normal;
 	left: 50%;
@@ -181,9 +187,9 @@
 	top: 350px;
 }
 
-.for_guidelines .col-1 i,
-.for_guidelines .col-edge-1 i {
-	font-family: 'proxima_novabold', sans-serif;
+.for-guidelines .col-1 i,
+.for-guidelines .col-edge-1 i {
+	font-family: 'Proxima Nova Bold';
 	font-size: 12px;
 	font-style: normal;
 	position: absolute;
@@ -193,7 +199,7 @@
 
 .left-padding-grid {
 	background: none repeat scroll 0 0 #717171;
-	height: 3000px;
+	height: 100%;
 	left: 0;
 	margin-left: -30px;
 	opacity: 0.25;
@@ -203,7 +209,7 @@
 
 .right-padding-grid {
 	background: none repeat scroll 0 0 #717171;
-	height: 3000px;
+	height: 100%;
 	margin-right: -30px;
 	opacity: 0.25;
 	position: absolute;
