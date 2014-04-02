@@ -23,6 +23,7 @@
 * Цвета
 *
 * На выходе мы имеем классы вида .c-1, .c-2, ... с единственным свойством color, соответствующим значению из _vars.less
+* Есть также классы для фона вида .bg-1, .bg-2, и классы специальных цветов .cs-1, .cs-2, .bgs-1, bgs-2
 */
 .c-13 {
   color: #dfdfdf;
@@ -102,6 +103,30 @@
 .bg-1 {
   background-color: #000000;
 }
+.cs-4 {
+  color: #666666;
+}
+.bgs-4 {
+  background-color: #666666;
+}
+.cs-3 {
+  color: #d69744;
+}
+.bgs-3 {
+  background-color: #d69744;
+}
+.cs-2 {
+  color: #57a5bb;
+}
+.bgs-2 {
+  background-color: #57a5bb;
+}
+.cs-1 {
+  color: #8fc232;
+}
+.bgs-1 {
+  background-color: #8fc232;
+}
 /**
 * Основные обозначения
 */
@@ -113,4 +138,72 @@ BODY {
   line-height: 22px;
   margin: 0;
   padding: 0;
+}
+/**
+* Отступы
+*/
+.m-none {
+  margin-bottom: 0px !important;
+}
+.mt-none {
+  margin-top: 0px !important;
+}
+.m-nano {
+  margin-bottom: 5px !important;
+}
+.mt-nano {
+  margin-top: 5px !important;
+}
+.m-micro {
+  margin-bottom: 10px !important;
+}
+.mt-micro {
+  margin-top: 10px !important;
+}
+.mr-micro {
+  margin-right: 10px !important;
+}
+.m-small {
+  margin-bottom: 20px !important;
+}
+.mt-small {
+  margin-top: 20px !important;
+}
+.mr-small {
+  margin-right: 20px !important;
+}
+.m-normal {
+  margin-bottom: 30px !important;
+}
+.mt-normal {
+  margin-top: 30px !important;
+}
+.m-middle {
+  margin-bottom: 40px !important;
+}
+.mt-middle {
+  margin-top: 40px !important;
+}
+.m-big {
+  margin-bottom: 50px !important;
+}
+.mt-big {
+  margin-top: 50px !important;
+}
+.m-giant {
+  margin-bottom: 60px !important;
+}
+.mt-giant {
+  margin-top: 60px !important;
+}
+/**
+* Разное
+*/
+.clear-fix {
+  clear: both;
+}
+HR {
+  border: none;
+  border-top: 1px solid #e2e2e2;
+  margin: 30px 23px 30px 0;
 }
