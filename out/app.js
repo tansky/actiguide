@@ -25,3 +25,19 @@ $(document).keydown(function(e) {
 		}
 	}
 });
+;var mainModule = angular.module('mainModule', []);;mainModule.directive('tipBox', function() {
+    return {
+        restrict: 'E',
+        scope: true,
+        replace: true,
+        transclude: true,
+        link: function(scope, element, attr) {
+            scope.showCloseBtn = attr.closeBtn;
+
+            scope.hideTip = function (){
+                scope.hideTipBox = true;
+            }
+        },
+        templateUrl: 'tipbox.html'
+    };
+});

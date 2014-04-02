@@ -20,7 +20,7 @@ module.exports = function (grunt) {
 		cssmin: {
 			default: {
 				files: {
-					'out/style.min.css': ['out/css/_style.css']
+					'out/style.min.css': ['out/css/*.css']
 				}
 			}
 		},
@@ -30,7 +30,7 @@ module.exports = function (grunt) {
 				separator: ';'
 			},
 			app: {
-				src: ['js/app/*.js'],
+				src: ['js/app/*.js', 'js/app/**/*.js'],
 				dest: 'out/app.js'
 			},
 			libs: {
