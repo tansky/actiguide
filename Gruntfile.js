@@ -43,7 +43,6 @@ module.exports = function (grunt) {
 			app: {
 				options : {
 					sourceMap: true,
-					beautify: true,
 					compress: true
 				},
 				files: {

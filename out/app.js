@@ -24,7 +24,8 @@ $(document).keydown(function(e) {
 					'			<div class="right-padding-grid"></div>' +
 					'		</div>' +
 					'	</div>' +
-					'</div>');
+					'</div>'
+			);
 		}
 	}
 });
