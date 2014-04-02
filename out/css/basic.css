@@ -27,41 +27,80 @@
 .c-13 {
   color: #dfdfdf;
 }
+.bg-13 {
+  background-color: #dfdfdf;
+}
 .c-12 {
   color: #fffdbe;
+}
+.bg-12 {
+  background-color: #fffdbe;
 }
 .c-11 {
   color: #d1000a;
 }
+.bg-11 {
+  background-color: #d1000a;
+}
 .c-10 {
   color: #6dac00;
+}
+.bg-10 {
+  background-color: #6dac00;
 }
 .c-9 {
   color: #dc692a;
 }
+.bg-9 {
+  background-color: #dc692a;
+}
 .c-8 {
   color: #50808a;
+}
+.bg-8 {
+  background-color: #50808a;
 }
 .c-7 {
   color: #f0fbfd;
 }
+.bg-7 {
+  background-color: #f0fbfd;
+}
 .c-6 {
   color: #00a2c4;
+}
+.bg-6 {
+  background-color: #00a2c4;
 }
 .c-5 {
   color: #cccccc;
 }
+.bg-5 {
+  background-color: #cccccc;
+}
 .c-4 {
   color: #e2e2e2;
+}
+.bg-4 {
+  background-color: #e2e2e2;
 }
 .c-3 {
   color: #555f64;
 }
+.bg-3 {
+  background-color: #555f64;
+}
 .c-2 {
   color: #ffffff;
 }
+.bg-2 {
+  background-color: #ffffff;
+}
 .c-1 {
   color: #000000;
+}
+.bg-1 {
+  background-color: #000000;
 }
 /**
 * Основные обозначения

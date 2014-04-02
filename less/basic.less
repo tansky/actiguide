@@ -48,6 +48,11 @@
 		color: @@colorSet;
 	}
 
+	.bg-@{index} {
+		.define(@index);
+		background-color: @@colorSet;
+	}
+
 	.mixin-loop(@index - 1);
 }
 
