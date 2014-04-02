@@ -1,0 +1,157 @@
+
+.wrapper {
+    clear: both;
+    margin: 0 auto;
+    max-width: 1150px;
+    min-width: 929px;
+    padding: 0 30px 30px;
+	}
+.m-box {
+    clear: both;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+	}
+.m-box:after {
+    clear: both;
+    content: ".";
+    display: block;
+    font-size: 0;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+	}
+* html .m-box {
+    height: 1%;
+	}
+
+
+.col-1, .col-2, .col-3, .col-4, .col-5,
+.col-edge-1, .col-edge-2, .col-edge-3, .col-edge-4, .col-edge-5  {
+    display: inline;
+    float: left;
+	}
+
+
+.col-1 {width: 16%;}
+.col-edge-1 {width: 18%;}
+
+
+.col-2 {width: 32%;}
+.col-edge-2 {width: 34%;}
+
+.col-3 {width: 48%;}
+.col-edge-3{width: 50%;}
+
+.col-4{width:64%;}
+.col-edge-4{width:66%;}
+
+.col-5{width:82%;}
+.col-edge-5{width:84%;} 
+
+.col-6 {width: 100%;}
+
+
+
+.empty-1 {padding-left: 16%;}
+.empty-edge-1{padding-left: 18%;}
+
+.empty-2 {padding-left: 32%;}
+.empty-edge-2 {padding-left: 34%;}
+
+.empty-3 {padding-left: 48%;}
+.empty-edge-3 {padding-left: 50%;}
+
+.empty-4 {padding-left: 64%;}
+.empty-edge-4 {padding-left: 66%;}
+
+.empty-5 {padding-left: 82%;}
+.empty-edge-5 {padding-left: 84%;}
+
+
+.box {
+    margin: 0 5px;
+    padding: 0 15px;
+	}
+	
+	
+	
+	
+// VISUAL GRID	
+	
+	
+.box .grid_p {
+    background: none repeat scroll 0 0 #EFEFEF;
+    height: 5000px;
+    opacity: 0.5;
+    width: 100%;
+	}
+#in_guidelines {
+    margin: 0 30px;
+	padding: 15px 0 0;
+    position: relative;
+	}
+#guidelines {
+    height: 0;
+    margin: 0 auto;
+    max-width: 1150px;
+    min-height: 0;
+    overflow: visible;
+    position: relative;
+    z-index: 22;
+	}
+#guidelines .col-1 .box,
+#guidelines .col-edge-1 .box  {
+    background: none repeat scroll 0 0 #717171;
+    height: 3000px;
+    opacity: 0.25;
+	}
+.for_guidelines {
+    position: absolute;
+    width: 100%;
+}
+.for_guidelines .col-1,
+.for_guidelines .col-edge-1 {
+    position: relative;
+	}
+.for_guidelines .col-1 b,
+.for_guidelines .col-edge-1 b  {
+    color: #000000;
+    display: block;
+    font-family: 'proxima_novabold',sans-serif;
+    font-size: 24px;
+    font-weight: normal;
+    left: 50%;
+    margin-left: -16px;
+    position: absolute;
+    top: 350px;
+	}
+.for_guidelines .col-1 i,
+.for_guidelines .col-edge-1 i {
+    font-family: 'proxima_novabold',sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    position: absolute;
+    right: -6px;
+    top: 330px;
+	}
+
+.left-padding-grid {
+    background: none repeat scroll 0 0 #717171;
+    height: 3000px;
+    left: 0;
+    margin-left: -30px;
+    opacity: 0.25;
+    position: absolute;
+    width: 35px;
+	}
+.right-padding-grid {
+    background: none repeat scroll 0 0 #717171;
+    height: 3000px;
+    margin-right: -30px;
+    opacity: 0.25;
+    position: absolute;
+    right: 0;
+    width: 35px;
+	}
+
