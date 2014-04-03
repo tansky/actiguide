@@ -2,6 +2,7 @@
 @import 'typeface.css';
 @import 'grid.css';
 @import 'features.css';
+@import 'tipbox.css';
 /**
 * Корневой файл стилей. Здесь можно управлять порядком подключения файлов стилей
 */
