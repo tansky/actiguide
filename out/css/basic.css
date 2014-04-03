@@ -26,13 +26,55 @@
 * Цвета
 *
 * На выходе мы имеем классы вида .c-1, .c-2, ... с единственным свойством color, соответствующим значению из _vars.less
-* Есть также классы для фона вида .bg-1, .bg-2, и классы специальных цветов .cs-1, .cs-2, .bgs-1, bgs-2
+* Есть также классы для фона вида .bg-1, .bg-2...
 */
+.c-20 {
+  color: #666666;
+}
+.bg-20 {
+  background-color: #666666;
+}
+.c-19 {
+  color: #d69744;
+}
+.bg-19 {
+  background-color: #d69744;
+}
+.c-18 {
+  color: #57a5bb;
+}
+.bg-18 {
+  background-color: #57a5bb;
+}
+.c-17 {
+  color: #8fc232;
+}
+.bg-17 {
+  background-color: #8fc232;
+}
+.c-16 {
+  color: #cccccc;
+}
+.bg-16 {
+  background-color: #cccccc;
+}
+.c-15 {
+  color: #eefcfd;
+}
+.bg-15 {
+  background-color: #eefcfd;
+}
+.c-14 {
+  color: #e2e2e2;
+}
+.bg-14 {
+  background-color: #e2e2e2;
+}
 .c-13 {
-  color: #dfdfdf;
+  color: #d1000a;
 }
 .bg-13 {
-  background-color: #dfdfdf;
+  background-color: #d1000a;
 }
 .c-12 {
   color: #fffdbe;
@@ -41,94 +83,70 @@
   background-color: #fffdbe;
 }
 .c-11 {
-  color: #d1000a;
-}
-.bg-11 {
-  background-color: #d1000a;
-}
-.c-10 {
-  color: #6dac00;
-}
-.bg-10 {
-  background-color: #6dac00;
-}
-.c-9 {
-  color: #dc692a;
-}
-.bg-9 {
-  background-color: #dc692a;
-}
-.c-8 {
-  color: #50808a;
-}
-.bg-8 {
-  background-color: #50808a;
-}
-.c-7 {
-  color: #f0fbfd;
-}
-.bg-7 {
-  background-color: #f0fbfd;
-}
-.c-6 {
-  color: #00a2c4;
-}
-.bg-6 {
-  background-color: #00a2c4;
-}
-.c-5 {
-  color: #cccccc;
-}
-.bg-5 {
-  background-color: #cccccc;
-}
-.c-4 {
-  color: #e2e2e2;
-}
-.bg-4 {
-  background-color: #e2e2e2;
-}
-.c-3 {
-  color: #555f64;
-}
-.bg-3 {
-  background-color: #555f64;
-}
-.c-2 {
-  color: #ffffff;
-}
-.bg-2 {
-  background-color: #ffffff;
-}
-.c-1 {
-  color: #000000;
-}
-.bg-1 {
-  background-color: #000000;
-}
-.cs-4 {
-  color: #666666;
-}
-.bgs-4 {
-  background-color: #666666;
-}
-.cs-3 {
-  color: #d69744;
-}
-.bgs-3 {
-  background-color: #d69744;
-}
-.cs-2 {
-  color: #57a5bb;
-}
-.bgs-2 {
-  background-color: #57a5bb;
-}
-.cs-1 {
   color: #8fc232;
 }
-.bgs-1 {
+.bg-11 {
   background-color: #8fc232;
+}
+.c-10 {
+  color: #fdfdfd;
+}
+.bg-10 {
+  background-color: #fdfdfd;
+}
+.c-9 {
+  color: #6dac00;
+}
+.bg-9 {
+  background-color: #6dac00;
+}
+.c-8 {
+  color: #b7b5c4;
+}
+.bg-8 {
+  background-color: #b7b5c4;
+}
+.c-7 {
+  color: #dc692a;
+}
+.bg-7 {
+  background-color: #dc692a;
+}
+.c-6 {
+  color: #50808a;
+}
+.bg-6 {
+  background-color: #50808a;
+}
+.c-5 {
+  color: #00a2c4;
+}
+.bg-5 {
+  background-color: #00a2c4;
+}
+.c-4 {
+  color: #d69744;
+}
+.bg-4 {
+  background-color: #d69744;
+}
+.c-3 {
+  color: #565f64;
+}
+.bg-3 {
+  background-color: #565f64;
+}
+.c-2 {
+  color: #000000;
+}
+.bg-2 {
+  background-color: #000000;
+}
+.c-1 {
+  color: #ffffff;
+}
+.bg-1 {
+  background-color: #ffffff;
 }
 /**
 * Основные обозначения

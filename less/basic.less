@@ -36,7 +36,7 @@
 * Цвета
 *
 * На выходе мы имеем классы вида .c-1, .c-2, ... с единственным свойством color, соответствующим значению из _vars.less
-* Есть также классы для фона вида .bg-1, .bg-2, и классы специальных цветов .cs-1, .cs-2, .bgs-1, bgs-2
+* Есть также классы для фона вида .bg-1, .bg-2...
 */
 
 .define(@var) {
@@ -62,22 +62,6 @@
 }
 
 .mixin-loop(@count-colors);
-
-.mixin-loop-s (@index) when (@index > 0) {
-	.cs-@{index} {
-		.define-s(@index);
-		color: @@colorSet;
-	}
-
-	.bgs-@{index} {
-		.define-s(@index);
-		background-color: @@colorSet;
-	}
-
-	.mixin-loop-s(@index - 1);
-}
-
-.mixin-loop-s(@count-colors-special);
 
 
 
