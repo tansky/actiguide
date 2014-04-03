@@ -25,7 +25,15 @@ $(document).keydown(function(e) {
 		}
 	}
 });
-;var mainModule = angular.module('mainModule', []);;mainModule.directive('tipBox', function() {
+;var mainModule = angular.module('mainModule', []);;mainModule.directive('btn', function() {
+    return {
+        restrict: 'C',
+        replace: false,
+        transclude: true,
+        template: '<span class="btn-in" data-ng-transclude></span>'
+    };
+});
+;mainModule.directive('tipBox', function() {
     return {
         restrict: 'E',
         scope: true,

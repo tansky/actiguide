@@ -5,6 +5,14 @@
 @dir-fonts: '../fonts/';
 
 
+/**
+* Шрифты
+*/
+
+@f-regular: 'proxima_novaregular';
+@f-bold:	'proxima_novabold';
+@f-symbol:	'WebSymbolsLigaRegular';
+
 
 /**
 * Цвета
@@ -76,4 +84,35 @@
 	-webkit-box-shadow: @shadow1, @shadow2, @shadow3, @shadow4, @shadow5;
 	-moz-box-shadow: @shadow1, @shadow2, @shadow3, @shadow4, @shadow5;
 	box-shadow: @shadow1, @shadow2, @shadow3, @shadow4, @shadow5;
+}
+
+.gradient-base_go-to (@start: #e2e2e2, @go-to:#e2e2e2, @stop: #cecece) {
+  background: @start; /* Old browsers */
+  background: -moz-linear-gradient(top, @start 0%, @go-to 50%, @stop 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start), color-stop(50%,@go-to), color-stop(100%,@stop)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, @start 0%,@go-to 50%,@stop 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, @start 0%,@go-to 50%,@stop 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, @start 0%,@go-to 50%,@stop 100%); /* IE10+ */
+  background: linear-gradient(to bottom, @start 0%,@go-to 50%,@stop 100%); /* W3C */
+  filter: ~"progid:DXImageTransform.Microsoft.gradient( startColorstr='@{start}', endColorstr='@{stop}',gradientType=0)"; /* IE6-9 */
+}
+
+.gradient-base (@start: #e2e2e2, @stop: #cecece) {
+  background: @start; /* Old browsers */
+  background: -moz-linear-gradient(top, @start 0%, @stop 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start), color-stop(100%,@stop)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, @start 0%,@stop 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, @start 0%,@stop 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, @start 0%,@stop 100%); /* IE10+ */
+  background: linear-gradient(to bottom, @start 0%,@stop 100%); /* W3C */
+  filter: ~"progid:DXImageTransform.Microsoft.gradient( startColorstr='@{start}', endColorstr='@{stop}',gradientType=0)"; /* IE6-9 */
+}
+
+.user-select(@none: none){
+  -moz-user-select:    @none;
+  -o-user-select:      @none;
+  -khtml-user-select:  @none;
+  -webkit-user-select: @none;
+  -ms-user-select:     @none;
+  user-select:         @none;
 }
