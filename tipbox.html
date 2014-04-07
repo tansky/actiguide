@@ -1,77 +1,78 @@
 ﻿<!doctype html>
 <html lang="ru" data-ng-app="mainModule">
-    <head>
-        <meta charset="UTF-8">
-        <title>ActiGuide &mdash; Сетка</title>
-        <link rel="stylesheet" href="out/style.min.css" />
-        <script type="text/javascript" src="out/libs.min.js"></script>
-        <script type="text/javascript" src="out/app.min.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<title>ActiGuide &mdash; Сетка</title>
+	<link rel="stylesheet" href="out/style.min.css"/>
+	<script type="text/javascript" src="out/libs.min.js"></script>
+	<script type="text/javascript" src="out/app.min.js"></script>
 
-        <script type="text/ng-template" id="tipbox.html">
-            <div class="tipbox" data-ng-hide="hideTipBox">
-                <i class="tipbox_tail"></i>
-                <div data-ng-transclude></div>
-                <div class="close_bottom" data-ng-show="showCloseBtn">
-                    <a href="" class="tipbox_close" data-ng-click="hideTip()">Скрыть</a>
-                </div>
-            </div>
-        </script>
-    </head>
-    <body>
-	
-    <div class="wrapper">
-		<section class="content">
+	<script type="text/ng-template" id="tipbox.html">
+		<div class="tipbox" data-ng-hide="hideTipBox">
+			<i class="tipbox_tail"></i>
 
-            <!-- Заголовок -->
-            <div class="m-box">
-                <div class="box">
-                    <h1 class="name-page">Блоки</h1>
-                </div>
-            </div>
+			<div data-ng-transclude></div>
+			<div class="close_bottom" data-ng-show="showCloseBtn">
+				<a href="" class="tipbox_close" data-ng-click="hideTip()">Скрыть</a>
+			</div>
+		</div>
+	</script>
+</head>
+<body>
 
-            <div class="m-box">
-                <div class="col-3">
-                    <div class="box">
-                        <tip-box class="tipbox_arrow_top">
-                            Белый блок со стрелкой вверх слева
-                        </tip-box>
-                        <tip-box class="tipbox_arrow_top_right">
-                            Белый блок со стрелкой вверх справа
-                        </tip-box>
-                        <tip-box>
-                            Белый блок без стрелки
-                        </tip-box>
-                        <tip-box class="tipbox_arrow_bottom">
-                            Белый блок со стрелкой вверх слева
-                        </tip-box>
-                        <tip-box class="tipbox_arrow_bottom_right">
-                            Белый блок со стрелкой вверх справа
-                        </tip-box>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="box">
-                        <tip-box class="tipbox__notice tipbox_arrow_top" data-close-btn="true">
-                            <p>Желтый блок со стрелкой вверх слева</p>
-                        </tip-box>
-                        <tip-box class="tipbox__notice tipbox_arrow_top_right" data-close-btn="true">
-                            <p>Желтый блок со стрелкой вверх справа</p>
-                        </tip-box>
-                        <tip-box class="tipbox__notice" data-close-btn="true">
-                            <p>Желтый блок без стрелки</p>
-                        </tip-box>
-                        <tip-box class="tipbox__notice tipbox_arrow_bottom" data-close-btn="true">
-                            <p>Желтый блок со стрелкой вверх слева</p>
-                        </tip-box>
-                        <tip-box class="tipbox__notice tipbox_arrow_bottom_right" data-close-btn="true">
-                            <p>Желтый блок со стрелкой вверх справа</p>
-                        </tip-box>
-                    </div>
-                </div>
-            </div>	
-        
-		</section>  
-	</div>
+<div class="wrapper">
+	<section class="content">
+
+		<!-- Заголовок -->
+		<div class="m-box">
+			<div class="box">
+				<h1 class="name-page">Блоки</h1>
+			</div>
+		</div>
+
+		<div class="m-box">
+			<div class="col-3">
+				<div class="box">
+					<tip-box class="tipbox_arrow_top">
+						Белый блок со стрелкой вверх слева
+					</tip-box>
+					<tip-box class="tipbox_arrow_top_right">
+						Белый блок со стрелкой вверх справа
+					</tip-box>
+					<tip-box>
+						Белый блок без стрелки
+					</tip-box>
+					<tip-box class="tipbox_arrow_bottom">
+						Белый блок со стрелкой вверх слева
+					</tip-box>
+					<tip-box class="tipbox_arrow_bottom_right">
+						Белый блок со стрелкой вверх справа
+					</tip-box>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="box">
+					<tip-box class="tipbox__notice tipbox_arrow_top" data-close-btn="true">
+						<p>Желтый блок со стрелкой вверх слева</p>
+					</tip-box>
+					<tip-box class="tipbox__notice tipbox_arrow_top_right" data-close-btn="true">
+						<p>Желтый блок со стрелкой вверх справа</p>
+					</tip-box>
+					<tip-box class="tipbox__notice" data-close-btn="true">
+						<p>Желтый блок без стрелки</p>
+					</tip-box>
+					<tip-box class="tipbox__notice tipbox_arrow_bottom" data-close-btn="true">
+						<p>Желтый блок со стрелкой вверх слева</p>
+					</tip-box>
+					<tip-box class="tipbox__notice tipbox_arrow_bottom_right" data-close-btn="true">
+						<p>Желтый блок со стрелкой вверх справа</p>
+					</tip-box>
+				</div>
+			</div>
+		</div>
+
+	</section>
+</div>
 </body>
 </html>
 

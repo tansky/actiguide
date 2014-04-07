@@ -1,1 +1,1 @@
-var mainModule = angular.module('mainModule', []);
+actiGuide.mainModule = angular.module('mainModule', []);

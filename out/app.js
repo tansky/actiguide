@@ -1,4 +1,5 @@
-// TODO: Глобально = грязно
+// Глобальный нэймспейс приложения
+var actiGuide = {};;// TODO: Глобально = грязно
 var agGridState = false;
 
 $(document).keydown(function(e) {
@@ -25,27 +26,61 @@ $(document).keydown(function(e) {
 		}
 	}
 });
-;var mainModule = angular.module('mainModule', []);;mainModule.directive('btn', function() {
-    return {
-        restrict: 'C',
-        replace: false,
-        transclude: true,
-        template: '<span class="btn-in" data-ng-transclude></span>'
-    };
+;actiGuide.mainModule = angular.module('mainModule', []);;;actiGuide.mainModule.directive('btn', function () {
+	return {
+		restrict: 'C',
+		replace: false,
+		transclude: true,
+		template: '<span class="btn-in" data-ng-transclude></span>'
+	};
 });
-;mainModule.directive('tipBox', function() {
-    return {
-        restrict: 'E',
-        scope: true,
-        replace: true,
-        transclude: true,
-        link: function(scope, element, attr) {
-            scope.showCloseBtn = attr.closeBtn;
+;actiGuide.mainModule.directive('actiguideDropdown', function () {
+	return {
+		restrict: 'E',
+		transclude: true,
+		template: '<span class="dropdown" ng-transclude ng-class="{active:active}"></span>',
+		replace: true,
+		controller: function($scope, $element) {
+			$scope.$watch('$element.active', function(newVal) {
+				console.log('sv', newVal);
+			});
 
-            scope.hideTip = function (){
-                scope.hideTipBox = true;
-            }
-        },
-        templateUrl: 'tipbox.html'
-    };
+			$element.bind('click', function() {
+				var scope = angular.element(this).scope();
+				scope.active = true;
+				console.log(scope);
+			});
+		}
+	};
+}).directive('dname', function () {
+	return {
+		restrict: 'E',
+		transclude: true,
+		replace : true,
+		scope: false,
+		template: '<span class="dropdown_name" ng-transclude></span>'
+	}
+}).directive('dblock', function () {
+	return {
+		restrict: 'E',
+		transclude: true,
+		scope: false,
+		replace: true,
+		template: '<span class="dropdown_block" ng-transclude></span>'
+	};
+});;actiGuide.mainModule.directive('tipBox', function () {
+	return {
+		restrict: 'E',
+		scope: true,
+		replace: true,
+		transclude: true,
+		link: function (scope, element, attr) {
+			scope.showCloseBtn = attr.closeBtn;
+
+			scope.hideTip = function () {
+				scope.hideTipBox = true;
+			}
+		},
+		templateUrl: 'tipbox.html'
+	};
 });

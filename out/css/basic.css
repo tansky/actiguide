@@ -167,10 +167,10 @@ BODY {
 * Отступы
 */
 .m-none {
-  margin-bottom: 0px !important;
+  margin-bottom: 0 !important;
 }
 .mt-none {
-  margin-top: 0px !important;
+  margin-top: 0 !important;
 }
 .m-nano {
   margin-bottom: 5px !important;
