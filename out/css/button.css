@@ -256,7 +256,7 @@
 }
 .ico_submit {
   text-rendering: optimizeLegibility;
-  font-family: 'WebSymbolsLigaRegular';
+  font-family: 'Web Symbols';
   font-size: 14px;
   top: 5px;
   right: -19px;
@@ -607,7 +607,7 @@
   margin-left: -2px;
   color: #fff;
   font-size: 20px !important;
-  font-family: 'proxima_novabold';
+  font-family: 'Proxima Nova Bold';
   text-shadow: 0 1px 0 rgba(93, 100, 148, 0.2);
   cursor: default;
 }
@@ -882,7 +882,7 @@
 .print-box .print_text,
 .print_box .print_text {
   font-size: 18px;
-  font-family: 'proxima_novabold', sans-serif;
+  font-family: 'Proxima Nova Bold', sans-serif;
   vertical-align: middle;
   cursor: default;
 }

@@ -1,0 +1,46 @@
+@import "_vars";
+
+ul.nav-list {
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 10px;
+    height: 32px;
+    font-size: 14px;
+    line-height: 32px;
+    color: @c-3;
+    cursor: default;
+    white-space: nowrap;
+    .user-select();
+
+    &:hover {
+      background: @c-15;
+    }
+    &:before {
+      content: '';
+    }
+    &.active {
+      background: @c-3;
+      color: @c-1;
+    }
+    &.list-title {
+      font-family: @f-bold, sans-serif;
+      background: none;
+      color: @c-2;
+    }
+
+    &.list-subtitle {
+      background: none;
+      color: @c-16;
+      font-size: 12px;
+      line-height: 32px;
+      height: 32px;
+      text-transform: uppercase;
+      padding-top: 3px;
+      letter-spacing: 1px;
+    }
+  }
+}

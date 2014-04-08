@@ -1,0 +1,58 @@
+/**
+* Папки
+*/
+/**
+* Шрифты
+*/
+/**
+* Цвета
+*/
+/**
+* Миксины
+*/
+ul.nav-list {
+  margin: 0;
+  padding: 0;
+}
+ul.nav-list li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0 10px;
+  height: 32px;
+  font-size: 14px;
+  line-height: 32px;
+  color: #565f64;
+  cursor: default;
+  white-space: nowrap;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+ul.nav-list li:hover {
+  background: #eefcfd;
+}
+ul.nav-list li:before {
+  content: '';
+}
+ul.nav-list li.active {
+  background: #565f64;
+  color: #ffffff;
+}
+ul.nav-list li.list-title {
+  font-family: 'Proxima Nova Bold', sans-serif;
+  background: none;
+  color: #000000;
+}
+ul.nav-list li.list-subtitle {
+  background: none;
+  color: #cccccc;
+  font-size: 12px;
+  line-height: 32px;
+  height: 32px;
+  text-transform: uppercase;
+  padding-top: 3px;
+  letter-spacing: 1px;
+}

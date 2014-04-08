@@ -6,6 +6,7 @@
 @import 'tipbox.css';
 @import 'button.css';
 @import 'dropdown.css';
+@import 'nav-list.css';
 /**
 * Корневой файл стилей. Здесь можно управлять порядком подключения файлов стилей
 */
