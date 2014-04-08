@@ -37,7 +37,8 @@ ul.nav-list li:hover {
 ul.nav-list li:before {
   content: '';
 }
-ul.nav-list li.active {
+ul.nav-list li.active,
+ul.nav-list li.pushed {
   background: #565f64;
   color: #ffffff;
 }

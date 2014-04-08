@@ -7,6 +7,12 @@ actiGuide.mainModule.directive('navList', function () {
                 listItems.removeClass('active');
                 $(this).addClass('active');
             });
+
+            listItems.on("mousedown", function () {
+                $(this).addClass("pushed");
+            }).on("mouseup mouseout", function () {
+                $(this).removeClass("pushed");
+            });
         }
     };
 });
