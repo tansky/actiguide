@@ -1,18 +1,31 @@
-actiGuide.mainModule.directive('actiguideDropdown', function () {
+actiGuide.mainModule.directive('dropdown', function () {
 	return {
 		restrict: 'E',
 		transclude: true,
-		template: '<span class="dropdown" ng-transclude ng-class="{active:active}"></span>',
+		template: '<span class="dropdown" ng-class="{active:active}" ng-transclude></span>',
 		replace: true,
-		controller: function($scope, $element) {
-			$scope.$watch('$element.active', function(newVal) {
-				console.log('sv', newVal);
-			});
+		scope: true,
+		link: function($scope, $element) {
+			$scope.active = false;
 
 			$element.bind('click', function() {
 				var scope = angular.element(this).scope();
-				scope.active = true;
-				console.log(scope);
+
+				if (!$scope.findElementUpInTree(this) && $scope._layers.length > 1) {
+					return;
+				}
+
+				$scope.updateLayers(this);
+
+				if (!scope.active) {
+					scope.active = true;
+				}
+
+				if (scope.active && $scope._layers.indexOf(this) < 0) {
+					$scope._layers.push(this);
+				}
+
+				scope.$apply();
 			});
 		}
 	};
@@ -28,8 +41,8 @@ actiGuide.mainModule.directive('actiguideDropdown', function () {
 	return {
 		restrict: 'E',
 		transclude: true,
-		scope: false,
 		replace: true,
+		scope: false,
 		template: '<span class="dropdown_block" ng-transclude></span>'
 	};
 });

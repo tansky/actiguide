@@ -26,7 +26,45 @@ $(document).keydown(function(e) {
 		}
 	}
 });
-;actiGuide.mainModule = angular.module('mainModule', []);;;actiGuide.mainModule.directive('btn', function () {
+;actiGuide.mainModule = angular.module('mainModule', []);;actiGuide.mainModule.controller('MainCtrl', function ($scope, $document) {
+
+	/**
+	 * Слои
+	 */
+
+	$scope._layers = [];
+
+	angular.element($document).bind('click', function(e) {
+		$scope.updateLayers(e.target);
+	});
+
+	$scope.updateLayers = function(element) {
+		if (!$scope.findElementUpInTree(element) && $scope._layers.length > 0) {
+			$scope.popLastLayer();
+		}
+	};
+
+	$scope.popLastLayer = function() {
+		var $topLayerScope = angular.element($scope._layers[$scope._layers.length - 1]).scope();
+
+		$topLayerScope.active = false;
+		$topLayerScope.$apply();
+
+		$scope._layers.pop();
+	};
+
+	$scope.findElementUpInTree = function(element) {
+		if ($scope._layers.indexOf(angular.element(element)[0]) > -1) {
+			return true;
+		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
+			return $scope.findElementUpInTree(angular.element(element).parent());
+		} else {
+			return false;
+		}
+	};
+
+});
+;actiGuide.mainModule.directive('btn', function () {
 	return {
 		restrict: 'C',
 		replace: false,
@@ -34,21 +72,34 @@ $(document).keydown(function(e) {
 		template: '<span class="btn-in" data-ng-transclude></span>'
 	};
 });
-;actiGuide.mainModule.directive('actiguideDropdown', function () {
+;actiGuide.mainModule.directive('dropdown', function () {
 	return {
 		restrict: 'E',
 		transclude: true,
-		template: '<span class="dropdown" ng-transclude ng-class="{active:active}"></span>',
+		template: '<span class="dropdown" ng-class="{active:active}" ng-transclude></span>',
 		replace: true,
-		controller: function($scope, $element) {
-			$scope.$watch('$element.active', function(newVal) {
-				console.log('sv', newVal);
-			});
+		scope: true,
+		link: function($scope, $element) {
+			$scope.active = false;
 
 			$element.bind('click', function() {
 				var scope = angular.element(this).scope();
-				scope.active = true;
-				console.log(scope);
+
+				if (!$scope.findElementUpInTree(this) && $scope._layers.length > 1) {
+					return;
+				}
+
+				$scope.updateLayers(this);
+
+				if (!scope.active) {
+					scope.active = true;
+				}
+
+				if (scope.active && $scope._layers.indexOf(this) < 0) {
+					$scope._layers.push(this);
+				}
+
+				scope.$apply();
 			});
 		}
 	};
@@ -64,8 +115,8 @@ $(document).keydown(function(e) {
 	return {
 		restrict: 'E',
 		transclude: true,
-		scope: false,
 		replace: true,
+		scope: false,
 		template: '<span class="dropdown_block" ng-transclude></span>'
 	};
 });;actiGuide.mainModule.directive('navList', function () {

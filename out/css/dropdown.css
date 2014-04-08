@@ -62,7 +62,7 @@
   -moz-border-radius: 2px;
   border-radius: 2px;
 }
-.dropdown_block.visible {
+.dropdown.active > .dropdown_block {
   display: block;
 }
 .bss-dropdown-unavailable a {

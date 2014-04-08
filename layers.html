@@ -7,30 +7,44 @@
 	<script type="text/javascript" src="out/libs.min.js"></script>
 	<script type="text/javascript" src="out/app.min.js"></script>
 </head>
-<body>
+<body ng-controller="MainCtrl">
 
 <div class="wrapper">
 	<section class="content">
 
-		<h1>h1</h1>
+		<h1>Слои</h1>
 
-		<actiguide-dropdown class="dropdown__giant">
+		<dropdown class="dropdown__giant">
 			<dname>
-				<a>Календарь в дропдауне</a>
+				<a>Текст в дропдауне</a>
 			</dname>
 			<dblock>
 				d-block
 			</dblock>
-		</actiguide-dropdown>
+		</dropdown>
 
-		<actiguide-dropdown class="dropdown__giant">
+		<dropdown class="dropdown__giant">
 			<dname>
-				<a>Календарь в дропдауне</a>
+				<a>Дропдаун в дропдауне</a>
 			</dname>
 			<dblock>
-				d-block
+				<dropdown class="dropdown__giant">
+					<dname>
+						<a>Дропдаун в дропдауне</a>
+					</dname>
+					<dblock>
+						<dropdown class="dropdown__giant">
+							<dname>
+								<a>Дропдаун в дропдауне</a>
+							</dname>
+							<dblock>
+								d-block
+							</dblock>
+						</dropdown>
+					</dblock>
+				</dropdown>
 			</dblock>
-		</actiguide-dropdown>
+		</dropdown>
 
 	</section>
 </div>
