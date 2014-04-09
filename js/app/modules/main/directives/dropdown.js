@@ -1,4 +1,4 @@
-actiGuide.mainModule.directive('dropdown', function () {
+actiGuide.mainModule.directive('dropdown', function (layers) {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -11,18 +11,18 @@ actiGuide.mainModule.directive('dropdown', function () {
 			$element.bind('click', function() {
 				var scope = angular.element(this).scope();
 
-				if (!$scope.findElementUpInTree(this) && $scope._layers.length > 1) {
+				if (!layers.findElementUpInTree(this) && layers.getLayersList.length > 1) {
 					return;
 				}
 
-				$scope.updateLayers(this);
+				layers.updateLayers(this);
 
 				if (!scope.active) {
 					scope.active = true;
 				}
 
-				if (scope.active && $scope._layers.indexOf(this) < 0) {
-					$scope._layers.push(this);
+				if (scope.active && layers.getLayersList.indexOf(this) < 0) {
+					layers.getLayersList.push(this);
 				}
 
 				scope.$apply();
