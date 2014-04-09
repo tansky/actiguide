@@ -17,12 +17,6 @@
   border-radius: 2px;
   box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.1);
 }
-.dropdown_block IMG {
-  cursor: pointer;
-}
-.dropdown.is-visible > .dropdown_block {
-  display: block;
-}
 .dropdown_block:before,
 .dropdown_block:after {
   position: absolute;
@@ -37,14 +31,20 @@
   border-left-color: transparent;
   border-right-color: transparent;
 }
-.dropdown_block.min:before,
-.dropdown_block.min:after {
-  left: 8px;
-}
 .dropdown_block:before {
   z-index: 1;
   margin-bottom: 0;
   border-bottom-color: #ccc;
+}
+.dropdown_block.min:before,
+.dropdown_block.min:after {
+  left: 8px;
+}
+.dropdown_block IMG {
+  cursor: pointer;
+}
+.dropdown.is-visible > .dropdown_block {
+  display: block;
 }
 .dropdown_block.dropdown__list {
   padding: 5px 0;
