@@ -1,8 +1,17 @@
+/**
+ *  @ngdoc directive
+ *  @name dropdown
+ *  @restrict E
+ *
+ *  @description
+ *  Директивы для генерации элементов типа дропдаун (см. пример в layers.html).
+ */
+
 actiGuide.mainModule.directive('dropdown', function (layers) {
 	return {
 		restrict: 'E',
 		transclude: true,
-		template: '<span class="dropdown" ng-class="{active:active}" ng-transclude></span>',
+		template: '<span class="dropdown" ng-class="{\'is-visible\':active}" ng-transclude></span>',
 		replace: true,
 		scope: true,
 		link: function($scope, $element) {
@@ -11,7 +20,7 @@ actiGuide.mainModule.directive('dropdown', function (layers) {
 			$element.bind('click', function() {
 				var scope = angular.element(this).scope();
 
-				if (!layers.findElementUpInTree(this) && layers.getLayersList.length > 1) {
+				if (!layers.isElementInLayers(this) && layers.getLayersList.length > 1) {
 					return;
 				}
 

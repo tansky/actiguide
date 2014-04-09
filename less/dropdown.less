@@ -1,63 +1,8 @@
-// TODO: Чистить
-
 .dropdown {
 	position: relative;
 	z-index: 2;
 	display: inline-block;
 	vertical-align: top;
-}
-
-.dropdown__d-block {
-	display: block;
-}
-
-.dropdown__va-baseline {
-	vertical-align: baseline;
-}
-
-.dropdown__align-left {
-	text-align: left;
-}
-
-.dropdown__float {
-	position: absolute;
-	left: 80px;
-}
-
-.dropdown__single {
-	position: static;
-
-	& .dropdown_block {
-		z-index: 2;
-	}
-}
-
-.dropdown__other_forms {
-	left: 80px;
-}
-
-.dropdown__popup_forms {
-	left: 30px;
-}
-
-.dropdown__popup_block {
-	padding-left: 60px;
-	position: relative;
-}
-
-.dropdown__popup_block60 {
-	padding-left: 60px;
-	position: relative;
-}
-
-.dropdown__popup_block60 .dropdown__float,
-.dropdown__popup_block .dropdown__float {
-	left: 0;
-}
-
-.b_popup .dropdown__popup_block {
-	padding-left: 90px;
-	position: relative;
 }
 
 .dropdown_block {
@@ -76,39 +21,19 @@
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
+
+	IMG {
+		cursor: pointer
+	}
 }
 
-.dropdown.active > .dropdown_block {
+.dropdown.is-visible > .dropdown_block {
 	display: block;
 }
 
-.bss-dropdown-unavailable a {
-	color: #00a2c4 !important;
-	text-decoration: none;
-}
 
-.bss-dropdown-promo-unavailable a {
-	color: #00a2c4 !important;
-	text-decoration: none;
-}
 
-/*для выравнивания кнопок консалтинга
- .dropdown__popup_block_top{left: 30px !important;}*/
-.dropdown__popup_block_radio {
-	top: -10px;
-}
-
-.dropdown_block img {
-	cursor: pointer
-}
-
-.copyright .dropdown_block {
-	padding: 15px 0;
-}
-
-.dropdown_block__padding20 {
-	padding: 20px;
-}
+// Размеры
 
 .dropdown__small > .dropdown_block {
 	width: 200px;
@@ -134,10 +59,6 @@
 	width: 660px;
 }
 
-.dropdown__default.datepicker .dropdown_block {
-	width: auto;
-}
-
 .dropdown_block:before,
 .dropdown_block:after {
 	position: absolute;
@@ -158,41 +79,10 @@
 	left: 8px;
 }
 
-.datepicker__bottom .dropdown_block:before,
-.datepicker__bottom .dropdown_block:after {
-	bottom: auto;
-	top: 100%;
-	margin-top: -1.25px;
-	border-top-color: #fff;
-	border-bottom-color: transparent;
-}
-
-.datepicker__right .dropdown_block:before,
-.datepicker__right .dropdown_block:after {
-	left: auto;
-	right: 20px;
-}
-
-.datepicker__right .dropdown_block.min:before,
-.datepicker__right .dropdown_block.min:after {
-	right: 5px;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-	.dropdown_block:after {
-		margin-bottom: -1.25px;
-	}
-}
-
 .dropdown_block:before {
 	z-index: 1;
 	margin-bottom: 0;
 	border-bottom-color: #ccc;
-}
-
-.datepicker__bottom .dropdown_block:before {
-	border-top-color: #ccc;
-	margin-top: 0;
 }
 
 .dropdown_block.dropdown__list {
@@ -253,44 +143,4 @@
 .dropdown_block.dropdown__list table td:last-child {
 	padding: 5px 20px 5px 5px;
 	text-align: right;
-}
-
-.transparent {
-	background: transparent !important;
-}
-
-.dropdown__rightpos .dropdown_block {
-	right: 0;
-}
-
-.dropdown__rightpos .dropdown_block:before,
-.dropdown__rightpos .dropdown_block:after {
-	right: 20px;
-	left: auto;
-}
-
-.dropdown_block__consulting {
-	line-height: 22px;
-}
-
-.item-delete-drop {
-	left: auto;
-	right: 0px;
-
-	:before {
-		left: 384px !important;
-		right: 15px !important;
-		content: '';
-	}
-}
-
-.dropdown__nomenklatura .dropdown_block {
-	left: auto !important;
-	right: -10px !important;
-}
-
-.dropdown__nomenklatura .dropdown_block:before,
-.dropdown__nomenklatura .dropdown_block:after {
-	right: 5px !important;
-	left: auto !important;
 }
