@@ -104,18 +104,18 @@ actiGuide.mainModule.directive('btn', function () {
  *  К полям подключены модификаторы RegExpFilter и Money, а также валидатор checkRange со значением 0
  *
  *  @param {string} ngModel Привязка к модели
- *  @param {string=} showKop Показываем поле с копейками, если указан параметр
- *  @param {string=} id Стандартный атрибут id. На поля для рублей и копеек будут проставлены атрибуты id
+ *  @param {string} [showKop] Показываем поле с копейками, если указан параметр
+ *  @param {string} [id] Стандартный атрибут id. На поля для рублей и копеек будут проставлены атрибуты id
  *  соответственно как {id}_Rub и {id}_Kop
- *  @param {string=} name Стандартный атрибут name. На поля для рублей и копеек будут проставлены атрибуты name
+ *  @param {string} [name] Стандартный атрибут name. На поля для рублей и копеек будут проставлены атрибуты name
  *  соответственно как {id}_Rub и {id}_Kop
- *  @param {string=} disabled Стандартный атрибут
- *  @param {string=} readonly Стандартный атрибут
- *  @param {string=} required Стандартный параметр AngularJs
- *  @param {string=} ngRequired Стандартный параметр AngularJs
- *  @param {string=} ngReadonly Стандартный параметр AngularJs
- *  @param {string=} ngDisabled Стандартный параметр AngularJs
- *  @param {string=} zeroAble По умолчанию значение 0 не валидно. Если указан параметр, значение 0 становится валидным
+ *  @param {string} [disabled] Стандартный атрибут
+ *  @param {string} [readonly] Стандартный атрибут
+ *  @param {string} [required] Стандартный параметр AngularJs
+ *  @param {string} [ngRequired] Стандартный параметр AngularJs
+ *  @param {string} [ngReadonly] Стандартный параметр AngularJs
+ *  @param {string} [ngDisabled] Стандартный параметр AngularJs
+ *  @param {string} [zeroAble] По умолчанию значение 0 не валидно. Если указан параметр, значение 0 становится валидным
  *
  */
 
@@ -312,7 +312,7 @@ actiGuide.mainModule.directive('navList', function () {
  *
  *  @description Директива блока. Стилевое оформление указывается с помощью классов.
  *
- *  @param {string=} closeBtn Показываем ссылку "Скрыть", если указан параметр
+ *  @param {string} [closeBtn] Показываем ссылку "Скрыть", если указан параметр
  *
  */
 actiGuide.mainModule.directive('tipBox', function () {
