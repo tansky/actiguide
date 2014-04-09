@@ -1,0 +1,95 @@
+﻿<!doctype html>
+<html lang="ru" data-ng-app="mainModule">
+    <head>
+        <meta charset="UTF-8">
+        <title>ActiGuide &mdash; Элементы формы</title>
+        <link rel="stylesheet" href="out/style.min.css" />
+        <script type="text/javascript" src="out/libs.min.js"></script>
+        <script type="text/javascript" src="out/app.min.js"></script>
+
+    </head>
+    <body>
+	
+    <div class="wrapper" data-ng-controller="FormDemoCtrl">
+		<section class="content">
+
+            <!-- Заголовок -->
+            <div class="m-box">
+                <div class="box">
+                    <h1 class="name-page">Элементы формы</h1>
+                </div>
+            </div>
+
+            <div class="m-box">
+                <div class="col-2">
+                    <div class="box">
+                        <div class="input-block">
+                            <label class="text-label" for="i2">Поле с курсором</label>
+                            <input type="text" name="" value="" id="i2" class="t-input t-input__normal focus"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="box">
+                        <div class="input-block">
+                            <label class="text-label" for="i3">Неправильно заполненное</label>
+                            <input type="text" name="" value="" id="i3" class="t-input t-input__normal invalid"/>
+                            <div class="ng-error">Краткая и емкая причина ошибки</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="m-box">
+                <div class="col-4">
+                    <div class="box">
+                        <p>Размеры полей ввода</p>
+                        <div>
+                            <input type="text" name="" value="" placeholder=":-)" class="t-input t-input__micro"/>
+                        </div>
+
+                        <div>
+                            <input type="text" name="" value="" placeholder="Малое" class="t-input t-input__mini"/>
+                        </div>
+
+                        <div>
+                            <input type="text" name="" value="" placeholder="Среднее" class="t-input t-input__medium"/>
+                        </div>
+
+                        <div>
+                            <input type="text" name="" value="" placeholder="Нормальное" class="t-input t-input__normal"/>
+                        </div>
+
+                        <div>
+                            <input type="text" name="" value="" placeholder="Большое" class="t-input t-input__big"/>
+                        </div>
+
+                        <div>
+                            <textarea class="t-input t-input__big" placeholder="Многострочное"></textarea>
+                        </div>
+
+                        <div class="m-normal">
+                            <input type="text" name="" value="" placeholder="По ширине контейнера" class="t-input"/>
+                        </div>
+
+                        <p>Общие для сервисов кастомные текстовые поля (собраны из полей стандартных размеров)</p>
+
+                        <div class="m-small">
+                            <money-field name="Price" data-ng-model="Model.Price"></money-field>
+                        </div>
+
+                        <div class="ctrl-group m-small">
+                            <money-field name="PriceKop" data-ng-model="Model.PriceKop" data-show-kop="true"></money-field>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+		</section>  
+	</div>
+
+    </body>
+</html>
+

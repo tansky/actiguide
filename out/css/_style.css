@@ -7,6 +7,9 @@
 @import 'button.css';
 @import 'dropdown.css';
 @import 'nav-list.css';
+@import 't-inputs.css';
+@import 'validation.css';
+@import 'ctrl-group.css';
 /**
 * Корневой файл стилей. Здесь можно управлять порядком подключения файлов стилей
 */

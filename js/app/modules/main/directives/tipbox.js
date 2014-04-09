@@ -1,3 +1,13 @@
+/**
+ *  @ngdoc directive
+ *  @name tipBox
+ *  @restrict E
+ *
+ *  @description Директива блока. Стилевое оформление указывается с помощью классов.
+ *
+ *  @param {string=} closeBtn Показываем ссылку "Скрыть", если указан параметр
+ *
+ */
 actiGuide.mainModule.directive('tipBox', function () {
 	return {
 		restrict: 'E',

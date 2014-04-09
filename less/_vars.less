@@ -86,6 +86,14 @@
 	box-shadow: @shadow1, @shadow2, @shadow3, @shadow4, @shadow5;
 }
 
+// Box sizing mixin
+
+.box-sizing(@boxmodel) {
+    -webkit-box-sizing: @boxmodel;
+    -moz-box-sizing: @boxmodel;
+    box-sizing: @boxmodel;
+}
+
 .gradient-base_go-to (@start: #e2e2e2, @go-to:#e2e2e2, @stop: #cecece) {
   background: @start; /* Old browsers */
   background: -moz-linear-gradient(top, @start 0%, @go-to 50%, @stop 100%); /* FF3.6+ */
