@@ -327,8 +327,23 @@ a:hover {
 .dni {
   display: none !important;
 }
-/* END DISPLAY STYLES
-    ------------------------------------------------------*/
+/**
+* Floats
+*/
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+/**
+* Разное
+*/
+HR {
+  border: none;
+  border-top: 1px solid #e2e2e2;
+  margin: 30px 23px 30px 0;
+}
 .clear-fix {
   clear: both;
 }

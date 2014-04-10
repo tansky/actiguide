@@ -1,6 +1,5 @@
 .dropdown {
 	position: relative;
-	z-index: 2;
 	display: inline-block;
 	vertical-align: top;
 }
@@ -9,10 +8,11 @@
 	background: #fff;
 	position: absolute;
 	display: none;
+	z-index: 5;
 
 	min-width: 50px;
 	padding: 10px 15px;
-	margin: 10px 0 0 0;
+	margin: 10px 0;
 
 	font-size: 16px;
 	white-space: normal;
@@ -24,7 +24,7 @@
 	&:before,
 	&:after {
 		position: absolute;
-		z-index: 2;
+		z-index: 5;
 		bottom: 100%;
 		margin-bottom: -0.75px;
 		left: 20px;
@@ -42,13 +42,58 @@
 		border-bottom-color: #ccc;
 	}
 
-	&.min:before,
-	&.min:after {
-		left: 8px;
-	}
-
 	IMG {
 		cursor: pointer
+	}
+}
+
+.dropdown.reflect-hor > .dropdown_block {
+	right: 0;
+
+	&:before,
+	&:after {
+		left: auto;
+		right: 20px;
+	}
+}
+
+.dropdown.reflect-ver > .dropdown_block {
+	bottom: 100%;
+
+	&:before,
+	&:after {
+		margin-bottom: auto;
+		margin-top: 1px;
+		border-bottom-color: transparent;
+		border-top-color: #fff;
+		bottom: auto;
+		top: 100%;
+	}
+
+	&:before {
+		margin-bottom: auto;
+		border-bottom-color: transparent;
+		margin-top: 0;
+		border-top-color: #ccc;
+	}
+
+	&:after {
+		margin-top: -0.75px;
+	}
+}
+
+.dropdown.small-wrap > .dropdown_block {
+	&:before,
+	&:after {
+		left: 8px;
+	}
+}
+
+.dropdown.small-wrap.reflect-hor > .dropdown_block {
+	&:before,
+	&:after {
+		left: auto;
+		right: 8px;
 	}
 }
 
@@ -56,7 +101,7 @@
 	display: block;
 }
 
-.dropdown_block.dropdown__list {
+.dropdown__list > .dropdown_block {
 	padding: 5px 0;
 
 	ul {

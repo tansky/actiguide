@@ -53,25 +53,35 @@ actiGuide.mainModule.directive('btn', function () {
  *  @restrict E
  *
  *  @description
- *  Директивы для генерации элементов типа дропдаун (см. пример в layers.html).
+ *  Директивы для генерации дропдаунов (см. пример в layers.html).
  */
 
-actiGuide.mainModule.directive('dropdown', function (layers) {
+actiGuide.mainModule.directive('dropdown', function ($window, $document, layers) {
+	var ngClasses = "{'is-visible':active, 'reflect-hor':reflectHorizontal, 'reflect-ver':reflectVertical, 'small-wrap':smallWrap}";
+
 	return {
 		restrict: 'E',
 		transclude: true,
-		template: '<span class="dropdown" ng-class="{\'is-visible\':active}" ng-transclude></span>',
+		template: '<span class="dropdown" ng-class="' + ngClasses + '" ng-transclude></span>',
 		replace: true,
 		scope: true,
 		link: function($scope, $element) {
 			$scope.active = false;
 
 			$element.bind('click', function() {
-				var scope = angular.element(this).scope();
+
+				/* Клик по элементу, вызывающему дропдаун не из активного дерева игнорируется, передав при этом
+				управление слушателю кликов из сервиса layers */
 
 				if (!layers.isElementInLayers(this) && layers.getLayersList.length > 1) {
 					return;
 				}
+
+
+				/* Открытие дропдауна и добавление его к слоям */
+
+				var element = angular.element(this),
+					scope = element.scope();
 
 				layers.updateLayers(this);
 
@@ -83,7 +93,26 @@ actiGuide.mainModule.directive('dropdown', function (layers) {
 					layers.getLayersList.push(this);
 				}
 
+
+				/* Проверка ширины элемента, открывающего дропдаун (смещаем стрелку ближе к краю, если ширина < 50px) */
+
+				if (element[0].offsetWidth < 50) {
+					$scope.smallWrap = true;
+				}
+
 				scope.$apply();
+
+
+				/* Проверка границ выпавшего дропдауна */
+
+				var document = angular.element($document).find('BODY')[0];
+
+				angular.forEach(element.children(), function(element) {
+					$scope.reflectHorizontal = document.clientWidth < element.getBoundingClientRect().right;
+					$scope.reflectVertical = document.clientHeight < element.getBoundingClientRect().bottom;
+					scope.$apply();
+				});
+
 			});
 		}
 	};
@@ -424,6 +453,12 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 
 	angular.element($document).bind('click', function(e) {
 		updateLayers(e.target);
+	});
+
+	angular.element($document).bind('keyup', function(e) {
+		if (e.which == 27 && _layers.length > 0) {
+			popLastLayer();
+		}
 	});
 
 	/**

@@ -12,39 +12,100 @@
 <div class="wrapper">
 	<section class="content">
 
-		<h1>Слои</h1>
+		<div class="m-box">
+			<div class="box">
+				<h1>Слои</h1>
+			</div>
+		</div>
 
-		<dropdown class="dropdown__giant">
-			<dname>
-				<a>Текст в дропдауне</a>
-			</dname>
-			<dblock>
-				d-block
-			</dblock>
-		</dropdown>
+		<div class="m-box m-giant">
+			<div class="col-edge-1">
+				<div class="box">
+					<h3>Дропдауны</h3>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="box">
 
-		<dropdown class="dropdown__giant">
-			<dname>
-				<a>Дропдаун в дропдауне</a>
-			</dname>
-			<dblock>
-				<dropdown class="dropdown__giant">
-					<dname>
-						<a>Дропдаун в дропдауне</a>
-					</dname>
-					<dblock>
-						<dropdown class="dropdown__giant">
+					<p>
+						<dropdown class="dropdown__default">
 							<dname>
-								<a>Дропдаун в дропдауне</a>
+								<a>Обычный дропдаун</a> |
 							</dname>
 							<dblock>
-								d-block
+								Привет!
 							</dblock>
 						</dropdown>
-					</dblock>
-				</dropdown>
-			</dblock>
-		</dropdown>
+
+						<dropdown class="dropdown__big">
+							<dname>
+								<a>Вложенные дропдауны</a>
+							</dname>
+							<dblock>
+								<dropdown class="dropdown__giant">
+									<dname>
+										<a>Дропдаун в дропдауне</a>
+									</dname>
+									<dblock>
+										<dropdown class="dropdown__huge">
+											<dname>
+												<a>Ещё один дропдаун в дропдауне</a>
+											</dname>
+											<dblock>
+												Кстати, кнопка &laquo;ESC&raquo; поочерёдно закрывает открытые слои.
+											</dblock>
+										</dropdown>
+									</dblock>
+								</dropdown>
+							</dblock>
+						</dropdown>
+					</p>
+
+					<p>
+						<dropdown>
+							<dname>
+								<a>!!!</a>
+							</dname>
+							<dblock>
+								Привет!
+							</dblock>
+						</dropdown>
+
+						&mdash; ширина элемента, открывающего дропдаун меньше 50px.
+					</p>
+
+				</div>
+			</div>
+			<div class="col-edge-1">
+				<div class="box">
+
+					<p class="fr">
+						<dropdown class="dropdown__huge">
+							<dname>
+								<a>Отражён</a>
+							</dname>
+							<dblock>
+								Если правый край выпавшего дропдауна не помещается в ширину окна, он будет отражён по горизонтали. На о-о-о-оочень большом разрешении, скорее всего, будет выглядеть как обычный.
+							</dblock>
+						</dropdown>
+					</p>
+
+					<div class="clear-fix"></div>
+
+					<p class="fr">
+						<dropdown class="dropdown__huge">
+							<dname>
+								<a>!!!</a>
+							</dname>
+							<dblock>
+								Ширина элемента, открывающего этот дропдаун тоже меньше 50px.
+							</dblock>
+						</dropdown>
+					</p>
+
+				</div>
+			</div>
+		</div>
 
 	</section>
 </div>

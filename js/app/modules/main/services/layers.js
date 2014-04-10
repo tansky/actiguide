@@ -14,6 +14,12 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 		updateLayers(e.target);
 	});
 
+	angular.element($document).bind('keyup', function(e) {
+		if (e.which == 27 && _layers.length > 0) {
+			popLastLayer();
+		}
+	});
+
 	/**
 	 * При удовлетворяющих условиях (например клик вне открытого дропдауна) данный публичный метод закроет верхний слой.
 	 * @name updateLayers
