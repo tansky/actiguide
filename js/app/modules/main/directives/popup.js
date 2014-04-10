@@ -4,7 +4,7 @@
  *  @restrict A
  *
  *  @description
- *  Директива для обеспечения отображения попапов.
+ *  Директива для открытия попапов.
  */
 
 actiGuide.mainModule.directive('pCaller', function (layers) {
