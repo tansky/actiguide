@@ -57,7 +57,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	function popLastLayer() {
 		var $topLayerScope = angular.element(_layers[_layers.length - 1]).scope();
 
-		$topLayerScope.active = false;
+		$topLayerScope.visible = false;
 		$topLayerScope.$apply();
 
 		_layers.pop();

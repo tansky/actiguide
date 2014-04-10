@@ -2,10 +2,10 @@
 @import 'reset.css';
 @import 'typeface.css';
 @import 'grid.css';
-@import 'features.css';
 @import 'tipbox.css';
 @import 'button.css';
 @import 'dropdown.css';
+@import 'popup.css';
 @import 'nav-list.css';
 @import 't-inputs.css';
 @import 'validation.css';

@@ -34,6 +34,9 @@ td {
   margin: 0;
   padding: 0;
 }
+A {
+  cursor: pointer;
+}
 table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -305,8 +308,15 @@ a:hover {
 ::-webkit-selection {
   background: #7fcdea;
 }
-/* DISPLAY STYLES
-------------------------------------------------------*/
+/**
+* Состояния (Stated)
+*/
+.is-visible {
+  display: block;
+}
+.is-hidden {
+  display: none;
+}
 .di {
   display: inline;
 }
@@ -317,12 +327,6 @@ a:hover {
 .dib__middle {
   display: inline-block;
   vertical-align: middle;
-}
-.db {
-  display: block;
-}
-.dn {
-  display: none;
 }
 .dni {
   display: none !important;
@@ -339,6 +343,18 @@ a:hover {
 /**
 * Разное
 */
+INPUT:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 50px white inset !important;
+  /* Change the color to your own background color */
+  -webkit-text-fill-color: #333;
+}
+.color-box DIV {
+  float: left;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+}
 HR {
   border: none;
   border-top: 1px solid #e2e2e2;
@@ -346,11 +362,6 @@ HR {
 }
 .clear-fix {
   clear: both;
-}
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 50px white inset !important;
-  /* Change the color to your own background color */
-  -webkit-text-fill-color: #333;
 }
 [ng\:cloak],
 [ng-cloak],

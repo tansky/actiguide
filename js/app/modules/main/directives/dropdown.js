@@ -4,24 +4,24 @@
  *  @restrict E
  *
  *  @description
- *  Директивы для генерации дропдаунов (см. пример в layers.html).
+ *  Директивы для генерации дропдаунов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('dropdown', function ($window, $document, layers) {
-	var ngClasses = "{'is-visible':active, 'reflect-hor':reflectHorizontal, 'reflect-ver':reflectVertical, 'small-wrap':smallWrap}";
+actiGuide.mainModule.directive('dropdown', function ($window, layers) {
+	var ngClasses = "{'is-visible':visible, 'reflect-hor':reflectHorizontal, 'reflect-ver':reflectVertical, 'small-wrap':smallWrap}";
 
 	return {
 		restrict: 'E',
 		transclude: true,
-		template: '<span class="dropdown" ng-class="' + ngClasses + '" ng-transclude></span>',
+		template: '<span class="dropdown" ng-class="' + ngClasses + '" ng-transclude />',
 		replace: true,
 		scope: true,
-		link: function($scope, $element) {
-			$scope.active = false;
+		link: function(scope, element) {
+			scope.visible = false;
 
-			$element.bind('click', function() {
+			element.bind('click', function() {
 
-				/* Клик по элементу, вызывающему дропдаун не из активного дерева игнорируется, передав при этом
+				/* Клик по элементу, вызывающему дропдаун не из дерева активных слоёв игнорируется, передав при этом
 				управление слушателю кликов из сервиса layers */
 
 				if (!layers.isElementInLayers(this) && layers.getLayersList.length > 1) {
@@ -31,56 +31,53 @@ actiGuide.mainModule.directive('dropdown', function ($window, $document, layers)
 
 				/* Открытие дропдауна и добавление его к слоям */
 
-				var element = angular.element(this),
-					scope = element.scope();
+				var clickedElement = angular.element(this),
+					clickedElementScope = clickedElement.scope();
 
 				layers.updateLayers(this);
+				clickedElementScope.visible = true;
 
-				if (!scope.active) {
-					scope.active = true;
-				}
-
-				if (scope.active && layers.getLayersList.indexOf(this) < 0) {
+				if (layers.getLayersList.indexOf(this) < 0) {
 					layers.getLayersList.push(this);
 				}
 
 
 				/* Проверка ширины элемента, открывающего дропдаун (смещаем стрелку ближе к краю, если ширина < 50px) */
 
-				if (element[0].offsetWidth < 50) {
-					$scope.smallWrap = true;
+				if (clickedElement[0].offsetWidth < 50) {
+					scope.smallWrap = true;
 				}
 
-				scope.$apply();
+				clickedElementScope.$apply();
 
 
 				/* Проверка границ выпавшего дропдауна */
 
-				var document = angular.element($document).find('BODY')[0];
+				var doc = angular.element(document).find('BODY')[0];
 
-				angular.forEach(element.children(), function(element) {
-					$scope.reflectHorizontal = document.clientWidth < element.getBoundingClientRect().right;
-					$scope.reflectVertical = document.clientHeight < element.getBoundingClientRect().bottom;
-					scope.$apply();
+				angular.forEach(clickedElement.children(), function(element) {
+					scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
+					scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
+					clickedElementScope.$apply();
 				});
 
 			});
 		}
 	};
-}).directive('dname', function () {
+}).directive('dCaller', function () {
 	return {
 		restrict: 'E',
 		transclude: true,
 		replace : true,
 		scope: false,
-		template: '<span class="dropdown_name" ng-transclude></span>'
+		template: '<span class="dropdown_caller" ng-transclude />'
 	}
-}).directive('dblock', function () {
+}).directive('dContainer', function () {
 	return {
 		restrict: 'E',
 		transclude: true,
 		replace: true,
 		scope: false,
-		template: '<span class="dropdown_block" ng-transclude></span>'
+		template: '<span class="dropdown_container" ng-transclude />'
 	};
 });

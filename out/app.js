@@ -53,24 +53,24 @@ actiGuide.mainModule.directive('btn', function () {
  *  @restrict E
  *
  *  @description
- *  Директивы для генерации дропдаунов (см. пример в layers.html).
+ *  Директивы для генерации дропдаунов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('dropdown', function ($window, $document, layers) {
-	var ngClasses = "{'is-visible':active, 'reflect-hor':reflectHorizontal, 'reflect-ver':reflectVertical, 'small-wrap':smallWrap}";
+actiGuide.mainModule.directive('dropdown', function ($window, layers) {
+	var ngClasses = "{'is-visible':visible, 'reflect-hor':reflectHorizontal, 'reflect-ver':reflectVertical, 'small-wrap':smallWrap}";
 
 	return {
 		restrict: 'E',
 		transclude: true,
-		template: '<span class="dropdown" ng-class="' + ngClasses + '" ng-transclude></span>',
+		template: '<span class="dropdown" ng-class="' + ngClasses + '" ng-transclude />',
 		replace: true,
 		scope: true,
-		link: function($scope, $element) {
-			$scope.active = false;
+		link: function(scope, element) {
+			scope.visible = false;
 
-			$element.bind('click', function() {
+			element.bind('click', function() {
 
-				/* Клик по элементу, вызывающему дропдаун не из активного дерева игнорируется, передав при этом
+				/* Клик по элементу, вызывающему дропдаун не из дерева активных слоёв игнорируется, передав при этом
 				управление слушателю кликов из сервиса layers */
 
 				if (!layers.isElementInLayers(this) && layers.getLayersList.length > 1) {
@@ -80,57 +80,54 @@ actiGuide.mainModule.directive('dropdown', function ($window, $document, layers)
 
 				/* Открытие дропдауна и добавление его к слоям */
 
-				var element = angular.element(this),
-					scope = element.scope();
+				var clickedElement = angular.element(this),
+					clickedElementScope = clickedElement.scope();
 
 				layers.updateLayers(this);
+				clickedElementScope.visible = true;
 
-				if (!scope.active) {
-					scope.active = true;
-				}
-
-				if (scope.active && layers.getLayersList.indexOf(this) < 0) {
+				if (layers.getLayersList.indexOf(this) < 0) {
 					layers.getLayersList.push(this);
 				}
 
 
 				/* Проверка ширины элемента, открывающего дропдаун (смещаем стрелку ближе к краю, если ширина < 50px) */
 
-				if (element[0].offsetWidth < 50) {
-					$scope.smallWrap = true;
+				if (clickedElement[0].offsetWidth < 50) {
+					scope.smallWrap = true;
 				}
 
-				scope.$apply();
+				clickedElementScope.$apply();
 
 
 				/* Проверка границ выпавшего дропдауна */
 
-				var document = angular.element($document).find('BODY')[0];
+				var doc = angular.element(document).find('BODY')[0];
 
-				angular.forEach(element.children(), function(element) {
-					$scope.reflectHorizontal = document.clientWidth < element.getBoundingClientRect().right;
-					$scope.reflectVertical = document.clientHeight < element.getBoundingClientRect().bottom;
-					scope.$apply();
+				angular.forEach(clickedElement.children(), function(element) {
+					scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
+					scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
+					clickedElementScope.$apply();
 				});
 
 			});
 		}
 	};
-}).directive('dname', function () {
+}).directive('dCaller', function () {
 	return {
 		restrict: 'E',
 		transclude: true,
 		replace : true,
 		scope: false,
-		template: '<span class="dropdown_name" ng-transclude></span>'
+		template: '<span class="dropdown_caller" ng-transclude />'
 	}
-}).directive('dblock', function () {
+}).directive('dContainer', function () {
 	return {
 		restrict: 'E',
 		transclude: true,
 		replace: true,
 		scope: false,
-		template: '<span class="dropdown_block" ng-transclude></span>'
+		template: '<span class="dropdown_container" ng-transclude />'
 	};
 });;/**
  *  @ngdoc directive
@@ -345,6 +342,93 @@ actiGuide.mainModule.directive('navList', function () {
     };
 });;/**
  *  @ngdoc directive
+ *  @name pCaller
+ *  @restrict A
+ *
+ *  @description
+ *  Директива для обеспечения отображения попапов.
+ */
+
+actiGuide.mainModule.directive('pCaller', function (layers) {
+	return {
+		restrict: 'A',
+		scope: false,
+		link: function(scope, element, attrs) {
+			(function(attrs) {
+				element.bind('click', function() {
+
+					/* Клик по элементу, вызывающему попап не из дерева активных слоёв игнорируется, передав при этом
+					 управление слушателю кликов из сервиса layers */
+
+					if (!layers.isElementInLayers(this) && layers.getLayersList.length > 1) {
+						return;
+					}
+
+					var popupElement = angular.element(document.getElementById(attrs.pCaller)),
+						popupScope = popupElement.scope();
+
+					layers.updateLayers(this);
+					popupScope.visible = true;
+
+					if (layers.getLayersList.indexOf(this) < 0) {
+						layers.getLayersList.push(this);
+					}
+
+					popupScope.$apply();
+
+				});
+			})(attrs);
+		}
+	}
+});
+
+
+/**
+ *  @ngdoc directive
+ *  @name popup
+ *  @restrict E
+ *
+ *  @description
+ *  Директивы для генерации попапов (см. примеры использования в layers.html).
+ */
+
+actiGuide.mainModule.directive('popup', function () {
+	var ngClasses = "{'is-visible':visible}";
+
+	return {
+		restrict: 'E',
+		transclude: true,
+		template: '<div class="popup" ng-class="' + ngClasses + '" ng-transclude />',
+		replace: true,
+		scope: true,
+		link: function(scope, element) {
+			scope.visible = false;
+
+			var overflowElement = element.prepend('<div class="popup_overflow" />');
+			overflowElement.bind('click', function() {
+				scope.visible = false;
+				scope.$apply();
+			});
+		}
+	}
+}).directive('pTitle', function () {
+	return {
+		restrict: 'E',
+		transclude: true,
+		replace : true,
+		scope: false,
+		template: '<span class="popup_title" ng-transclude />'
+	}
+}).directive('pContainer', function () {
+	return {
+		restrict: 'E',
+		transclude: true,
+		replace: true,
+		scope: false,
+		template: '<span class="popup_container" ng-transclude />'
+	};
+});;/**
+ *  @ngdoc directive
  *  @name tipBox
  *  @restrict E
  *
@@ -498,7 +582,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	function popLastLayer() {
 		var $topLayerScope = angular.element(_layers[_layers.length - 1]).scope();
 
-		$topLayerScope.active = false;
+		$topLayerScope.visible = false;
 		$topLayerScope.$apply();
 
 		_layers.pop();

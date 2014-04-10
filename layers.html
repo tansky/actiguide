@@ -29,46 +29,47 @@
 
 					<p>
 						<dropdown class="dropdown__default">
-							<dname>
+							<d-caller>
 								<a>Обычный дропдаун</a> |
-							</dname>
-							<dblock>
+							</d-caller>
+							<d-container>
 								Привет!
-							</dblock>
+							</d-container>
 						</dropdown>
 
 						<dropdown class="dropdown__big">
-							<dname>
+							<d-caller>
 								<a>Вложенные дропдауны</a>
-							</dname>
-							<dblock>
+							</d-caller>
+							<d-container>
 								<dropdown class="dropdown__giant">
-									<dname>
+									<d-caller>
 										<a>Дропдаун в дропдауне</a>
-									</dname>
-									<dblock>
+									</d-caller>
+									<d-container>
 										<dropdown class="dropdown__huge">
-											<dname>
+											<d-caller>
 												<a>Ещё один дропдаун в дропдауне</a>
-											</dname>
-											<dblock>
+											</d-caller>
+											<d-container>
 												Кстати, кнопка &laquo;ESC&raquo; поочерёдно закрывает открытые слои.
-											</dblock>
+												Здесь тоже <a p-caller="popup-1">откртие попапа №1</a>.
+											</d-container>
 										</dropdown>
-									</dblock>
+									</d-container>
 								</dropdown>
-							</dblock>
+							</d-container>
 						</dropdown>
 					</p>
 
 					<p>
 						<dropdown>
-							<dname>
+							<d-caller>
 								<a>!!!</a>
-							</dname>
-							<dblock>
+							</d-caller>
+							<d-container>
 								Привет!
-							</dblock>
+							</d-container>
 						</dropdown>
 
 						&mdash; ширина элемента, открывающего дропдаун меньше 50px.
@@ -81,12 +82,12 @@
 
 					<p class="fr">
 						<dropdown class="dropdown__huge">
-							<dname>
+							<d-caller>
 								<a>Отражён</a>
-							</dname>
-							<dblock>
+							</d-caller>
+							<d-container>
 								Если правый край выпавшего дропдауна не помещается в ширину окна, он будет отражён по горизонтали. На о-о-о-оочень большом разрешении, скорее всего, будет выглядеть как обычный.
-							</dblock>
+							</d-container>
 						</dropdown>
 					</p>
 
@@ -94,15 +95,48 @@
 
 					<p class="fr">
 						<dropdown class="dropdown__huge">
-							<dname>
+							<d-caller>
 								<a>!!!</a>
-							</dname>
-							<dblock>
+							</d-caller>
+							<d-container>
 								Ширина элемента, открывающего этот дропдаун тоже меньше 50px.
-							</dblock>
+							</d-container>
 						</dropdown>
 					</p>
 
+				</div>
+			</div>
+		</div>
+
+		<div class="m-box m-giant">
+			<div class="col-edge-1">
+				<div class="box">
+					<h3>Попапы</h3>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="box">
+
+					<a p-caller="popup-1">Откртие попапа №1</a>.
+					<a p-caller="popup-2">Откртие попапа №2</a>.
+
+					<popup id="popup-1">
+						<p-title>
+							Заголовок попапа №1
+						</p-title>
+						<p-container>
+							Содержимое попапа №1
+						</p-container>
+					</popup>
+
+					<popup id="popup-2">
+						<p-title>
+							Заголовок попапа №2
+						</p-title>
+						<p-container>
+							Содержимое попапа №2
+						</p-container>
+					</popup>
 				</div>
 			</div>
 		</div>

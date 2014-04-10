@@ -4,7 +4,7 @@
 	vertical-align: top;
 }
 
-.dropdown_block {
+.dropdown_container {
 	background: #fff;
 	position: absolute;
 	display: none;
@@ -41,13 +41,9 @@
 		margin-bottom: 0;
 		border-bottom-color: #ccc;
 	}
-
-	IMG {
-		cursor: pointer
-	}
 }
 
-.dropdown.reflect-hor > .dropdown_block {
+.dropdown.reflect-hor > .dropdown_container {
 	right: 0;
 
 	&:before,
@@ -57,7 +53,7 @@
 	}
 }
 
-.dropdown.reflect-ver > .dropdown_block {
+.dropdown.reflect-ver > .dropdown_container {
 	bottom: 100%;
 
 	&:before,
@@ -82,14 +78,14 @@
 	}
 }
 
-.dropdown.small-wrap > .dropdown_block {
+.dropdown.small-wrap > .dropdown_container {
 	&:before,
 	&:after {
 		left: 8px;
 	}
 }
 
-.dropdown.small-wrap.reflect-hor > .dropdown_block {
+.dropdown.small-wrap.reflect-hor > .dropdown_container {
 	&:before,
 	&:after {
 		left: auto;
@@ -97,11 +93,11 @@
 	}
 }
 
-.dropdown.is-visible > .dropdown_block {
+.dropdown.is-visible > .dropdown_container {
 	display: block;
 }
 
-.dropdown__list > .dropdown_block {
+.dropdown__list > .dropdown_container {
 	padding: 5px 0;
 
 	ul {
@@ -169,26 +165,26 @@
 
 // Размеры
 
-.dropdown__small > .dropdown_block {
+.dropdown__small > .dropdown_container {
 	width: 200px;
 }
 
-.dropdown__default > .dropdown_block {
+.dropdown__default > .dropdown_container {
 	width: 300px;
 }
 
-.dropdown__big > .dropdown_block {
+.dropdown__big > .dropdown_container {
 	width: 400px;
 }
 
-.dropdown__giant > .dropdown_block {
+.dropdown__giant > .dropdown_container {
 	width: 500px;
 }
 
-.dropdown__giant > .dropdown_block {
+.dropdown__giant > .dropdown_container {
 	width: 580px;
 }
 
-.dropdown__huge > .dropdown_block {
+.dropdown__huge > .dropdown_container {
 	width: 660px;
 }
