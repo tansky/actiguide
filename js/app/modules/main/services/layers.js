@@ -27,23 +27,33 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
-		if (!isElementInLayers(element) && _layers.length > 0) {
+		if (!isInPopup(element) && !isInTree(element) && _layers.length > 0 && !angular.element(element).hasClass('pop-on-click')) {
 			popLastLayer();
 		}
 	}
 
 	/**
 	 * Данный публичный метод позволяет выяснить, присутствует ли полученный элемент (либо его родители) в списке
-	 * имеющихся слоёв.
-	 * @name isElementInLayers
+	 * слоёв текущего дерева.
+	 * @name isInTree
 	 * @function
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
-	function isElementInLayers(element) {
+	function isInTree(element) {
 		if (_layers.indexOf(angular.element(element)[0]) > -1) {
 			return true;
 		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
-			return isElementInLayers(angular.element(element).parent());
+			return isInTree(angular.element(element).parent());
+		} else {
+			return false;
+		}
+	}
+
+	function isInPopup(element) {
+		if (angular.element(element).hasClass('popup')) {
+			return true;
+		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
+			return isInPopup(angular.element(element).parent());
 		} else {
 			return false;
 		}
@@ -51,21 +61,23 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 
 	/**
 	 * Механизм закрытия верхнего слоя.
-	 * @name isElementInLayers
+	 * @name isInTree
 	 * @function
 	 */
 	function popLastLayer() {
-		var $topLayerScope = angular.element(_layers[_layers.length - 1]).scope();
+		var $topLayer = angular.element(_layers[_layers.length - 1]),
+			topLayerScope = angular.element($topLayer).data('popupElement') ? angular.element(angular.element($topLayer).data('popupElement')).scope() : $topLayer.scope();
 
-		$topLayerScope.visible = false;
-		$topLayerScope.$apply();
+		topLayerScope.visible = false;
+		topLayerScope.$apply();
 
 		_layers.pop();
 	}
 
 	return {
-		getLayersList: _layers,
+		layersList: _layers,
 		updateLayers: updateLayers,
-		isElementInLayers: isElementInLayers
+		isInTree: isInTree,
+		popLastLayer: popLastLayer
 	}
 }]);

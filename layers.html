@@ -7,7 +7,7 @@
 	<script type="text/javascript" src="out/libs.min.js"></script>
 	<script type="text/javascript" src="out/app.min.js"></script>
 </head>
-<body>
+<body ng-class="{'no-scroll':noScroll}">
 
 <div class="wrapper">
 	<section class="content">
@@ -52,8 +52,8 @@
 												<a>Ещё один дропдаун в дропдауне</a>
 											</d-caller>
 											<d-container>
-												Кстати, кнопка &laquo;ESC&raquo; поочерёдно закрывает открытые слои.
-												Здесь тоже <a p-caller="popup-1">откртие попапа №1</a>.
+												Кстати, кнопка &laquo;ESC&raquo; поочерёдно закрывает открытые слои.<br />
+												Здесь тоже <a popup-caller="popup-1">открытие попапа 1</a>.
 											</d-container>
 										</dropdown>
 									</d-container>
@@ -117,26 +117,71 @@
 			<div class="col-4">
 				<div class="box">
 
-					<a p-caller="popup-1">Откртие попапа №1</a>.
-					<a p-caller="popup-2">Откртие попапа №2</a>.
+					<a popup-caller="popup-1">Открытие попапа 1</a>.
+					<a popup-caller="popup-2">Открытие попапа 2</a>.
+					<a popup-caller="popup-3">Открытие попапа 3</a>.
+					<a popup-caller="popup-4">Открытие попапа 4</a>.
 
-					<popup id="popup-1">
-						<p-title>
-							Заголовок попапа №1
-						</p-title>
-						<p-container>
-							Содержимое попапа №1
-						</p-container>
+					<popup id="popup-1" no-close-button>
+						<popup-title>
+							Заголовок попапа 1
+						</popup-title>
+						<popup-container>
+							Если в корневом элементе попапа установить аттрибут <strong>no-close-button</strong>, то у попапа не будет закрывающего крестика сверху-справа.
+						</popup-container>
 					</popup>
 
 					<popup id="popup-2">
-						<p-title>
-							Заголовок попапа №2
-						</p-title>
-						<p-container>
-							Содержимое попапа №2
-						</p-container>
+						<popup-title>
+							Заголовок попапа 2
+						</popup-title>
+						<popup-container>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+							<p>Содержимое попапа 2</p>
+						</popup-container>
 					</popup>
+
+					<popup id="popup-3" no-close-button popup-width="400">
+						<popup-container>
+							<p>Для попапа также можно задать специальную ширину используя атрибут <strong>popup-width</strong> контейнера.</p>
+							<p>Ширина этого попапа &mdash; 400px.</p>
+						</popup-container>
+					</popup>
+
+					<popup id="popup-4" no-close-button popup-width="400">
+						<popup-container no-padding>
+							<img src="tmp/grass.jpg" />
+						</popup-container>
+					</popup>
+
 				</div>
 			</div>
 		</div>
