@@ -62,7 +62,8 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 		scope: true,
 		link: function(scope, element, attrs) {
 
-			var innerWrapStyle = '';
+			var innerWrapStyle = '',
+				innerWrapAdditionalClasses = '';
 
 			scope.visible = false;
 
@@ -76,7 +77,7 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 
 			/* Директивы ниже наполняют скоуп попапа данными, из которых здесь формируется его контент */
 
-			var sections = ['title', 'container'],
+			var sections = ['title', 'sidebar', 'container'],
 				collect = '';
 
 			if (typeof attrs.noCloseButton === 'undefined') {
@@ -87,6 +88,10 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 				innerWrapStyle += 'width: ' + parseInt(attrs.popupWidth, 10) + 'px;';
 			}
 
+			if (scope.sidebar) {
+				innerWrapAdditionalClasses += ' w-sidebar';
+			}
+
 			angular.forEach(sections, function(section) {
 				if (scope[section]) {
 					collect += scope[section];
@@ -94,7 +99,11 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 			});
 
 			element.append('<div class="popup_overflow pop-on-click"></div>');
-			element.append('<div class="popup_wrap pop-on-click"><div class="popup_inner-wrap" style="' + innerWrapStyle + '">' + collect + '</div></div>');
+			element.append('<div class="popup_wrap pop-on-click"><div class="popup_inner-wrap' + innerWrapAdditionalClasses + '" style="' + innerWrapStyle + '">' + collect + '<div class="clear-fix"></div></div>');
+
+			if (scope.activeSection) {
+				console.log(scope.activeSection);
+			}
 
 		}
 	}
@@ -107,6 +116,23 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 				$parentScope = $parent.scope();
 
 			$parentScope.title = '<div class="popup_title"><h2>' + $element.html() + '</h2></div>';
+		}
+	}
+}).directive('popupSidebar', function () {
+	return {
+		restrict: 'E',
+		link: function(scope, element) {
+			var $element = angular.element(element),
+				$parent = $element.parent(),
+				$parentScope = $parent.scope();
+
+			$parentScope.sidebar = '<div class="popup_sidebar">' + $element.html() + '</div>';
+
+			angular.forEach($element.find('li'), function(item) {
+				if (!$parentScope.activeSection && angular.element(item).data('section')) {
+					$parentScope.activeSection = angular.element(item).data('section');
+				}
+			});
 		}
 	}
 }).directive('popupContainer', function () {
