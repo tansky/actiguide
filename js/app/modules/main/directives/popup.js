@@ -62,6 +62,8 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 		scope: true,
 		link: function(scope, element, attrs) {
 
+			var innerWrapStyle = '';
+
 			scope.visible = false;
 
 			element.html('').bind('click', function(e) {
@@ -81,6 +83,10 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 				collect += '<div class="close-button pop-on-click"></div>';
 			}
 
+			if (parseInt(attrs.popupWidth, 10) > 0) {
+				innerWrapStyle += 'width: ' + parseInt(attrs.popupWidth, 10) + 'px;';
+			}
+
 			angular.forEach(sections, function(section) {
 				if (scope[section]) {
 					collect += scope[section];
@@ -88,7 +94,7 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 			});
 
 			element.append('<div class="popup_overflow pop-on-click"></div>');
-			element.append('<div class="popup_wrap pop-on-click"><div class="popup_inner-wrap">' + collect + '</div></div>');
+			element.append('<div class="popup_wrap pop-on-click"><div class="popup_inner-wrap" style="' + innerWrapStyle + '">' + collect + '</div></div>');
 
 		}
 	}
@@ -106,12 +112,17 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 }).directive('popupContainer', function () {
 	return {
 		restrict: 'E',
-		link: function(scope, element) {
+		link: function(scope, element, attrs) {
 			var $element = angular.element(element),
 				$parent = $element.parent(),
-				$parentScope = $parent.scope();
+				$parentScope = $parent.scope(),
+				additionalClasses = '';
 
-			$parentScope.container = '<div class="popup_container">' + $element.html() + '</div>';
+			if (typeof attrs.noPadding !== 'undefined') {
+				additionalClasses += ' no-padding';
+			}
+
+			$parentScope.container = '<div class="popup_container' + additionalClasses + '">' + $element.html() + '</div>';
 		}
 	};
 });

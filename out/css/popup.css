@@ -44,7 +44,13 @@
   margin: 0;
 }
 .popup_container {
-  padding: 18px 65px 15px 30px;
+  padding: 20px 30px;
+}
+.popup_container.no-padding {
+  padding: 0;
+}
+.popup_container.no-padding IMG {
+  vertical-align: top;
 }
 .close-button {
   position: absolute;
