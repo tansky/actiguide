@@ -18,19 +18,21 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 					var popupElement = document.getElementById(attrs.popupCaller),
 						popupScope = angular.element(popupElement).scope();
 
-					angular.element(this).data('skipOnUpdate', true);
-
 					/* Клик по элементу, вызывающему попап не из дерева активных слоёв игнорируется, передав при этом
 					 управление слушателю кликов из сервиса layers */
 
-					if (layers.isInTree(popupElement)) {
+					if (layers.layersList.length > 0 && !layers.isInTree(this)) {
 						return;
 					}
 
 					popupScope.visible = true;
-					popupScope.$apply();
 
-					layers.layersList.push(popupElement);
+					if (layers.layersList.indexOf(this) < 0) {
+						layers.layersList.push(this);
+						angular.element(element).data('popupElement', popupElement);
+					}
+
+					popupScope.$apply();
 
 				});
 			})(attrs);

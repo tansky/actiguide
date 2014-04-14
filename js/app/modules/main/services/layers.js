@@ -27,24 +27,8 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
-		if (!isInTree(element) && _layers.length > 0 && !angular.element(element).hasClass('pop-on-click') && !angular.element(element).data('skipOnUpdate')) {
+		if (!isInTree(element) && !isInPopup(element) && _layers.length > 0 && !angular.element(element).hasClass('pop-on-click')) {
 			popLastLayer();
-		}
-	}
-
-	/**
-	 * Публичный метод добавляет элемент к текущему дереву, если его там ещё нет
-	 * @name addLayer
-	 * @function
-	 * @param {object} element DOM-элемент, который добавляется к дереву
-	 */
-	function addLayer(element) {
-		if (_layers.indexOf(angular.element(element)[0]) > -1) {
-			return true;
-		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
-			return isInTree(angular.element(element).parent());
-		} else {
-			return false;
 		}
 	}
 
@@ -65,16 +49,27 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 		}
 	}
 
+	function isInPopup(element) {
+		if (angular.element(element).hasClass('popup_wrap')) {
+			return true;
+		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
+			return isInPopup(angular.element(element).parent());
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * Механизм закрытия верхнего слоя.
 	 * @name isInTree
 	 * @function
 	 */
 	function popLastLayer() {
-		var $topLayerScope = angular.element(_layers[_layers.length - 1]).scope();
+		var $topLayer = angular.element(_layers[_layers.length - 1]),
+			topLayerScope = angular.element($topLayer).data('popupElement') ? angular.element(angular.element($topLayer).data('popupElement')).scope() : $topLayer.scope();
 
-		$topLayerScope.visible = false;
-		$topLayerScope.$apply();
+		topLayerScope.visible = false;
+		topLayerScope.$apply();
 
 		_layers.pop();
 	}
@@ -82,7 +77,6 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	return {
 		layersList: _layers,
 		updateLayers: updateLayers,
-		addLayer: addLayer,
 		isInTree: isInTree,
 		popLastLayer: popLastLayer
 	}
