@@ -12,6 +12,7 @@
 /**
 * Цвета кнопок
 */
+/* Focus bg */
 /* Active bg */
 /* Pushed / Preload bg */
 /* FRAME bg Pushed / Preload / Active */
@@ -175,6 +176,9 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#cecece',gradientType=0);
   /* IE6-9 */
 }
+.btn:focus {
+  background: #00a2c4;
+}
 .btn.hover .btn-in,
 .btn:hover .btn-in,
 .btn:focus .btn-in {
@@ -198,9 +202,9 @@
   /* IE6-9 */
 }
 /* active */
-.active .btn-in,
-.btn-in:active,
-.active .btn-in:hover {
+.btn.active .btn-in,
+.btn.active .btn-in:hover,
+.btn:active .btn-in {
   background: #f3f3f3;
   border: none;
   line-height: 32px;
@@ -311,6 +315,9 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#77ca00', endColorstr='#5d9e00',gradientType=0);
   /* IE6-9 */
 }
+.btn__positive:focus {
+  background: #336600;
+}
 .btn__positive.hover .btn-in,
 .btn__positive:hover .btn-in,
 .btn__positive:focus .btn-in {
@@ -341,7 +348,7 @@
   box-shadow: none;
 }
 .btn__positive.active .btn-in,
-.btn__positive .btn-in:active,
+.btn__positive:active .btn-in,
 .btn__positive.active .btn-in:hover {
   background: #70b700;
   text-shadow: none;
@@ -457,6 +464,9 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cb001c', endColorstr='#97001a',gradientType=0);
   /* IE6-9 */
 }
+.btn__negative:focus {
+  background: #660000;
+}
 .btn__negative.hover .btn-in,
 .btn__negative:hover .btn-in,
 .btn__negative:focus .btn-in {
@@ -487,8 +497,8 @@
   box-shadow: none;
 }
 .btn__negative.active .btn-in,
-.btn__negative .btn-in:active,
-.btn__negative.active .btn-in:hover {
+.btn__negative.active .btn-in:hover,
+.btn__negative:active .btn-in {
   background: #c10028;
   text-shadow: none;
   -webkit-box-shadow: inset 3px 3px 5px -2px #860017;
@@ -603,6 +613,9 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999ec0', endColorstr='#747aa4',gradientType=0);
   /* IE6-9 */
 }
+.btn__consult:focus {
+  background: #333366;
+}
 .btn__consult.hover .btn-in,
 .btn__consult:hover .btn-in,
 .btn__consult:focus .btn-in {
@@ -633,8 +646,8 @@
   box-shadow: none;
 }
 .btn__consult.active .btn-in,
-.btn__consult .btn-in:active,
-.btn__consult.active .btn-in:hover {
+.btn__consult.active .btn-in:hover,
+.btn__consult:active .btn-in {
   background: #626895;
   text-shadow: none;
   -webkit-box-shadow: inset 3px 3px 5px -2px #51588b;
@@ -749,6 +762,9 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', endColorstr='#090909',gradientType=0);
   /* IE6-9 */
 }
+.btn__dark:focus {
+  background: #00a2c4;
+}
 .btn__dark.hover .btn-in,
 .btn__dark:hover .btn-in,
 .btn__dark:focus .btn-in {
@@ -779,8 +795,8 @@
   box-shadow: none;
 }
 .btn__dark.active .btn-in,
-.btn__dark .btn-in:active,
-.btn__dark.active .btn-in:hover {
+.btn__dark.active .btn-in:hover,
+.btn__dark:active .btn-in {
   background: #383838;
   text-shadow: none;
   -webkit-box-shadow: inset 3px 3px 5px -2px #1c1c1c;
@@ -895,6 +911,9 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e76800', endColorstr='#e76800',gradientType=0);
   /* IE6-9 */
 }
+.btn__orange:focus {
+  background: #b22600;
+}
 .btn__orange.hover .btn-in,
 .btn__orange:hover .btn-in,
 .btn__orange:focus .btn-in {
@@ -925,8 +944,8 @@
   box-shadow: none;
 }
 .btn__orange.active .btn-in,
-.btn__orange .btn-in:active,
-.btn__orange.active .btn-in:hover {
+.btn__orange.active .btn-in:hover,
+.btn__orange:active .btn-in {
   background: #d95d00;
   text-shadow: none;
   -webkit-box-shadow: inset 3px 3px 5px -2px #ab4900;
