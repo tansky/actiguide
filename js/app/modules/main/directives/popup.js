@@ -25,6 +25,7 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 						return;
 					}
 
+					scope.noScroll = true;
 					popupScope.visible = true;
 
 					if (layers.layersList.indexOf(this) < 0) {
@@ -50,7 +51,7 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
  *  Директивы для генерации попапов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('popup', function (layers) {
+actiGuide.mainModule.directive('popup', function ($document, layers) {
 	var ngClasses = "{'is-visible':visible}";
 
 	return {
@@ -59,12 +60,14 @@ actiGuide.mainModule.directive('popup', function (layers) {
 		template: '<div class="popup" ng-class="' + ngClasses + '" ng-transclude />',
 		replace: true,
 		scope: true,
-		link: function(scope, element) {
+		link: function(scope, element, attrs) {
 
 			scope.visible = false;
 
 			element.html('').bind('click', function(e) {
 				if (angular.element(e.target).hasClass('pop-on-click')) {
+					angular.element($document[0].body).scope().noScroll = false;
+					scope.noScroll = false;
 					layers.popLastLayer();
 				}
 			});
@@ -74,6 +77,10 @@ actiGuide.mainModule.directive('popup', function (layers) {
 			var sections = ['title', 'container'],
 				collect = '';
 
+			if (typeof attrs.noCloseButton === 'undefined') {
+				collect += '<div class="close-button pop-on-click"></div>';
+			}
+
 			angular.forEach(sections, function(section) {
 				if (scope[section]) {
 					collect += scope[section];
@@ -81,7 +88,7 @@ actiGuide.mainModule.directive('popup', function (layers) {
 			});
 
 			element.append('<div class="popup_overflow pop-on-click"></div>');
-			element.append('<div class="popup_wrap"><div class="popup_inner-wrap">' + collect + '</div></div>');
+			element.append('<div class="popup_wrap pop-on-click"><div class="popup_inner-wrap">' + collect + '</div></div>');
 
 		}
 	}
@@ -93,7 +100,7 @@ actiGuide.mainModule.directive('popup', function (layers) {
 				$parent = $element.parent(),
 				$parentScope = $parent.scope();
 
-			$parentScope.title = '<div class="popup_title">' + $element.html() + '</div>';
+			$parentScope.title = '<div class="popup_title"><h2>' + $element.html() + '</h2></div>';
 		}
 	}
 }).directive('popupContainer', function () {

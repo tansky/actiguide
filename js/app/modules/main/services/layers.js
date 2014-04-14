@@ -27,7 +27,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
-		if (!isInTree(element) && !isInPopup(element) && _layers.length > 0 && !angular.element(element).hasClass('pop-on-click')) {
+		if (!isInPopup(element) && !isInTree(element) && _layers.length > 0 && !angular.element(element).hasClass('pop-on-click')) {
 			popLastLayer();
 		}
 	}
@@ -50,7 +50,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	}
 
 	function isInPopup(element) {
-		if (angular.element(element).hasClass('popup_wrap')) {
+		if (angular.element(element).hasClass('popup')) {
 			return true;
 		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
 			return isInPopup(angular.element(element).parent());

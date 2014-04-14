@@ -22,12 +22,44 @@
 .popup_wrap {
   position: absolute;
   z-index: 14;
-  width: 710px;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
+  max-height: 100%;
+  overflow: auto;
 }
 .popup_inner-wrap {
+  position: relative;
+  width: 710px;
+  margin: 40px auto;
   background: #fff;
+  box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+}
+.popup_title {
+  padding: 18px 65px 15px 30px;
+  min-height: 30px;
+  line-height: 30px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.popup_title H2 {
+  margin: 0;
+}
+.popup_container {
+  padding: 18px 65px 15px 30px;
+}
+.close-button {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  right: 0;
+  cursor: pointer;
+}
+.close-button:before {
+  content: '×';
+  font-size: 50px;
+  color: #ccc;
+  position: absolute;
+  text-align: center;
+  width: 64px;
+  line-height: 30px;
+  top: 20px;
 }

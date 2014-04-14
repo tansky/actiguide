@@ -34,6 +34,9 @@ td {
   margin: 0;
   padding: 0;
 }
+BODY.no-scroll {
+  overflow: hidden;
+}
 A {
   cursor: pointer;
 }
@@ -154,7 +157,7 @@ body {
 .link_down,
 .link_up_before,
 .link_down_before,
-a {
+A {
   text-decoration: none;
   cursor: pointer;
   color: #00a2c4;
