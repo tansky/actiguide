@@ -1,0 +1,132 @@
+/**
+* Папки
+*/
+/**
+* Шрифты
+*/
+/**
+* Цвета
+*/
+/**
+* Миксины
+*/
+/* GROUP TEXT CONTROLS
+    =======================================================*/
+.ctrl-group * {
+  font-size: 16px;
+}
+.ctrl-group .ctrl-group,
+.ctrl-group {
+  font-size: 0;
+  white-space: nowrap;
+}
+.ctrl-group .t-input {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding: 4px 7px;
+  margin-bottom: 0;
+  margin-top: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: inset -2px 0 0 -1px #cccccc, inset 0 -2px 0 -1px #cccccc, inset 0 2px 0 -1px #cccccc, inset 0px 1px 2px #dfdfdf;
+  -moz-box-shadow: inset -2px 0 0 -1px #cccccc, inset 0 -2px 0 -1px #cccccc, inset 0 2px 0 -1px #cccccc, inset 0px 1px 2px #dfdfdf;
+  box-shadow: inset -2px 0 0 -1px #cccccc, inset 0 -2px 0 -1px #cccccc, inset 0 2px 0 -1px #cccccc, inset 0px 1px 2px #dfdfdf;
+}
+.ctrl-group.one_input input {
+  -wedkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 0 0 1px #ccc, inset 2px 2px 3px #DFDFDF;
+  -moz-box-shadow: inset 0 0 0 1px #ccc, inset 2px 2px 3px #DFDFDF;
+  box-shadow: inset 0 0 0 1px #ccc, inset 2px 2px 3px #DFDFDF;
+}
+.ctrl-group .first {
+  -webkit-box-shadow: inset 0 0 0 1px #ccc, inset 1px 1px 3px #DFDFDF;
+  -moz-box-shadow: inset 0 0 0 1px #ccc, inset 1px 1px 3px #DFDFDF;
+  box-shadow: inset 0 0 0 1px #ccc, inset 1px 1px 3px #DFDFDF;
+  -webkit-border-radius: 2px 0 0 2px;
+  -moz-border-radius: 2px 0 0 2px;
+  border-radius: 2px 0 0 2px;
+}
+.ctrl-group .last {
+  -webkit-border-radius: 0 2px 2px 0;
+  -moz-border-radius: 0 2px 2px 0;
+  border-radius: 0 2px 2px 0;
+}
+span.ctrl__sim1,
+span.ctrl__sim2,
+span.ctrl__sim3,
+span.ctrl__sim-abs,
+span.ctrl__sim1_left {
+  display: inline-block;
+  font-size: 16px;
+  line-height: normal;
+  color: #D7D7D7;
+  position: absolute;
+  padding-top: 7px;
+  z-index: 3;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+span.ctrl__sim1 {
+  margin-left: -1.2em;
+}
+input.ctrl__sim1 {
+  padding-right: 1.9em;
+}
+span.ctrl__sim2 {
+  margin-left: -28px;
+}
+input.ctrl__sim2 {
+  padding-right: 1.8em;
+}
+span.ctrl__sim3 {
+  margin-left: -2.2em;
+}
+input.ctrl__sim3 {
+  padding-right: 2.5em;
+}
+span.ctrl__sim1_left {
+  margin-left: 0.5em;
+}
+.ctrl-group .t-input.ctrl__sim1_left,
+input.ctrl__sim1_left {
+  padding-left: 1.9em;
+}
+.t-input__in-head.ctrl__sim1_left {
+  padding-left: 1.5em;
+}
+span.ctrl__sim-abs {
+  font-size: 14px;
+  white-space: nowrap;
+  width: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-top: 9px;
+  text-align: right;
+  margin-left: 72px;
+}
+.ctrl__sim3 {
+  position: relative;
+}
+span.ctrl__sim3 {
+  margin-left: -34px;
+  padding-right: 8px;
+}
+.ctrl-group__elastic input {
+  min-width: 150px;
+  width: 33%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 32px;
+}
+.ctrl-group__elastic input:last-child {
+  width: 34%;
+}

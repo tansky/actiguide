@@ -2,11 +2,14 @@
 @import '_reset.css';
 @import 'typeface.css';
 @import 'grid.css';
-@import 'features.css';
 @import 'tipbox.css';
 @import 'button.css';
 @import 'dropdown.css';
+@import 'popup.css';
 @import 'nav-list.css';
+@import 't-inputs.css';
+@import 'validation.css';
+@import 'ctrl-group.css';
 /**
-* Корневой файл стилей. Здесь можно управлять порядком подключения файлов стилей
+* Корневой файл стилей. Здесь можно управлять порядком подключения стилей
 */

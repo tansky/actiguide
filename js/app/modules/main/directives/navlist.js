@@ -1,3 +1,11 @@
+/**
+ *  @ngdoc directive
+ *  @name navList
+ *  @restrict C
+ *
+ *  @description Директива для навигационных списков. Добавляет состояния pushed/active
+ *
+ */
 actiGuide.mainModule.directive('navList', function () {
     return {
         restrict: 'C',
