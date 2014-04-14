@@ -27,23 +27,39 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
-		if (!isElementInLayers(element) && _layers.length > 0) {
+		if (!isInTree(element) && _layers.length > 0 && !angular.element(element).hasClass('pop-on-click') && !angular.element(element).data('skipOnUpdate')) {
 			popLastLayer();
 		}
 	}
 
 	/**
-	 * Данный публичный метод позволяет выяснить, присутствует ли полученный элемент (либо его родители) в списке
-	 * имеющихся слоёв.
-	 * @name isElementInLayers
+	 * Публичный метод добавляет элемент к текущему дереву, если его там ещё нет
+	 * @name addLayer
 	 * @function
-	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
+	 * @param {object} element DOM-элемент, который добавляется к дереву
 	 */
-	function isElementInLayers(element) {
+	function addLayer(element) {
 		if (_layers.indexOf(angular.element(element)[0]) > -1) {
 			return true;
 		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
-			return isElementInLayers(angular.element(element).parent());
+			return isInTree(angular.element(element).parent());
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Данный публичный метод позволяет выяснить, присутствует ли полученный элемент (либо его родители) в списке
+	 * слоёв текущего дерева.
+	 * @name isInTree
+	 * @function
+	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
+	 */
+	function isInTree(element) {
+		if (_layers.indexOf(angular.element(element)[0]) > -1) {
+			return true;
+		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
+			return isInTree(angular.element(element).parent());
 		} else {
 			return false;
 		}
@@ -51,7 +67,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 
 	/**
 	 * Механизм закрытия верхнего слоя.
-	 * @name isElementInLayers
+	 * @name isInTree
 	 * @function
 	 */
 	function popLastLayer() {
@@ -64,8 +80,10 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	}
 
 	return {
-		getLayersList: _layers,
+		layersList: _layers,
 		updateLayers: updateLayers,
-		isElementInLayers: isElementInLayers
+		addLayer: addLayer,
+		isInTree: isInTree,
+		popLastLayer: popLastLayer
 	}
 }]);

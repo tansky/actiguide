@@ -17,6 +17,7 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 		replace: true,
 		scope: true,
 		link: function(scope, element) {
+
 			scope.visible = false;
 
 			element.bind('click', function() {
@@ -24,7 +25,7 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				/* Клик по элементу, вызывающему дропдаун не из дерева активных слоёв игнорируется, передав при этом
 				управление слушателю кликов из сервиса layers */
 
-				if (!layers.isElementInLayers(this) && layers.getLayersList.length > 1) {
+				if (layers.layersList.length > 1 && !layers.isInTree(this)) {
 					return;
 				}
 
@@ -37,8 +38,8 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				layers.updateLayers(this);
 				clickedElementScope.visible = true;
 
-				if (layers.getLayersList.indexOf(this) < 0) {
-					layers.getLayersList.push(this);
+				if (layers.layersList.indexOf(this) < 0) {
+					layers.layersList.push(this);
 				}
 
 
@@ -62,6 +63,7 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				});
 
 			});
+
 		}
 	};
 }).directive('dCaller', function () {
