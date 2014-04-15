@@ -112,6 +112,9 @@ H4 {
   font-size: 12px;
   line-height: 18px;
 }
+.code {
+  font: 14px "Courier New", Courier, monospace;
+}
 /**
 * Наборные тексты
 */

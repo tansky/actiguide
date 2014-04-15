@@ -126,80 +126,122 @@
 
 					<a popup-caller="popup-5">Открытие попапа 5</a>.
 
-					<popup id="popup-1" no-close-button>
-						<popup-title>
-							Заголовок попапа 1
-						</popup-title>
-						<popup-container>
-							Если в корневом элементе попапа установить аттрибут <strong>no-close-button</strong>, то у попапа не будет закрывающего крестика сверху-справа.
-						</popup-container>
+					<popup id="popup-1" popup-config='{
+						"title": "Тестовый попап",
+						"noCloseButton": true,
+						"customWidth": 950
+					}'>
+						<p>Попапы конфигурируются через аттрибут <strong>popup-config</strong>, представляющий из себя JSON. Ниже приведён пример попапа с полным набором всех возможных параметров:</p>
+
+						<p class="code">
+							&lt;popup id='popup-id' popup-config='{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Заголовок попапа&quot;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;noCloseButton&quot;: true,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(если true, то не будет отображён крестик в модельном окне)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;noPadding&quot;: true,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(если true, то у контейнера не будет внутреннего отступа, см. <a popup-caller="popup-4">Попап 4</a>)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;customWidth&quot;: 500&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(особая ширина попапа в пикселях)<br />
+							}'&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;Содержимое попапа<br />
+							&lt;/popup&gt;
+						</p>
+
+						<p>Отдельного внимания заслуживает меню попапа. Оно конфигурируется в том же аттрибуте следующим образом:</p>
+
+						<p class="code">
+							&lt;popup id='popup-id' popup-config='{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;menu&quot;: [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(внутри попапа может находиться меню, см. <a popup-caller="popup-5">Попап 5</a>)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;: &quot;hilite&quot;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(данный пункт меню будет выделенным)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Ссылка 1&quot;,<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;section&quot;: &quot;section-1&quot;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;: &quot;divider&quot;,<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Разделитель&quot;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Ссылка 2&quot;,<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;section&quot;: &quot;section-2&quot;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;]<br />
+							}'&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;popup-section target=&quot;section-1&quot;&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Содержимое секции 1<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;/popup-section&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;popup-section target=&quot;section-2&quot;&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Содержимое секции 2<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;/popup-section&gt;<br />
+							&lt;/popup&gt;
+						</p>
 					</popup>
 
 					<popup id="popup-2">
-						<popup-title>
-							Заголовок попапа 2
-						</popup-title>
-						<popup-container>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-							<p>Содержимое попапа 2</p>
-						</popup-container>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
+						<p>Попап со скроллом</p>
 					</popup>
 
-					<popup id="popup-3" no-close-button popup-width="400">
-						<popup-container>
-							<p>Для попапа также можно задать специальную ширину используя атрибут <strong>popup-width</strong> контейнера.</p>
-							<p>Ширина этого попапа &mdash; 400px.</p>
-						</popup-container>
+					<popup id="popup-3" popup-config='{
+						"noCloseButton": true,
+						"customWidth": 400
+					}'>
+						<p>Для попапа также можно задать специальную ширину используя атрибут <strong>popup-width</strong> контейнера.</p>
+						<p>Ширина этого попапа &mdash; 400px.</p>
 					</popup>
 
-					<popup id="popup-4" no-close-button popup-width="400">
-						<popup-container no-padding>
-							<img src="tmp/grass.jpg" />
-						</popup-container>
+					<popup id="popup-4" popup-config='{
+						"noCloseButton": true,
+						"noPadding": true,
+						"customWidth": 400
+					}'>
+						<img src="tmp/grass.jpg" />
 					</popup>
 
-					<popup id="popup-5">
-						<popup-title>
-							Заголовок попапа 5
-						</popup-title>
-						<popup-sidebar>
-							<ul>
-								<li data-section="section-1"><a>Ссылка 1</a></li>
-								<li class="divider">Разделитель в несколько строк</li>
-								<li data-section="section-2"><a>Ссылка 2</a></li>
-							</ul>
-						</popup-sidebar>
-						<popup-container>
-							Container
-						</popup-container>
+					<popup id="popup-5" popup-config='{
+						"title": "Заголовок попапа 5",
+						"menu": [
+							{"type": "hilite", "title": "Ссылка 1", "section": "section-1"},
+							{"type": "divider", "title": "Разделитель в несколько строк"},
+							{"title": "Ссылка 2", "section": "section-2"}
+						]
+					}'>
+						<popup-section target="section-1">
+							<p>Container</p>
+							<p>Section 1</p>
+						</popup-section>
+						<popup-section target="section-2">
+							<p>Container</p>
+							<p>Section 2</p>
+						</popup-section>
 					</popup>
 
 				</div>

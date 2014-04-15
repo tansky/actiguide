@@ -39,19 +39,8 @@
 	width: 710px;
 	margin: 40px auto;
 	background: #fff;
-	box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0 0 10px rgba(0, 0, 0, .5);
 	border-radius: 5px;
-
-	&.w-sidebar {
-		width: 980px;
-
-		.popup_container {
-			vertical-align: top;
-			display: table-cell;
-			width: 649px;
-			border-radius: 0 0 5px 0;
-		}
-	}
 }
 
 .popup_title {
@@ -76,20 +65,55 @@
 		line-height: normal;
 	}
 
-	.divider {
-		padding: 14px 60px 14px 30px;
-		color: #ccc;
-	}
-
-	A {
+	LI {
 		display: block;
+		position: relative;
 		padding: 14px 60px 14px 30px;
-	}
+		cursor: pointer;
+		color: @c-5;
 
-	A.active {
-		background: #555F64;
-		color: #fff;
-		font-family: 'Proxima Nova Bold';
+		&:hover {
+			background-color: @c-15;
+		}
+
+		&.divider {
+			background-color: transparent;
+			cursor: default;
+			padding: 14px 60px 14px 30px;
+			color: @c-16;
+		}
+
+		&.hilite {
+			font-family: 'Proxima Nova Bold';
+			color: @c-9;
+		}
+
+		&.is-active {
+			background: #555F64;
+			color: #fff;
+
+			&:after {
+				position: absolute;
+				display: block;
+				content: '×';
+				top: 50%;
+				right: 20px;
+				margin-top: -11px;
+				height: 23px;
+				width: 23px;
+				text-align: center;
+				background-color: #929ea1;
+				border-radius: 13px;
+				color: @c-1;
+				font-size: 20px;
+				font-family: 'Web Symbols';
+				line-height: 20px;
+			}
+		}
+
+		&:last-child {
+			border-radius: 0 0 0 5px;
+		}
 	}
 }
 
@@ -99,11 +123,34 @@
 	border-radius: 5px;
 }
 
-.popup_container.no-padding {
-	padding: 0;
+.popup {
+	&.w-sidebar {
+		.popup_inner-wrap {
+			width: 980px;
 
-	IMG {
-		vertical-align: top;
+			.popup_container {
+				vertical-align: top;
+				display: table-cell;
+				width: 649px;
+				border-radius: 0 0 5px 0;
+			}
+		}
+	}
+
+	&.w-sidebar.no-title {
+		.popup_container {
+			border-radius: 0 5px 5px 0;
+		}
+	}
+
+	&.no-padding {
+		.popup_container {
+			padding: 0;
+
+			IMG {
+				vertical-align: top;
+			}
+		}
 	}
 }
 
@@ -117,7 +164,7 @@
 	&:before {
 		content: '×';
 		font-size: 50px;
-		color: #ccc;
+		color: @c-16;
 		position: absolute;
 		text-align: center;
 		width: 64px;

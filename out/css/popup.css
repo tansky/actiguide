@@ -99,15 +99,6 @@
   box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
 }
-.popup_inner-wrap.w-sidebar {
-  width: 980px;
-}
-.popup_inner-wrap.w-sidebar .popup_container {
-  vertical-align: top;
-  display: table-cell;
-  width: 649px;
-  border-radius: 0 0 5px 0;
-}
 .popup_title {
   padding: 18px 65px 15px 30px;
   min-height: 30px;
@@ -128,28 +119,71 @@
   list-style: none;
   line-height: normal;
 }
-.popup_sidebar .divider {
-  padding: 14px 60px 14px 30px;
-  color: #ccc;
-}
-.popup_sidebar A {
+.popup_sidebar LI {
   display: block;
+  position: relative;
   padding: 14px 60px 14px 30px;
+  cursor: pointer;
+  color: #00a2c4;
 }
-.popup_sidebar A.active {
+.popup_sidebar LI:hover {
+  background-color: #eefcfd;
+}
+.popup_sidebar LI.divider {
+  background-color: transparent;
+  cursor: default;
+  padding: 14px 60px 14px 30px;
+  color: #cccccc;
+}
+.popup_sidebar LI.hilite {
+  font-family: 'Proxima Nova Bold';
+  color: #6dac00;
+}
+.popup_sidebar LI.is-active {
   background: #555F64;
   color: #fff;
-  font-family: 'Proxima Nova Bold';
+}
+.popup_sidebar LI.is-active:after {
+  position: absolute;
+  display: block;
+  content: '×';
+  top: 50%;
+  right: 20px;
+  margin-top: -11px;
+  height: 23px;
+  width: 23px;
+  text-align: center;
+  background-color: #929ea1;
+  border-radius: 13px;
+  color: #ffffff;
+  font-size: 20px;
+  font-family: 'Web Symbols';
+  line-height: 20px;
+}
+.popup_sidebar LI:last-child {
+  border-radius: 0 0 0 5px;
 }
 .popup_container {
   padding: 20px 30px;
   background-color: #fdfdfd;
   border-radius: 5px;
 }
-.popup_container.no-padding {
+.popup.w-sidebar .popup_inner-wrap {
+  width: 980px;
+}
+.popup.w-sidebar .popup_inner-wrap .popup_container {
+  vertical-align: top;
+  display: table-cell;
+  width: 649px;
+  border-radius: 0 0 5px 0;
+}
+.popup.w-sidebar.no-title .popup_container {
+  border-radius: 0 5px 5px 0;
+}
+.popup.no-padding .popup_container {
   padding: 0;
 }
-.popup_container.no-padding IMG {
+.popup.no-padding .popup_container IMG {
   vertical-align: top;
 }
 .close-button {
@@ -162,7 +196,7 @@
 .close-button:before {
   content: '×';
   font-size: 50px;
-  color: #ccc;
+  color: #cccccc;
   position: absolute;
   text-align: center;
   width: 64px;

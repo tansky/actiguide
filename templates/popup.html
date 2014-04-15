@@ -1,0 +1,33 @@
+<div class="popup ng-scope" ng-class="{'is-visible': visible, 'no-title': !title, 'no-padding': noPadding, 'w-sidebar': menu}">
+
+	<div class="popup_overflow pop-on-click"></div>
+
+	<div class="popup_wrap pop-on-click">
+		<div class="popup_inner-wrap" ng-style="{width: customWidth}">
+
+			<div ng-if="!noCloseButton" class="close-button pop-on-click"></div>
+
+			<div ng-if="title" class="popup_title"><h2>{{title}}</h2></div>
+
+			<div ng-if="menu" class="popup_sidebar">
+				<ul>
+					<li ng-repeat="item in menu"
+						ng-class="{'is-active': currentSection === item, 'hilite': item.type === 'hilite', 'divider': item.type === 'divider'}"
+						ng-click="setSection()">{{item.title}}</li>
+				</ul>
+			</div>
+
+			<div ng-if="menu" class="popup_container">
+				<div ng-repeat="(target, section) in sections" ng-if="currentSection.section === target">
+					<span ng-bind-html="section"></span>
+				</div>
+			</div>
+
+			<div ng-show="!menu" class="popup_container" ng-transclude></div>
+
+			<div class="clear-fix"></div>
+
+		</div>
+	</div>
+
+</div>

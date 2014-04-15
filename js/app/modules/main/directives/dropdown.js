@@ -25,7 +25,7 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				/* Клик по элементу, вызывающему дропдаун не из дерева активных слоёв игнорируется, передав при этом
 				управление слушателю кликов из сервиса layers */
 
-				if (layers.layersList.length > 1 && !layers.isInTree(this)) {
+				if (layers.layersList.length > 1 && !layers.isUpInTree(this)) {
 					return;
 				}
 

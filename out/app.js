@@ -74,7 +74,7 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				/* Клик по элементу, вызывающему дропдаун не из дерева активных слоёв игнорируется, передав при этом
 				управление слушателю кликов из сервиса layers */
 
-				if (layers.layersList.length > 1 && !layers.isInTree(this)) {
+				if (layers.layersList.length > 1 && !layers.isUpInTree(this)) {
 					return;
 				}
 
@@ -356,6 +356,8 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 		restrict: 'A',
 		scope: false,
 		link: function(scope, element, attrs) {
+			angular.element(element).data('popupCaller', true);
+
 			(function(attrs) {
 				element.bind('click', function() {
 
@@ -365,17 +367,16 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 					/* Клик по элементу, вызывающему попап не из дерева активных слоёв игнорируется, передав при этом
 					 управление слушателю кликов из сервиса layers */
 
-					if (layers.layersList.length > 0 && !layers.isInTree(this)) {
+					if (layers.layersList.length > 0 && !layers.isDownInTree(this)) {
 						return;
 					}
 
 					scope.noScroll = true;
+
 					popupScope.visible = true;
 
-					if (layers.layersList.indexOf(this) < 0) {
-						layers.layersList.push(this);
-						angular.element(element).data('popupElement', popupElement);
-					}
+					layers.layersList.push(popupElement);
+					angular.element(element).data('targetPopup', popupElement);
 
 					popupScope.$apply();
 
@@ -396,105 +397,60 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
  */
 
 actiGuide.mainModule.directive('popup', function ($document, layers) {
-	var ngClasses = "{'is-visible':visible}";
-
 	return {
 		restrict: 'E',
 		transclude: true,
-		template: '<div class="popup" ng-class="' + ngClasses + '" ng-transclude />',
+		templateUrl: 'templates/popup.html',
 		replace: true,
 		scope: true,
-		link: function(scope, element, attrs) {
+		controller: function($scope, $element, $attrs) {
 
-			var innerWrapStyle = '',
-				innerWrapAdditionalClasses = '';
+			$scope.visible = false;
 
-			scope.visible = false;
-
-			element.html('').bind('click', function(e) {
+			$element.bind('click', function (e) {
 				if (angular.element(e.target).hasClass('pop-on-click')) {
 					angular.element($document[0].body).scope().noScroll = false;
-					scope.noScroll = false;
 					layers.popLastLayer();
 				}
 			});
 
-			/* Директивы ниже наполняют скоуп попапа данными, из которых здесь формируется его контент */
+			/* Включаем параметры из popup-config в scope */
 
-			var sections = ['title', 'sidebar', 'container'],
-				collect = '';
-
-			if (typeof attrs.noCloseButton === 'undefined') {
-				collect += '<div class="close-button pop-on-click"></div>';
-			}
-
-			if (parseInt(attrs.popupWidth, 10) > 0) {
-				innerWrapStyle += 'width: ' + parseInt(attrs.popupWidth, 10) + 'px;';
-			}
-
-			if (scope.sidebar) {
-				innerWrapAdditionalClasses += ' w-sidebar';
-			}
-
-			angular.forEach(sections, function(section) {
-				if (scope[section]) {
-					collect += scope[section];
+			if ($attrs.popupConfig) {
+				var conf = JSON.parse($attrs.popupConfig);
+				for (var i in conf) {
+					if (conf.hasOwnProperty(i)) {
+						$scope[i] = conf[i];
+					}
 				}
-			});
-
-			element.append('<div class="popup_overflow pop-on-click"></div>');
-			element.append('<div class="popup_wrap pop-on-click"><div class="popup_inner-wrap' + innerWrapAdditionalClasses + '" style="' + innerWrapStyle + '">' + collect + '<div class="clear-fix"></div></div>');
-
-			if (scope.activeSection) {
-				console.log(scope.activeSection);
 			}
+
+			if ($scope.menu && !$scope.currentSection) {
+				$scope.currentSection = $scope.menu[0];
+			}
+
+			$scope.setSection = function() {
+				if (this.item.type !== 'divider') {
+					$scope.currentSection = this.item;
+				}
+			};
 
 		}
 	}
-}).directive('popupTitle', function () {
+}).directive('popupSection', function ($sce) {
 	return {
 		restrict: 'E',
-		link: function(scope, element) {
-			var $element = angular.element(element),
-				$parent = $element.parent(),
+		controller: function($scope, $element, $attrs) {
+			var $parent = angular.element($element).parent(),
 				$parentScope = $parent.scope();
 
-			$parentScope.title = '<div class="popup_title"><h2>' + $element.html() + '</h2></div>';
-		}
-	}
-}).directive('popupSidebar', function () {
-	return {
-		restrict: 'E',
-		link: function(scope, element) {
-			var $element = angular.element(element),
-				$parent = $element.parent(),
-				$parentScope = $parent.scope();
-
-			$parentScope.sidebar = '<div class="popup_sidebar">' + $element.html() + '</div>';
-
-			angular.forEach($element.find('li'), function(item) {
-				if (!$parentScope.activeSection && angular.element(item).data('section')) {
-					$parentScope.activeSection = angular.element(item).data('section');
-				}
-			});
-		}
-	}
-}).directive('popupContainer', function () {
-	return {
-		restrict: 'E',
-		link: function(scope, element, attrs) {
-			var $element = angular.element(element),
-				$parent = $element.parent(),
-				$parentScope = $parent.scope(),
-				additionalClasses = '';
-
-			if (typeof attrs.noPadding !== 'undefined') {
-				additionalClasses += ' no-padding';
+			if (!$parentScope.sections) {
+				$parentScope.sections = {};
 			}
 
-			$parentScope.container = '<div class="popup_container' + additionalClasses + '">' + $element.html() + '</div>';
+			$parentScope.sections[$attrs.target] = $sce.trustAsHtml($element.html());
 		}
-	};
+	}
 });;/**
  *  @ngdoc directive
  *  @name tipBox
@@ -620,7 +576,16 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
-		if (!isInPopup(element) && !isInTree(element) && _layers.length > 0 && !angular.element(element).hasClass('pop-on-click')) {
+		if ((
+			_layers.length > 0 &&
+			!isUpInTree(element) &&
+			!angular.element(element).hasClass('pop-on-click') &&
+			!angular.element(element).data('popupCaller')
+		) || (
+			_layers.length > 0 &&
+			angular.element(element).data('popupCaller') &&
+			!isDownInTree(angular.element(element).data('targetPopup')))
+		) {
 			popLastLayer();
 		}
 	}
@@ -628,38 +593,50 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	/**
 	 * Данный публичный метод позволяет выяснить, присутствует ли полученный элемент (либо его родители) в списке
 	 * слоёв текущего дерева.
-	 * @name isInTree
+	 * @name isUpInTree
 	 * @function
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
-	function isInTree(element) {
+	function isUpInTree(element) {
 		if (_layers.indexOf(angular.element(element)[0]) > -1) {
 			return true;
 		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
-			return isInTree(angular.element(element).parent());
+			return isUpInTree(angular.element(element).parent());
 		} else {
 			return false;
 		}
 	}
 
-	function isInPopup(element) {
-		if (angular.element(element).hasClass('popup')) {
-			return true;
-		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
-			return isInPopup(angular.element(element).parent());
-		} else {
-			return false;
+	function isDownInTree(element, tree) {
+		var found = false;
+
+		if (!tree) {
+			tree = _layers;
 		}
+
+		var dig = function(element, tree) {
+			angular.forEach(tree, function (item) {
+				if (item == element) {
+					found = true;
+					return true;
+				} else {
+					return dig(element, angular.element(item).children());
+				}
+			});
+		};
+		dig(element, tree);
+
+		return found;
 	}
 
 	/**
 	 * Механизм закрытия верхнего слоя.
-	 * @name isInTree
+	 * @name isUpInTree
 	 * @function
 	 */
 	function popLastLayer() {
 		var $topLayer = angular.element(_layers[_layers.length - 1]),
-			topLayerScope = angular.element($topLayer).data('popupElement') ? angular.element(angular.element($topLayer).data('popupElement')).scope() : $topLayer.scope();
+			topLayerScope = $topLayer.scope();
 
 		topLayerScope.visible = false;
 		topLayerScope.$apply();
@@ -670,7 +647,8 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	return {
 		layersList: _layers,
 		updateLayers: updateLayers,
-		isInTree: isInTree,
+		isUpInTree: isUpInTree,
+		isDownInTree: isDownInTree,
 		popLastLayer: popLastLayer
 	}
 }]);

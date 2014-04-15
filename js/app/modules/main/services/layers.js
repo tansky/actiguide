@@ -27,7 +27,16 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
-		if (!isInPopup(element) && !isInTree(element) && _layers.length > 0 && !angular.element(element).hasClass('pop-on-click')) {
+		if ((
+			_layers.length > 0 &&
+			!isUpInTree(element) &&
+			!angular.element(element).hasClass('pop-on-click') &&
+			!angular.element(element).data('popupCaller')
+		) || (
+			_layers.length > 0 &&
+			angular.element(element).data('popupCaller') &&
+			!isDownInTree(angular.element(element).data('targetPopup')))
+		) {
 			popLastLayer();
 		}
 	}
@@ -35,38 +44,50 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	/**
 	 * Данный публичный метод позволяет выяснить, присутствует ли полученный элемент (либо его родители) в списке
 	 * слоёв текущего дерева.
-	 * @name isInTree
+	 * @name isUpInTree
 	 * @function
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
-	function isInTree(element) {
+	function isUpInTree(element) {
 		if (_layers.indexOf(angular.element(element)[0]) > -1) {
 			return true;
 		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
-			return isInTree(angular.element(element).parent());
+			return isUpInTree(angular.element(element).parent());
 		} else {
 			return false;
 		}
 	}
 
-	function isInPopup(element) {
-		if (angular.element(element).hasClass('popup')) {
-			return true;
-		} else if (angular.element(element).parent()[0].tagName !== 'HTML') {
-			return isInPopup(angular.element(element).parent());
-		} else {
-			return false;
+	function isDownInTree(element, tree) {
+		var found = false;
+
+		if (!tree) {
+			tree = _layers;
 		}
+
+		var dig = function(element, tree) {
+			angular.forEach(tree, function (item) {
+				if (item == element) {
+					found = true;
+					return true;
+				} else {
+					return dig(element, angular.element(item).children());
+				}
+			});
+		};
+		dig(element, tree);
+
+		return found;
 	}
 
 	/**
 	 * Механизм закрытия верхнего слоя.
-	 * @name isInTree
+	 * @name isUpInTree
 	 * @function
 	 */
 	function popLastLayer() {
 		var $topLayer = angular.element(_layers[_layers.length - 1]),
-			topLayerScope = angular.element($topLayer).data('popupElement') ? angular.element(angular.element($topLayer).data('popupElement')).scope() : $topLayer.scope();
+			topLayerScope = $topLayer.scope();
 
 		topLayerScope.visible = false;
 		topLayerScope.$apply();
@@ -77,7 +98,8 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	return {
 		layersList: _layers,
 		updateLayers: updateLayers,
-		isInTree: isInTree,
+		isUpInTree: isUpInTree,
+		isDownInTree: isDownInTree,
 		popLastLayer: popLastLayer
 	}
 }]);
