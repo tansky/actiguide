@@ -10,6 +10,7 @@
 @import 't-inputs.css';
 @import 'validation.css';
 @import 'ctrl-group.css';
+@import 'select.css';
 /**
 * Корневой файл стилей. Здесь можно управлять порядком подключения стилей
 */
