@@ -1032,10 +1032,26 @@
   color: rgba(0, 0, 0, 0.25);
   text-shadow: none;
 }
-.btn__secondary:hover,
-.btn__secondary:active,
-.btn__secondary:focus,
-.btn__secondary.pushed {
+.btn__secondary.btn__positive:hover,
+.btn__secondary.btn__negative:hover,
+.btn__secondary.btn__consult:hover,
+.btn__secondary.btn__dark:hover,
+.btn__secondary.btn__orange:hover,
+.btn__secondary.btn__positive:active,
+.btn__secondary.btn__negative:active,
+.btn__secondary.btn__consult:active,
+.btn__secondary.btn__dark:active,
+.btn__secondary.btn__orange:active,
+.btn__secondary.btn__positive:focus,
+.btn__secondary.btn__negative:focus,
+.btn__secondary.btn__consult:focus,
+.btn__secondary.btn__dark:focus,
+.btn__secondary.btn__orange:focus,
+.btn__secondary.btn__positive.pushed,
+.btn__secondary.btn__negative.pushed,
+.btn__secondary.btn__consult.pushed,
+.btn__secondary.btn__dark.pushed,
+.btn__secondary.btn__orange.pushed {
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
