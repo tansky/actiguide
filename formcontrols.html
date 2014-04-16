@@ -44,23 +44,23 @@
                     <div class="box">
                         <p>Размеры полей ввода</p>
                         <div>
-                            <input type="text" name="" value="" placeholder=":-)" class="t-input t-input__micro"/>
+                            <input type="text" placeholder=":-)" class="t-input t-input__micro"/>
                         </div>
 
                         <div>
-                            <input type="text" name="" value="" placeholder="Малое" class="t-input t-input__mini"/>
+                            <input type="text" placeholder="Малое" class="t-input t-input__mini"/>
                         </div>
 
                         <div>
-                            <input type="text" name="" value="" placeholder="Среднее" class="t-input t-input__medium"/>
+                            <input type="text" placeholder="Среднее" class="t-input t-input__medium"/>
                         </div>
 
                         <div>
-                            <input type="text" name="" value="" placeholder="Нормальное" class="t-input t-input__normal"/>
+                            <input type="text" placeholder="Нормальное" class="t-input t-input__normal"/>
                         </div>
 
                         <div>
-                            <input type="text" name="" value="" placeholder="Большое" class="t-input t-input__big"/>
+                            <input type="text" placeholder="Большое" class="t-input t-input__big"/>
                         </div>
 
                         <div>
@@ -81,8 +81,70 @@
                             <money-field name="PriceKop" data-ng-model="Model.PriceKop" data-show-kop="true"></money-field>
                         </div>
 
+                        <div class="input-block ">
+                            <div class="ctrl-group" data-split-fields>
+                                <input class="t-input t-input__normal first" data-ng-model="Model.F" name="F" placeholder="Фамилия" data-modifier='["EnToRu","RegExpFilter:[^-`а-яА-ЯёЁ]"]' data-val-tip="фамилию" />
+                                <input class="t-input t-input__normal" data-ng-model="Model.I" name="I" placeholder="Имя" data-modifier='["EnToRu","RegExpFilter:[^-`а-яА-ЯёЁ]"]' data-val-tip="имя" />
+                                <input class="t-input t-input__normal last" data-ng-model="Model.O" name="O" placeholder="Отчество" data-modifier='["EnToRu","RegExpFilter:[^-`а-яА-ЯёЁ]"]' data-val-tip="отчество" />
+                            </div>
+                        </div>
+
+                        <div class="input-block">
+                            <div class="ctrl-group" data-split-fields>
+                                <input class="t-input t-input__mini ctrl__sim1 first" data-ng-model="Model.Value" data-modifier='["RegExpFilter:[^\\d]"]' maxlength="3"  name="Value">
+                                <span class="ctrl__sim1">%</span>
+                                <input class="t-input t-input__big last" data-ng-model="Model.Name" name="Name" placeholder="Название надбавки">
+                            </div>
+                        </div>
+
+                        <div class="input-block">
+                            <div class="ctrl-group" data-split-fields>
+                                <money-field name="Value2" data-ng-model="Model.Value2"></money-field>
+                                <input class="t-input t-input__big last" data-ng-model="Model.Name2" name="Name2" placeholder="Название надбавки">
+                            </div>
+                        </div>
+
+                        <div class="input-block">
+                            <div class="ctrl-group m-micro" data-split-fields>
+                                <input class="t-input t-input__bigger first" placeholder="Кем выдан">
+                                <input class="t-input t-input__micro" placeholder="ДД">
+                                <input class="t-input t-input__micro" placeholder="ММ">
+                                <input class="t-input t-input__mini last" placeholder="ГГГГ">
+                            </div>
+                        </div>
 
 
+                        <p>Выпадающие списки</p>
+
+                        <div class="custom-select m-big">
+                            <select>
+                                <option>:-)</option>
+                                <option>:-(</option>
+                                <option>>:0</option>
+                            </select>
+                        </div>
+
+                        <span class="btn btn__select btn__positive">
+                            Обычный
+                            <span class="btn-ugl"></span>
+                            <ul class="select-dropdown nav-list">
+                                <li><a href="#">Пункт 1</a></li>
+                                <li>Пункт 2</li>
+                                <li>Пункт 3</li>
+                            </ul>
+                        </span>
+
+                        <span class="btn btn__select">
+                            Обычный
+                            <span class="btn-ugl"></span>
+
+                            <ul class="select-dropdown nav-list">
+                                <li><a href="#">Пункт 1</a></li>
+                                <li>Пункт 2</li>
+                                <li>Пункт 3</li>
+                            </ul>
+
+                        </span>
                     </div>
                 </div>
             </div>
