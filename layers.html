@@ -248,6 +248,38 @@
 			</div>
 		</div>
 
+		<div class="m-box m-giant">
+			<div class="col-edge-1">
+				<div class="box">
+					<h3>Подгрузка</h3>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="box">
+
+					<a popup-caller="popup-6">Открытие попапа 4</a>.
+
+					<popup id="popup-6" ng-controller="TestCtrl" dyn-load="tmp/sample.html"></popup>
+
+					<dropdown class="dropdown__default" ng-controller="TestCtrl" dyn-load="tmp/sample.html">
+						<d-caller>
+							<a>Обычный дропдаун</a>
+						</d-caller>
+						<d-container>
+							Привет!
+						</d-container>
+					</dropdown>
+
+					<script>
+						actiGuide.mainModule.controller('TestCtrl', function($scope) {
+							console.log('sv', $scope);
+						});
+					</script>
+
+				</div>
+			</div>
+		</div>
+
 	</section>
 </div>
 
