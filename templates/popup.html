@@ -23,7 +23,7 @@
 				</div>
 			</div>
 
-			<div ng-if="dynamic" class="popup_container">dynamic!</div>
+			<div ng-if="!menu && dynamic" class="popup_container">dynamic!</div>
 
 			<div ng-show="!menu && !dynamic" class="popup_container" ng-transclude></div>
 

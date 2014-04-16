@@ -257,9 +257,25 @@
 			<div class="col-4">
 				<div class="box">
 
-					<a popup-caller="popup-6">Открытие попапа 4</a>.
+					<a popup-caller="popup-6">Открытие попапа 6</a>.
+					<a popup-caller="popup-7">Открытие попапа 7</a>.
 
 					<popup id="popup-6" ng-controller="TestCtrl" dyn-load="tmp/sample.html"></popup>
+
+					<popup id="popup-7" ng-controller="TestCtrl" dyn-load="tmp/sample.html" popup-config='{
+						"menu": [
+							{"type": "hilite", "title": "Ссылка 1", "section": "section-1"},
+							{"type": "divider", "title": "Разделитель в несколько строк"},
+							{"title": "Ссылка 2", "section": "section-2"}
+						]
+					}'>
+						<popup-section target="section-1">
+							<p>Section 1</p>
+						</popup-section>
+						<popup-section target="section-2">
+							<p>Section 2</p>
+						</popup-section>
+					</popup>
 
 					<dropdown class="dropdown__default" ng-controller="TestCtrl" dyn-load="tmp/sample.html">
 						<d-caller>
