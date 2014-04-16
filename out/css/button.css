@@ -1020,9 +1020,11 @@
     
     ======================================================= */
 .btn__secondary {
-  box-shadow: none;
   background: none;
   padding: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 .btn__secondary .btn-in {
   background: none;
@@ -1030,9 +1032,17 @@
   color: rgba(0, 0, 0, 0.25);
   text-shadow: none;
 }
+.btn__secondary:hover,
+.btn__secondary:active,
+.btn__secondary:focus,
+.btn__secondary.pushed {
+  -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
+  -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
+}
 /* END BUTTON SECONDARY
     ======================================================= */
-/* PRINT BOX
+/* BUTTON PRINT
    ========================================================*/
 .btn__print {
   margin-left: -5px;
@@ -1062,15 +1072,6 @@
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.btn__print.pressed .btn-in {
-  border: none;
-  line-height: 50px !important;
-  background: #f3f3f3;
-  -webkit-box-shadow: inset 3px 3px 5px -2px #cecece !important;
-  -moz-box-shadow: inset 3px 3px 5px -2px #cecece !important;
-  box-shadow: inset 3px 3px 5px -2px #cecece !important;
-  filter: none !important;
-}
 .print_ico {
   font-size: 18px;
   color: #000;
@@ -1097,7 +1098,7 @@
 .btn__print:active .btn-in {
   line-height: 51px !important;
 }
-/* END PRINT BOX
+/* END BUTTON PRINT
    ========================================================*/
 /*
 
