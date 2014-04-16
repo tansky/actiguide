@@ -60,22 +60,127 @@ H4 {
 }
 
 .tech {
-	font-size: 12px;
-	line-height: 18px;
-}
+    font-family: Consolas,Monaco,monospace;
+    font-size: 12px;
+    line-height: 18px;
+    }
 
 .code {
 	font: 14px "Courier New", Courier, monospace;
 }
 
 
+.text-box{
+    ul, ol{
+    font-size: 16px;
+    margin: 0 0 30px 30px;
+    padding: 0;
+    line-height: 22px;
+    }
+        ol ol,
+        ul ul{
+            margin-top: 15px; 
+            margin-bottom: 0;
+            }
 
-/**
-* Наборные тексты
-*/
+        ol li{
+            margin-bottom: 20px;
+            }
+        ul li{
+            margin-bottom: 20px;
+            list-style-type: none;
 
-.typesetting {
-	P {
-		margin: 0;
-	}
-}
+            &:before{
+                position: absolute;
+                content: '—';
+                margin-left: -17px;
+                margin-top: -0.05em;  
+                }
+            }
+        table{
+            margin: 0 0 30px 30px;
+
+            td, th{
+
+                padding: 0 20px;
+                vertical-align: bottom;
+            }
+        }
+    }
+
+
+
+
+
+/* TEXT BOX
+    --------------------------------------------------------*/
+
+
+
+
+    .text-box table {
+        
+        }
+    .text-box td, .text-box th{
+
+        }
+
+    .text-box th {
+        font-size: 12px;
+        line-height: 16px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        }
+    .text-box td {
+        border-top: 1px solid #e2e2e2;
+        line-height: 22px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        }
+    .text-box tr.first td { border-top: none; }
+    .text-box td:first-child, .text-box th:first-child {
+        padding-left: 0;
+        }
+    .text-box td:last-child, .text-box th:last-child {
+        padding-right: 0;
+        }
+
+    .text-box thead th{
+        font-family: @f-bold;
+        font-size: 18px;
+        }
+
+    .text-box ol ol li{
+        list-style-type: lower-alpha;
+        }
+
+    .text-box h2 {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        }
+    .text-box h2:first-child{ margin-top: 0; }
+    .text-box h3 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        }
+    .text-box h3:first-child{ margin-top: 0; }
+    .text-box h4 {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        }
+
+    .js-sicklist_preview .text{ line-height: 36px;margin-bottom:0}
+    .js-sicklist_preview .text.m40{margin-bottom:28px}
+    .text-box .text,
+    .text-box .secondary,
+    .text-box .tech  {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        }
+    .text-box .text{ line-height: 26px; }
+    .text-box .secondary { line-height: 22px; }
+    .text-box .tech { line-height: 18px; }
+
+
+
+
