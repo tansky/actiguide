@@ -1,0 +1,82 @@
+﻿<!doctype html>
+<html lang="ru" data-ng-app="mainModule">
+    <head>
+        <meta charset="UTF-8">
+        <title>ActiGuide &mdash; Элементы формы</title>
+        <link rel="stylesheet" href="out/style.min.css" />
+        <script type="text/javascript" src="out/libs.min.js"></script>
+        <script type="text/javascript" src="out/app.min.js"></script>
+    </head>
+    <body>
+	
+    <div class="wrapper" data-ng-controller="TestFormCtrl">
+		<section class="content">
+
+            <!-- Заголовок -->
+            <div class="m-box">
+                <div class="box">
+                    <h1 class="name-page">Тест форма</h1>
+                </div>
+            </div>
+
+            <div class="m-box">
+                <div class="col-4">
+                    <div class="box">
+                        <form name="TestForm" novalidate>
+
+                            <div class="input-block">
+                                <label class="text-label" for="Name">Название</label>
+                                <input class="t-input t-input__normal" id="Name" name="Name" data-ng-model="Model.Name" type="text" required placeholder="Название" data-val-tip="название" />
+                            </div>
+
+                            <div class="custom-select custom-select__big m-small">
+                                <label class="text-label">Тип платежа</label>
+                                <select data-ng-model="Model.PaymentType" data-ng-options="c.Name for c in Model.PaymentTypeCatalog"></select>
+                            </div>
+
+                            <div class="input-block">
+                                <label class="text-label" for="NomerScheta">Номер расчетного счета</label>
+                                <input class="t-input t-input__normal" data-ng-model="Model.NomerScheta" name="NomerScheta" id="NomerScheta" placeholder="20 цифр" data-modifier='["RegExpFilter:[^\\d]", "DigitMask:xxxx xxxx xxxx xxxx xxxx"]' data-ng-minlength="20" required data-val-tip="номер расчетного счета" />
+                                <div class="ng-error" data-ng-show="TestForm.NomerScheta.$error.showError == 'minlength'">Необходимо ввести 20 цифр</div>
+                            </div>
+
+                            <div class="input-block" data-ng-show="checkPaymentType()">
+                                <label class="text-label">ФИО сотрудника</label>
+                                <div class="ctrl-group" data-split-fields>
+                                    <input class="t-input t-input__normal first" data-ng-model="Model.F" name="F" placeholder="Фамилия" data-modifier='["EnToRu","RegExpFilter:[^-`а-яА-ЯёЁ]"]' data-ng-required="checkPaymentType()" data-val-tip="фамилию" />
+                                    <input class="t-input t-input__normal" data-ng-model="Model.I" name="I" placeholder="Имя" data-modifier='["EnToRu","RegExpFilter:[^-`а-яА-ЯёЁ]"]' data-ng-required="checkPaymentType()" data-val-tip="имя" />
+                                    <input class="t-input t-input__normal last" data-ng-model="Model.O" name="O" placeholder="Отчество" data-modifier='["EnToRu","RegExpFilter:[^-`а-яА-ЯёЁ]"]' data-ng-required="checkPaymentType()" data-val-tip="отчество" />
+                                </div>
+                            </div>
+
+                            <div class="input-block">
+                                <label class="text-label" for="Price_Rub">Сумма</label>
+                                <div class="ctrl-group">
+                                    <money-field name="Price" id="Price" data-ng-model="Model.Price" data-show-kop="true" required data-val-tip="сумму"></money-field>
+                                </div>
+                                <div class="ng-error" data-ng-show="TestForm.Price.$error.showError == 'checkRange'">Сумма должна быть больше нуля</div>
+                            </div>
+
+                            <div class="input-block">
+                                <label class="text-label" for="Telephon">Телефон (необязательно)</label>
+                                <input class="t-input t-input__medium" data-ng-model="Model.Telephon" name="Telephon" id="Telephon" data-modifier='["Telefon"]' data-ng-minlength="10" data-val-tip="телефон" />
+                                <div class="ng-error" data-ng-show="TestForm.Telephon.$error.showError == 'minlength'">Необходимо ввести 10 цифр</div>
+                            </div>
+
+                            <div class="m-micro mt-middle">
+                                <validation-tip></validation-tip>
+                                <button class="btn btn__positive" type="submit" data-ng-click="saveTestForm(TestForm.$invalid)" data-ng-class="{ disable: TestForm.$invalid, 'btn__preload': sending }" data-validation-tip>
+                                    Сохранить
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        
+		</section>  
+	</div>
+
+    </body>
+</html>
+

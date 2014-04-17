@@ -1,0 +1,9 @@
+<div class="validation-tip validation-tip__ng" data-ng-show="showTip && isInvalid">
+    <div class="tipbox tipbox__notice tipbox_arrow_bottom dib">
+        <i class="tipbox_tail"></i>
+        <p>
+            Необходимо указать:
+            <span class="validation-tip__label" data-ng-repeat="tip in tips" data-ng-if="tip.showTip"> <span data-ng-click="focusTo(tip)" class="validation-tip__item">{{ tip.title }}</span></span>
+        </p>
+    </div>
+</div>
