@@ -820,23 +820,23 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
  *  @restrict E
  *
  *  @description
- *  Директивы для генерации дропдаунов (см. примеры использования в layers.html).
+ *  Директива для генерации дропдаунов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('dropdown', function ($window, layers) {
-	var ngClasses = "{'is-visible':visible, 'reflect-hor':reflectHorizontal, 'reflect-ver':reflectVertical, 'small-wrap':smallWrap}";
-
+actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
 	return {
 		restrict: 'E',
 		transclude: true,
-		template: '<span class="dropdown" ng-class="' + ngClasses + '" ng-transclude />',
+		templateUrl: 'templates/dropdown.html',
 		replace: true,
 		scope: true,
-		link: function(scope, element) {
+		controller: function($scope, $element, $attrs) {
 
-			scope.visible = false;
+			$scope.visible = false;
 
-			element.bind('click', function() {
+			$scope.caller = $sce.trustAsHtml($attrs.caller);
+
+			$element.bind('click', function() {
 
 				/* Клик по элементу, вызывающему дропдаун не из дерева активных слоёв игнорируется, передав при этом
 				управление слушателю кликов из сервиса layers */
@@ -862,7 +862,7 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				/* Проверка ширины элемента, открывающего дропдаун (смещаем стрелку ближе к краю, если ширина < 50px) */
 
 				if (clickedElement[0].offsetWidth < 50) {
-					scope.smallWrap = true;
+					$scope.smallWrap = true;
 				}
 
 				clickedElementScope.$apply();
@@ -873,30 +873,14 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				var doc = angular.element(document).find('BODY')[0];
 
 				angular.forEach(clickedElement.children(), function(element) {
-					scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
-					scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
+					$scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
+					$scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
 					clickedElementScope.$apply();
 				});
 
 			});
 
 		}
-	};
-}).directive('dCaller', function () {
-	return {
-		restrict: 'E',
-		transclude: true,
-		replace : true,
-		scope: false,
-		template: '<span class="dropdown_caller" ng-transclude />'
-	}
-}).directive('dContainer', function () {
-	return {
-		restrict: 'E',
-		transclude: true,
-		replace: true,
-		scope: false,
-		template: '<span class="dropdown_container" ng-transclude />'
 	};
 });;actiGuide.mainModule.directive('dynLoad', function ($http, $sce) {
 	return {
