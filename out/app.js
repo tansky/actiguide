@@ -898,25 +898,43 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 		scope: false,
 		template: '<span class="dropdown_container" ng-transclude />'
 	};
-});;actiGuide.mainModule.directive('dynLoad', function ($http) {
+});;actiGuide.mainModule.directive('dynLoad', function ($http, $sce) {
 	return {
 		restrict: 'A',
 		replace: true,
-		controller: function($scope, $element) {
+		controller: function($scope, $element, $attrs) {
 			$scope.dynamic = true;
+			$scope.loaded = false;
 
 			$scope.$watch('visible', function(newVal) {
-				console.log('visible', newVal);
-			});
-
-			$scope.$watch('currentSection', function(newVal) {
-				if (newVal) {
-					console.log('currentSection', newVal.section);
+				if ($scope.currentSection) {
+					if (newVal) {
+						loadContent($scope.sections[$scope.currentSection.section]);
+					}
+				} else {
+					if (!$scope.loaded && newVal) {
+						$http.get($attrs.dynLoad).success(function (response) {
+							$scope.loaded = true;
+							$scope.content = $sce.trustAsHtml(response);
+						});
+					}
 				}
 			});
 
-			console.log('dyn load', $scope);
-			console.log($element);
+			$scope.$watch('currentSection', function(newVal) {
+				if ($scope.visible && newVal) {
+					loadContent($scope.sections[newVal.section]);
+				}
+			});
+
+			function loadContent(currentSection) {
+				if (!currentSection.loaded) {
+					$http.get(currentSection.dynLoad).success(function (response) {
+						currentSection.loaded = true;
+						currentSection.content = $sce.trustAsHtml(response);
+					});
+				}
+			}
 		}
 	}
 });;/**
@@ -1296,7 +1314,15 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 				$parentScope.sections = {};
 			}
 
-			$parentScope.sections[$attrs.target] = $sce.trustAsHtml($element.html());
+			if (!$parentScope.sections[$attrs.target]) {
+				$parentScope.sections[$attrs.target] = {}
+			}
+
+			$parentScope.sections[$attrs.target].content = $sce.trustAsHtml($element.html());
+
+			if ($attrs.dynLoad) {
+				$parentScope.sections[$attrs.target].dynLoad = $attrs.dynLoad;
+			}
 		}
 	}
 });;/**

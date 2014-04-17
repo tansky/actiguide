@@ -17,13 +17,31 @@
 				</ul>
 			</div>
 
-			<div ng-if="menu" class="popup_container">
-				<div ng-repeat="(target, section) in sections" ng-if="currentSection.section === target">
-					<span ng-bind-html="section"></span>
+			<div ng-if="menu && !dynamic" class="popup_container">
+				<div ng-repeat="(target, section) in sections" ng-if="currentSection.section === target" class="section">
+					<span ng-bind-html="section.content"></span>
 				</div>
 			</div>
 
-			<div ng-if="!menu && dynamic" class="popup_container">dynamic!</div>
+			<div ng-if="menu && dynamic" class="popup_container">
+				<div ng-repeat="(target, section) in sections" ng-if="currentSection.section === target" class="section">
+					<div ng-if="!section.loaded">
+						<div class="spinner"></div>
+					</div>
+					<div ng-if="section.loaded">
+						<span ng-bind-html="section.content"></span>
+					</div>
+				</div>
+			</div>
+
+			<div ng-if="!menu && dynamic" class="popup_container">
+				<div ng-if="!loaded">
+					<div class="spinner"></div>
+				</div>
+				<div ng-if="loaded">
+					<span ng-bind-html="content"></span>
+				</div>
+			</div>
 
 			<div ng-show="!menu && !dynamic" class="popup_container" ng-transclude></div>
 

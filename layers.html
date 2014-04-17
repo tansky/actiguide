@@ -263,32 +263,31 @@
 					<popup id="popup-6" ng-controller="TestCtrl" dyn-load="tmp/sample.html"></popup>
 
 					<popup id="popup-7" ng-controller="TestCtrl" dyn-load="tmp/sample.html" popup-config='{
+						"title": "Попап с меню и динамикой",
 						"menu": [
-							{"type": "hilite", "title": "Ссылка 1", "section": "section-1"},
+							{"type": "hilite", "title": "Секция 1", "section": "section-1"},
 							{"type": "divider", "title": "Разделитель в несколько строк"},
-							{"title": "Ссылка 2", "section": "section-2"}
+							{"title": "Секция 2", "section": "section-2"}
 						]
 					}'>
-						<popup-section target="section-1">
+						<popup-section target="section-1" dyn-load="tmp/sample.html">
 							<p>Section 1</p>
 						</popup-section>
-						<popup-section target="section-2">
+						<popup-section target="section-2" dyn-load="tmp/sample-2.html">
 							<p>Section 2</p>
 						</popup-section>
 					</popup>
 
 					<dropdown class="dropdown__default" ng-controller="TestCtrl" dyn-load="tmp/sample.html">
 						<d-caller>
-							<a>Обычный дропдаун</a>
+							<a>Дропдаун с динамическим содержимым</a>
 						</d-caller>
-						<d-container>
-							Привет!
-						</d-container>
+						<d-container></d-container>
 					</dropdown>
 
 					<script>
 						actiGuide.mainModule.controller('TestCtrl', function($scope) {
-							console.log('sv', $scope);
+
 						});
 					</script>
 

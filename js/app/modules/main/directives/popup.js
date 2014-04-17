@@ -104,7 +104,15 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 				$parentScope.sections = {};
 			}
 
-			$parentScope.sections[$attrs.target] = $sce.trustAsHtml($element.html());
+			if (!$parentScope.sections[$attrs.target]) {
+				$parentScope.sections[$attrs.target] = {}
+			}
+
+			$parentScope.sections[$attrs.target].content = $sce.trustAsHtml($element.html());
+
+			if ($attrs.dynLoad) {
+				$parentScope.sections[$attrs.target].dynLoad = $attrs.dynLoad;
+			}
 		}
 	}
 });
