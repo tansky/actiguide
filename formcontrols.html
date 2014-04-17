@@ -10,7 +10,7 @@
     </head>
     <body>
 	
-    <div class="wrapper" data-ng-controller="FormDemoCtrl">
+    <div class="wrapper" data-ng-controller="TestFormCtrl">
 		<section class="content">
 
             <!-- Заголовок -->
@@ -73,6 +73,10 @@
 
                         <p>Общие для сервисов кастомные текстовые поля (собраны из полей стандартных размеров)</p>
 
+                        <div class="ctrl-group m-small">
+                            <date-field name="Date" data-ng-model="Model.Date"></date-field>
+                        </div>
+
                         <div class="m-small">
                             <money-field name="Price" data-ng-model="Model.Price"></money-field>
                         </div>
@@ -105,11 +109,18 @@
                         </div>
 
                         <div class="input-block">
+                            <div class="ctrl-group" data-split-fields>
+                                <money-field name="Value2" data-ng-model="Model.Value2" data-show-kop="true"></money-field>
+                                <input class="t-input t-input__big last" data-ng-model="Model.Name2" name="Name2" placeholder="Название надбавки">
+                            </div>
+                        </div>
+
+                        <div class="input-block">
                             <div class="ctrl-group m-micro" data-split-fields>
                                 <input class="t-input t-input__bigger first" placeholder="Кем выдан">
-                                <input class="t-input t-input__micro" placeholder="ДД">
-                                <input class="t-input t-input__micro" placeholder="ММ">
-                                <input class="t-input t-input__mini last" placeholder="ГГГГ">
+                                <div class="ctrl-group dib last">
+                                    <date-field name="Date" data-ng-model="Model.Date"></date-field>
+                                </div>
                             </div>
                         </div>
 

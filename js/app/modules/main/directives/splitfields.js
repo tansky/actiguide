@@ -9,8 +9,9 @@
 actiGuide.mainModule.directive('splitFields', function ($caretPosition, $timeout) {
     return {
         restrict: 'A',
+        priority: 900,
         link: function (scope, element, attrs) {
-            var fields = element.find('input');
+            var fields = element.find('input:visible');
 
             if (fields.length < 2) return;
 

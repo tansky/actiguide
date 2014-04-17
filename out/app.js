@@ -316,7 +316,7 @@ $(document).keydown(function(e) {
     }
 
     CoreUISelect.prototype.onKeydown = function (event) {
-        event.preventDefault();
+        if (event.which != 9) event.preventDefault();
         switch (event.which) {
             case 32:   // SPACE
                 this.showDropdown();
@@ -505,10 +505,47 @@ $(document).keydown(function(e) {
 
 
 
-})(jQuery);;actiGuide.mainModule = angular.module('mainModule', []);;actiGuide.mainModule.controller('FormDemoCtrl', function ($scope) {
+})(jQuery);;actiGuide.mainModule = angular.module('mainModule', []);;actiGuide.mainModule.controller('TestFormCtrl', function ($scope, $timeout) {
 
     $scope.Model = {};
 
+    $scope.Model.PaymentTypeCatalog = [
+        {
+            Name: 'Оплата контрагенту',
+            Id: 1
+        },
+        {
+            Name: 'Возврат контрагенту',
+            Id: 2
+        },
+        {
+            Name: 'Штраф и неустойка контрагенту',
+            Id: 3
+        },
+        {
+            Name: 'Выплата зарплаты',
+            Id: 4
+        }
+    ];
+
+    $scope.Model.PaymentType = $scope.Model.PaymentTypeCatalog[0];
+
+    $scope.saveTestForm = function (disabled) {
+        if (disabled) return;
+
+        $scope.sending = true;
+
+        $timeout(function (){
+            $scope.sending = false;
+            $timeout(function (){
+                alert('Сохранение успешно');
+            });
+        }, 2000);
+    };
+
+    $scope.checkPaymentType = function (){
+        return $scope.Model.PaymentType.Id == 4;
+    };
 });
 ;/**
  *  @ngdoc directive
@@ -561,6 +598,221 @@ actiGuide.mainModule.directive('btn', function () {
 		transclude: true,
 		template: '<span class="btn-in" data-ng-transclude></span>'
 	};
+});
+;/**
+ *  @ngdoc directive
+ *  @name dateField
+ *  @restrict EA
+ *
+ *  @description Директива для поля ввода денежных сумм.
+ *  Переход между полями может осуществлятся с помощью стрелок влево/вправо
+ *  К полям подключены модификаторы RegExpFilter и Money, а также валидатор checkRange со значением 0
+ *
+ *  @param {string} ngModel Привязка к модели
+ *  @param {string} [showKop] Показываем поле с копейками, если указан параметр
+ *  @param {string} [id] Стандартный атрибут id. На поля для рублей и копеек будут проставлены атрибуты id
+ *  соответственно как {id}_Rub и {id}_Kop
+ *  @param {string} [name] Стандартный атрибут name. На поля для рублей и копеек будут проставлены атрибуты name
+ *  соответственно как {id}_Rub и {id}_Kop
+ *  @param {string} [disabled] Стандартный атрибут
+ *  @param {string} [readonly] Стандартный атрибут
+ *  @param {string} [required] Стандартный параметр AngularJs
+ *  @param {string} [ngRequired] Стандартный параметр AngularJs
+ *  @param {string} [ngReadonly] Стандартный параметр AngularJs
+ *  @param {string} [ngDisabled] Стандартный параметр AngularJs
+ *  @param {string} [zeroAble] По умолчанию значение 0 не валидно. Если указан параметр, значение 0 становится валидным
+ *
+ */
+
+actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeout, $filter, $caretPosition) {
+
+    var options = {
+        yearLimitMax: 2100,
+        yearLimitMin: 1900,
+        daysInMonth: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+        monthLimit: 12
+    };
+
+    return {
+        restrict: 'EA',
+        require: 'ngModel',
+        scope: true,
+        link: function (scope, element, attrs, ngModelCtrl) {
+
+            var inputDay = element.find('input:first'),
+                inputMonth = element.find('input:eq(1)'),
+                inputYear = element.find('input:last'),
+                inputs = element.find('input');
+
+            //рендер значения из модели по инпутам
+            ngModelCtrl.$render = function() {
+                if (ngModelCtrl.$viewValue) {
+                    var value = String(ngModelCtrl.$viewValue).split('.');
+
+                    inputDay.val(value[0]);
+                    inputMonth.val(value[1]);
+                    inputYear.val(value[2]);
+                } else {
+                    inputs.val('');
+                }
+            };
+
+            var listener = function () {
+                var day = parseInt(inputDay.val()),
+                    month = parseInt(inputMonth.val()),
+                    year = parseInt(inputYear.val()),
+                    totalValue;
+
+                console.log(day, month, year);
+
+                if (month == 2 && (year + '').length == 4) {
+                    options.dayLimit = new Date(year, month, 0).getDate();
+                } else {
+                    options.dayLimit = month ? options.daysInMonth[month - 1] : 31
+                }
+
+                if (day > options.dayLimit) {
+                    day = options.dayLimit;
+                    inputDay.val(options.dayLimit);
+                }
+
+                if (month > options.monthLimit) {
+                    month = options.monthLimit;
+                    inputMonth.val(options.monthLimit);
+                }
+
+                if (year > options.yearLimitMax) {
+                    year = options.yearLimitMax;
+                    inputYear.val(options.yearLimitMax);
+                }
+
+                totalValue = day + '.' + month + '.' + year;
+
+                scope.$apply(function () {
+                    ngModelCtrl.$setViewValue(totalValue);
+                });
+            };
+
+            if ($sniffer.hasEvent('input')) {
+                inputs.on('input', listener);
+            } else {
+                var timeout;
+
+                var deferListener = function() {
+                    if (!timeout) {
+                        timeout = $browser.defer(function() {
+                            listener();
+                            timeout = null;
+                        });
+                    }
+                };
+
+                inputs.on('keydown', function(event) {
+                    var key = event.keyCode;
+
+                    // ignore
+                    //    command            modifiers                   arrows
+                    if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40)) return;
+
+                    deferListener();
+                });
+
+                // if user paste into input using mouse, we need "change" event to catch it
+                inputs.on('change', listener);
+
+                // if user modifies input value using context menu in IE, we need "paste" and "cut" events to catch it
+                if ($sniffer.hasEvent('paste')) {
+                    inputs.on('paste cut', deferListener);
+                }
+            }
+
+            inputs.on('focusout', function (e) {
+                var day = parseInt(inputDay.val()),
+                    month = parseInt(inputMonth.val()),
+                    year = parseInt(inputYear.val()),
+                    totalValue;
+
+                if (day === 0) { inputDay.val('1'); }
+                if (month === 0) { inputMonth.val('1'); }
+
+
+                totalValue = day + '.' + month + '.' + year;
+
+                scope.$apply(function () {
+                    ngModelCtrl.$setViewValue(totalValue);
+                });
+            });
+
+            //управление стрелками
+//            inputRub.on('keydown', function(event) {
+//                if (!scope.showKop) return;
+//
+//                var key = event.keyCode,
+//                    caretPosition = $caretPosition.get(this),
+//                    valueLength = this.value.length;
+//
+//                if (key == 39 && caretPosition == valueLength) {
+//                    $timeout(function () {
+//                        $caretPosition.$set(inputKop, 0);
+//                    }, 1);
+//                }
+//            });
+//            inputKop.on('keydown', function(event) {
+//                var key = event.keyCode,
+//                    caretPosition = $caretPosition.get(this);
+//
+//                if (key == 37 && caretPosition == 0) {
+//                    $timeout(function () {
+//                        $caretPosition.$set(inputRub, inputRub.val().length);
+//                    }, 1);
+//                }
+//            });
+
+            //прокидываем событие фокус на инпут
+            element.on('focus', function() {
+                inputDay.focus();
+            });
+
+            //расстановка атрибутов
+            if ('disabled' in attrs) {
+                inputs.attr('disabled', 'disabled');
+            }
+
+            if ('readonly' in attrs) {
+                inputs.attr('readonly', 'readonly');
+            }
+
+            if ('id' in attrs) {
+                inputDay.attr('id', attrs.id + '_Day');
+                inputMonth.attr('id', attrs.id + '_Month');
+                inputYear.attr('id', attrs.id + '_Year');
+            }
+
+            if ('name' in attrs) {
+                inputDay.attr('name', attrs.name + '.Day');
+                inputMonth.attr('name', attrs.name + '.Month');
+                inputYear.attr('name', attrs.name + '.Year');
+            }
+
+            if (attrs.ngDisabled) {
+                scope.$watch(attrs.ngDisabled, function(newValue) {
+                    inputs.attr('disabled', newValue);
+                });
+            }
+
+            if (attrs.ngReadonly) {
+                scope.$watch(attrs.ngReadonly, function (newValue) {
+                    inputs.attr('readonly', newValue);
+                });
+            }
+        },
+        template: '<div class="dib" data-split-fields>' +
+                '<input class="t-input t-input__micro first" placeholder="ДД" maxlength="2">' +
+                '<input class="t-input t-input__micro" placeholder="ММ" maxlength="2">' +
+                '<input class="t-input t-input__mini last" placeholder="ГГГГ" maxlength="4">' +
+            '</div>',
+        replace: true
+    };
 });
 ;/**
  *  @ngdoc directive
@@ -687,6 +939,64 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 	}
 });;/**
  *  @ngdoc directive
+ *  @name form
+ *  @restrict E
+ *
+ *  @description Директива формы
+ *
+ *
+ */
+actiGuide.mainModule.directive('form', function () {
+    return {
+        require: 'form',
+        restrict: 'E',
+        link: function ($scope, $element, $attrs, formCtrl) {
+            if (!formCtrl) return;
+
+            angular.forEach(formCtrl, function(item) {
+                if (angular.isObject(item) && item.$name) {
+                    var control = $element.find('[name="' + item.$name + '"]');
+
+                    item.$element = control;
+
+                    control.on('focusout', function() {
+                        var errorReason;
+                        angular.forEach(item.$error, function(value, reason) {
+                            if (value === true && reason !== 'required') {
+                                errorReason = reason;
+                            }
+                        });
+
+                        if (errorReason) {
+                            $scope.$apply(item.$error.showError = errorReason);
+                            $(this).addClass('invalid');
+                        } else {
+                            $scope.$apply(item.$error.showError = false);
+                            $(this).removeClass('invalid');
+                        }
+
+                        if (item.$warnings) {
+                            var warningReason;
+                            angular.forEach(item.$warnings, function(value, reason) {
+                                if (value === true) {
+                                    warningReason = reason;
+                                }
+                            });
+
+                            if (warningReason) {
+                                $scope.$apply(item.$warnings.showWarning = warningReason);
+                            } else {
+                                $scope.$apply(item.$warnings.showWarning = false);
+                            }
+                        }
+                    });
+                }
+            });
+        },
+    };
+});
+;/**
+ *  @ngdoc directive
  *  @name moneyField
  *  @restrict EA
  *
@@ -699,7 +1009,7 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
  *  @param {string} [id] Стандартный атрибут id. На поля для рублей и копеек будут проставлены атрибуты id
  *  соответственно как {id}_Rub и {id}_Kop
  *  @param {string} [name] Стандартный атрибут name. На поля для рублей и копеек будут проставлены атрибуты name
- *  соответственно как {id}_Rub и {id}_Kop
+ *  соответственно как {name}_Rub и {name}_Kop
  *  @param {string} [disabled] Стандартный атрибут
  *  @param {string} [readonly] Стандартный атрибут
  *  @param {string} [required] Стандартный параметр AngularJs
@@ -1080,8 +1390,9 @@ actiGuide.mainModule.directive('select', function ($timeout) {
 actiGuide.mainModule.directive('splitFields', function ($caretPosition, $timeout) {
     return {
         restrict: 'A',
+        priority: 900,
         link: function (scope, element, attrs) {
-            var fields = element.find('input');
+            var fields = element.find('input:visible');
 
             if (fields.length < 2) return;
 
@@ -1116,7 +1427,7 @@ actiGuide.mainModule.directive('splitFields', function ($caretPosition, $timeout
  *  @param {string} [closeBtn] Показываем ссылку "Скрыть", если указан параметр
  *
  */
-actiGuide.mainModule.directive('tipBox', function () {
+actiGuide.mainModule.directive('tipBox', function (VIEWS_PATH) {
 	return {
 		restrict: 'E',
 		scope: true,
@@ -1129,7 +1440,7 @@ actiGuide.mainModule.directive('tipBox', function () {
 				scope.hideTipBox = true;
 			}
 		},
-		templateUrl: 'tipbox.html'
+		templateUrl: VIEWS_PATH + 'tipbox.html'
 	};
 });
 ;/**
@@ -1663,6 +1974,102 @@ actiGuide.mainModule.directive('checkRange', function () {
         }
     };
 });/**
+ *  @ngdoc directive
+ *  @name validationTip
+ *  @restrict A
+ *
+ *  @description Директива вешается на кнопку submit. При клике на кнопку показывается подсказка о невалидных полях и ставится фокус в первое невалидное поле
+ *
+ */
+actiGuide.mainModule.directive('validationTip', function () {
+    return {
+        restrict: 'A',
+        link: function ($scope, $element) {
+            var parent = $element.parents('form').get(0) || $element.parents('.popup-modal').get(0) || $('body');
+            $element.on('click', function() {
+                $scope.$apply($scope.showTip = true);
+                $('input.ng-invalid, textarea.ng-invalid, div.ng-invalid:not(.disabled) input', parent).not(':hidden, .disabled').first().focus();
+            });
+        }
+    };
+});
+
+/**
+ *  @ngdoc directive
+ *  @name validationTip
+ *  @restrict E
+ *
+ *  @description Подсказка о невалидных полях формы
+ *
+ */
+actiGuide.mainModule.directive('validationTip', function (VIEWS_PATH) {
+    return {
+        priority: 900,
+        require: '^form',
+        scope: true,
+        restrict: 'E',
+        replace: true,
+        link: function ($scope, $element, $attrs, formCtrl) {
+            if (!formCtrl) return;
+
+            $scope.tips = $scope.tips ? $scope.tips : [];
+
+            angular.forEach(formCtrl, function(item) {
+                if (angular.isObject(item) && item.$name) {
+                    var tipText = item.$element ? item.$element.data('val-tip') : null;
+
+                    if (tipText) {
+                        $scope.tips.push({
+                            $elName: item.$name,
+                            $element: item.$element,
+                            title: tipText,
+                            showTip: item.$invalid
+                        });
+
+                        var currentIndex = $scope.tips.length - 1;
+
+                        $scope.$watch(formCtrl.$name + '.' + item.$name + '.$invalid', function(newValue, oldValue) {
+                            $scope.tips[currentIndex].showTip = newValue;
+
+                            var isInvalid = false;
+                            angular.forEach($scope.tips, function(tip) {
+                                if (tip.showTip === true) {
+                                    isInvalid = true;
+                                }
+                            });
+
+                            $scope.isInvalid = isInvalid;
+                        });
+                    }
+                }
+            });
+
+            $scope.$on('tipsChanged', function() {
+                var isInvalid = false;
+                angular.forEach($scope.tips, function(tip) {
+                    if (tip.showTip === true) {
+                        isInvalid = true;
+                    }
+                });
+
+                $scope.isInvalid = isInvalid;
+            });
+
+            $scope.focusTo = function(tip) {
+                if (tip.href) {
+                    $scope[tip.href]($scope.popup);
+                    return;
+                }
+
+                if (!tip.$element) return;
+
+                angular.isString(tip.$element) ? $(tip.$element).first().focus() : tip.$element.focus();
+            };
+        },
+        templateUrl: VIEWS_PATH + 'validationtip.html'
+    };
+});
+;/**
  *  @ngdoc filter
  *  @name currency
  *
@@ -1854,4 +2261,4 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 		isDownInTree: isDownInTree,
 		popLastLayer: popLastLayer
 	}
-}]);
+}]);;actiGuide.mainModule.constant('VIEWS_PATH', 'js/app/modules/main/directives/views/');
