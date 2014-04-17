@@ -2,4 +2,14 @@
 
 	<h3>Динамически загруженный блок</h3>
 
+	<p>Элемент этого попапа был инициализирован как контроллер <strong>TestCtrl</strong>.</p>
+
+	<p class="code">&lt;popup id="popup-id" ng-controller="TestCtrl" dyn-load="sample.html"&gt;&lt;/popup&gt;</p>
+
+	<p>После загрузки данного блока будет вызван callback &mdash; <strong>dynOnLoad</strong>.</p>
+
+	<p>Если блок уже был загружен, то повторное окрытие вызовет функцию <strong>dynOnOpen</strong>.</p>
+
+	<p>Взглядните в консоль браузера (и на исходный код страницы), чтобы увидеть на примере порядок вызова этих функций.</p>
+
 </div>
