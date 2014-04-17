@@ -39,8 +39,8 @@
                     </div>
                 </div>
             </div>
-            <div class="m-box">
-                <div class="col-4">
+            <div class="m-box m-big">
+                <div class="col-4 m-big">
                     <div class="box">
                         <p>Размеры полей ввода</p>
                         <div>
@@ -101,12 +101,13 @@
                             </div>
                         </div>
 
+                        <!-- тут пока косяк
                         <div class="input-block">
                             <div class="ctrl-group" data-split-fields>
                                 <money-field name="Value2" data-ng-model="Model.Value2"></money-field>
                                 <input class="t-input t-input__big last" data-ng-model="Model.Name2" name="Name2" placeholder="Название надбавки">
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="input-block">
                             <div class="ctrl-group" data-split-fields>
@@ -135,27 +136,29 @@
                             </select>
                         </div>
 
-                        <span class="btn btn__select btn__positive">
+                        <p>Кнопки со списком ссылок</p>
+
+                        <button class="btn btn__select btn__positive">
                             Обычный
                             <span class="btn-ugl"></span>
                             <ul class="select-dropdown nav-list">
                                 <li><a href="#">Пункт 1</a></li>
-                                <li>Пункт 2</li>
-                                <li>Пункт 3</li>
+                                <li><a href="#">Пункт 2</a></li>
+                                <li><a href="#">Пункт 3</a></li>
                             </ul>
-                        </span>
+                        </button>
 
-                        <span class="btn btn__select">
+                        <button class="btn btn__select">
                             Обычный
                             <span class="btn-ugl"></span>
 
                             <ul class="select-dropdown nav-list">
                                 <li><a href="#">Пункт 1</a></li>
-                                <li>Пункт 2</li>
-                                <li>Пункт 3</li>
+                                <li><a href="#">Пункт 2</a></li>
+                                <li><a href="#">Пункт 3</a></li>
                             </ul>
 
-                        </span>
+                        </button>
                     </div>
                 </div>
             </div>
