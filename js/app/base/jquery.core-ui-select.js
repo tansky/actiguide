@@ -288,7 +288,7 @@
     }
 
     CoreUISelect.prototype.onKeydown = function (event) {
-        event.preventDefault();
+        if (event.which != 9) event.preventDefault();
         switch (event.which) {
             case 32:   // SPACE
                 this.showDropdown();

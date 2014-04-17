@@ -1,6 +1,6 @@
 /**
  *  @ngdoc directive
- *  @name moneyField
+ *  @name dateField
  *  @restrict EA
  *
  *  @description Директива для поля ввода денежных сумм.
@@ -12,7 +12,7 @@
  *  @param {string} [id] Стандартный атрибут id. На поля для рублей и копеек будут проставлены атрибуты id
  *  соответственно как {id}_Rub и {id}_Kop
  *  @param {string} [name] Стандартный атрибут name. На поля для рублей и копеек будут проставлены атрибуты name
- *  соответственно как {name}_Rub и {name}_Kop
+ *  соответственно как {id}_Rub и {id}_Kop
  *  @param {string} [disabled] Стандартный атрибут
  *  @param {string} [readonly] Стандартный атрибут
  *  @param {string} [required] Стандартный параметр AngularJs
@@ -23,56 +23,73 @@
  *
  */
 
-actiGuide.mainModule.directive('moneyField', function($sniffer, $browser, $timeout, $filter, $caretPosition) {
+actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeout, $filter, $caretPosition) {
+
+    var options = {
+        yearLimitMax: 2100,
+        yearLimitMin: 1900,
+        daysInMonth: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+        monthLimit: 12
+    };
+
     return {
         restrict: 'EA',
         require: 'ngModel',
         scope: true,
         link: function (scope, element, attrs, ngModelCtrl) {
 
-            scope.showKop = attrs.showKop;
-            scope.atm = attrs.qa;
-
-            var inputRub = element.find('input:first'),
-                inputKop = element.find('input:last'),
-                spanRub = inputRub.next('span'),
-                spanKop = inputKop.next('span'),
+            var inputDay = element.find('input:first'),
+                inputMonth = element.find('input:eq(1)'),
+                inputYear = element.find('input:last'),
                 inputs = element.find('input');
-
-            if (attrs.required) {
-                inputRub.attr('required', 'required');
-            }
 
             //рендер значения из модели по инпутам
             ngModelCtrl.$render = function() {
                 if (ngModelCtrl.$viewValue) {
-                    ngModelCtrl.$viewValue = Math.ceil(ngModelCtrl.$viewValue * 100) / 100;
                     var value = String(ngModelCtrl.$viewValue).split('.');
 
-                    inputRub.val($filter('currency')(value[0]));
-                    if (value[1]) {
-                        value[1] = value[1].length == 1 ? value[1] + '0' : value[1]; //если пришло число типа 1.2, добавляем к копейкам ноль
-                        inputKop.val(value[1]);
-                    } else {
-                        inputKop.val('');
-                    }
+                    inputDay.val(value[0]);
+                    inputMonth.val(value[1]);
+                    inputYear.val(value[2]);
                 } else {
-                    inputRub.val('');
-                    inputKop.val('');
+                    inputs.val('');
                 }
             };
 
-
             var listener = function () {
-                var kop = inputKop.val(),
-                    rub = inputRub.val(),
-                    totalValue = (rub ? rub : (kop && kop > 0 ? '0' : '' )) + (kop && kop > 0 ? '.' + (kop.length > 1 ? kop : '0' + kop) : '');
+                var day = parseInt(inputDay.val()),
+                    month = parseInt(inputMonth.val()),
+                    year = parseInt(inputYear.val()),
+                    totalValue;
 
-                if (ngModelCtrl.$viewValue != parseFloat(totalValue)) {
-                    scope.$apply(function () {
-                        ngModelCtrl.$setViewValue(parseFloat(totalValue.replace(/\s/g, '')));
-                    });
+                console.log(day, month, year);
+
+                if (month == 2 && (year + '').length == 4) {
+                    options.dayLimit = new Date(year, month, 0).getDate();
+                } else {
+                    options.dayLimit = month ? options.daysInMonth[month - 1] : 31
                 }
+
+                if (day > options.dayLimit) {
+                    day = options.dayLimit;
+                    inputDay.val(options.dayLimit);
+                }
+
+                if (month > options.monthLimit) {
+                    month = options.monthLimit;
+                    inputMonth.val(options.monthLimit);
+                }
+
+                if (year > options.yearLimitMax) {
+                    year = options.yearLimitMax;
+                    inputYear.val(options.yearLimitMax);
+                }
+
+                totalValue = day + '.' + month + '.' + year;
+
+                scope.$apply(function () {
+                    ngModelCtrl.$setViewValue(totalValue);
+                });
             };
 
             if ($sniffer.hasEvent('input')) {
@@ -108,42 +125,51 @@ actiGuide.mainModule.directive('moneyField', function($sniffer, $browser, $timeo
                 }
             }
 
+            inputs.on('focusout', function (e) {
+                var day = parseInt(inputDay.val()),
+                    month = parseInt(inputMonth.val()),
+                    year = parseInt(inputYear.val()),
+                    totalValue;
+
+                if (day === 0) { inputDay.val('1'); }
+                if (month === 0) { inputMonth.val('1'); }
+
+
+                totalValue = day + '.' + month + '.' + year;
+
+                scope.$apply(function () {
+                    ngModelCtrl.$setViewValue(totalValue);
+                });
+            });
+
             //управление стрелками
-            inputRub.on('keydown', function(event) {
-                if (!scope.showKop) return;
-
-                var key = event.keyCode,
-                    caretPosition = $caretPosition.get(this),
-                    valueLength = this.value.length;
-
-                if (key == 39 && caretPosition == valueLength) {
-                    $timeout(function () {
-                        $caretPosition.$set(inputKop, 0);
-                    }, 1);
-                }
-            });
-            inputKop.on('keydown', function(event) {
-                var key = event.keyCode,
-                    caretPosition = $caretPosition.get(this);
-
-                if (key == 37 && caretPosition == 0) {
-                    $timeout(function () {
-                        $caretPosition.$set(inputRub, inputRub.val().length);
-                    }, 1);
-                }
-            });
+//            inputRub.on('keydown', function(event) {
+//                if (!scope.showKop) return;
+//
+//                var key = event.keyCode,
+//                    caretPosition = $caretPosition.get(this),
+//                    valueLength = this.value.length;
+//
+//                if (key == 39 && caretPosition == valueLength) {
+//                    $timeout(function () {
+//                        $caretPosition.$set(inputKop, 0);
+//                    }, 1);
+//                }
+//            });
+//            inputKop.on('keydown', function(event) {
+//                var key = event.keyCode,
+//                    caretPosition = $caretPosition.get(this);
+//
+//                if (key == 37 && caretPosition == 0) {
+//                    $timeout(function () {
+//                        $caretPosition.$set(inputRub, inputRub.val().length);
+//                    }, 1);
+//                }
+//            });
 
             //прокидываем событие фокус на инпут
             element.on('focus', function() {
-                inputRub.focus();
-            });
-
-            spanRub.on('click', function() {
-                inputRub.focus();
-            });
-
-            spanKop.on('click', function () {
-                inputKop.focus();
+                inputDay.focus();
             });
 
             //расстановка атрибутов
@@ -156,13 +182,15 @@ actiGuide.mainModule.directive('moneyField', function($sniffer, $browser, $timeo
             }
 
             if ('id' in attrs) {
-                inputRub.attr('id', attrs.id + '_Rub');
-                inputKop.attr('id', attrs.id + '_Kop');
+                inputDay.attr('id', attrs.id + '_Day');
+                inputMonth.attr('id', attrs.id + '_Month');
+                inputYear.attr('id', attrs.id + '_Year');
             }
 
             if ('name' in attrs) {
-                inputRub.attr('name', attrs.name + '.Rub');
-                inputKop.attr('name', attrs.name + '.Kop');
+                inputDay.attr('name', attrs.name + '.Day');
+                inputMonth.attr('name', attrs.name + '.Month');
+                inputYear.attr('name', attrs.name + '.Year');
             }
 
             if (attrs.ngDisabled) {
@@ -177,9 +205,10 @@ actiGuide.mainModule.directive('moneyField', function($sniffer, $browser, $timeo
                 });
             }
         },
-        template: '<div class="dib t-input-money">' +
-            '<input type="text" class="t-input ctrl__sim3 first m-none" data-modifier=\'[\"RegExpFilter:[^\\\\d]\", \"Money\"]\' maxlength="11" data-check-range="0" autocomplete="off" data-qa=\"{{ atm }}.Rub\"><span class="ctrl__sim3">Руб</span>' +
-            '<input type="text" data-ng-show="showKop" class="t-input t-input__mini ctrl__sim3 last m-none" data-modifier=\'["RegExpFilter:[^\\\\d]"]\' maxlength="2" autocomplete="off" data-qa=\"{{ atm }}.Kop\"><span data-ng-show="showKop" class="ctrl__sim3">Коп</span>' +
+        template: '<div class="dib" data-split-fields>' +
+                '<input class="t-input t-input__micro first" placeholder="ДД" maxlength="2">' +
+                '<input class="t-input t-input__micro" placeholder="ММ" maxlength="2">' +
+                '<input class="t-input t-input__mini last" placeholder="ГГГГ" maxlength="4">' +
             '</div>',
         replace: true
     };

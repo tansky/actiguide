@@ -8,7 +8,7 @@
  *  @param {string} [closeBtn] Показываем ссылку "Скрыть", если указан параметр
  *
  */
-actiGuide.mainModule.directive('tipBox', function () {
+actiGuide.mainModule.directive('tipBox', function (VIEWS_PATH) {
 	return {
 		restrict: 'E',
 		scope: true,
@@ -21,6 +21,6 @@ actiGuide.mainModule.directive('tipBox', function () {
 				scope.hideTipBox = true;
 			}
 		},
-		templateUrl: 'tipbox.html'
+		templateUrl: VIEWS_PATH + 'tipbox.html'
 	};
 });
