@@ -903,55 +903,68 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 		restrict: 'A',
 		replace: true,
 		controller: function($scope, $element, $attrs) {
-			$scope.dynamic = true;
-			$scope.loaded = false;
 
-			$scope.$watch('visible', function(newVal) {
-				if ($scope.currentSection) {
-					if (newVal) {
-						if (!$scope.sections[$scope.currentSection.section].loaded) {
-							loadContent($scope.sections[$scope.currentSection.section], function() {
-								if (typeof $scope.dynOnLoad === 'function') {
-									$scope.dynOnLoad($scope.currentSection.section);
+			console.log($element);
+
+			if ($element[0].tagName.toLowerCase() === 'popup-section') {
+
+				/* Динамическая загрузка для секций попапов с меню */
+
+			} else {
+
+				/* Динамическая загрузка для обычных попапов */
+
+				$scope.dynamic = true;
+				$scope.loaded = false;
+
+				$scope.$watch('visible', function(newVal) {
+					if ($scope.currentSection) {
+						if (newVal) {
+							if (!$scope.sections[$scope.currentSection.section].loaded) {
+								loadContent($scope.sections[$scope.currentSection.section], function() {
+									if (typeof $scope.dynOnLoad === 'function') {
+										$scope.dynOnLoad($scope.currentSection.section);
+									}
+								});
+							} else {
+								if (typeof $scope.dynOnOpen === 'function') {
+									$scope.dynOnOpen($scope.currentSection.section);
 								}
-							});
-						} else {
-							if (typeof $scope.dynOnOpen === 'function') {
-								$scope.dynOnOpen($scope.currentSection.section);
 							}
 						}
+					} else {
+						if (!$scope.loaded && newVal) {
+							$http.get($attrs.dynLoad).success(function (response) {
+								$scope.loaded = true;
+								$scope.content = $sce.trustAsHtml(response);
+
+								if (typeof $scope.dynOnLoad === 'function') {
+									$scope.dynOnLoad();
+								}
+							});
+						}
+
+						if ($scope.loaded && newVal && typeof $scope.dynOnOpen === 'function') {
+							$scope.dynOnOpen();
+						}
 					}
-				} else {
-					if (!$scope.loaded && newVal) {
-						$http.get($attrs.dynLoad).success(function (response) {
-							$scope.loaded = true;
-							$scope.content = $sce.trustAsHtml(response);
+				});
 
-							if (typeof $scope.dynOnLoad === 'function') {
-								$scope.dynOnLoad();
-							}
-						});
+				$scope.$watch('currentSection', function(newVal) {
+					if ($scope.visible && newVal) {
+						loadContent($scope.sections[newVal.section]);
 					}
 
-					if ($scope.loaded && newVal && typeof $scope.dynOnOpen === 'function') {
-						$scope.dynOnOpen();
+					if ($scope.visible && newVal && !$scope.sections[newVal.section].loaded && typeof $scope.dynOnLoad === 'function') {
+						$scope.dynOnLoad(newVal.section);
 					}
-				}
-			});
 
-			$scope.$watch('currentSection', function(newVal) {
-				if ($scope.visible && newVal) {
-					loadContent($scope.sections[newVal.section]);
-				}
+					if ($scope.visible && newVal && $scope.sections[newVal.section].loaded && typeof $scope.dynOnOpen === 'function') {
+						$scope.dynOnOpen(newVal.section);
+					}
+				});
 
-				if ($scope.visible && newVal && !$scope.sections[newVal.section].loaded && typeof $scope.dynOnLoad === 'function') {
-					$scope.dynOnLoad(newVal.section);
-				}
-
-				if ($scope.visible && newVal && $scope.sections[newVal.section].loaded && typeof $scope.dynOnOpen === 'function') {
-					$scope.dynOnOpen(newVal.section);
-				}
-			});
+			}
 
 			function loadContent(currentSection, callback) {
 				if (!currentSection.loaded) {

@@ -262,19 +262,18 @@
 
 					<popup id="popup-6" ng-controller="TestCtrl" dyn-load="tmp/sample.html"></popup>
 
-					<popup id="popup-7" ng-controller="TestCtrl" dyn-load="tmp/sample.html" popup-config='{
+					<popup id="popup-7" ng-controller="TestCtrl" popup-config='{
 						"title": "Попап с меню и динамикой",
 						"menu": [
-							{"type": "hilite", "title": "Секция 1", "section": "section-1"},
-							{"type": "divider", "title": "Разделитель в несколько строк"},
-							{"title": "Секция 2", "section": "section-2"}
+							{"title": "Секция 1", "section": "section-1"},
+							{"title": "Секция 2", "section": "section-2"},
+							{"title": "Секция без динамики", "section": "section-3"}
 						]
 					}'>
-						<popup-section target="section-1" dyn-load="tmp/sample.html">
-							<p>Section 1</p>
-						</popup-section>
-						<popup-section target="section-2" dyn-load="tmp/sample-2.html">
-							<p>Section 2</p>
+						<popup-section target="section-1" dyn-load="tmp/sample.html"></popup-section>
+						<popup-section target="section-2" dyn-load="tmp/sample-2.html"></popup-section>
+						<popup-section target="section-3">
+							Секция 3
 						</popup-section>
 					</popup>
 
@@ -297,9 +296,9 @@
 
 							$scope.dynOnOpen = function(section) {
 								if (!section) {
-									console.log('Коллбэк из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыт попап с динамическим содержимым');
+									console.log('Функция из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыт попап с динамическим содержимым');
 								} else {
-									console.log('Коллбэк из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыта секция в попапе с динамическим содержимым', section);
+									console.log('Функция из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыта секция в попапе с динамическим содержимым', section);
 								}
 							};
 						});
