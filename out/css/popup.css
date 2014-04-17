@@ -98,6 +98,7 @@
   background: #fff;
   box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
+  overflow: hidden;
 }
 .popup_title {
   padding: 18px 65px 15px 30px;
@@ -160,9 +161,6 @@
   font-family: 'Web Symbols';
   line-height: 20px;
 }
-.popup_sidebar LI:last-child {
-  border-radius: 0 0 0 5px;
-}
 .popup_container {
   padding: 20px 30px;
   background-color: #fdfdfd;
@@ -179,9 +177,6 @@
 }
 .popup.w-sidebar.no-title .popup_container {
   border-radius: 0 5px 5px 0;
-}
-.popup.w-sidebar.no-title .popup_sidebar LI:first-child {
-  border-radius: 5px 0 0 0;
 }
 .popup.no-padding .popup_container {
   padding: 0;
