@@ -244,14 +244,11 @@
 						</popup-section>
 					</popup>
 
-					<!--<dropdown class="dropdown__default" ng-controller="TestCtrl" dyn-load="tmp/sample.html">-->
-						<!--<d-caller>-->
-							<!--<a>Дропдаун с динамическим содержимым</a>-->
-						<!--</d-caller>-->
-						<!--<d-container></d-container>-->
-					<!--</dropdown>-->
+					<dropdown class="dropdown__default" caller="<a>Дропдаун с динамическим содержимым</a>" ng-controller="TestCtrl" dyn-load="tmp/sample.html"></dropdown>
 
 					<script>
+						// TODO: Не передаём контроллер. Передаём конкретные функции!
+
 						actiGuide.mainModule.controller('TestCtrl', function($scope) {
 							$scope.dynOnLoad = function(section) {
 								if (!section) {
