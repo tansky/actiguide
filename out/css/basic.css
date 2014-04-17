@@ -273,3 +273,7 @@ BODY {
 .mt-giant {
   margin-top: 60px !important;
 }
+.spinner {
+  background: url('../img/spin.gif') no-repeat center;
+  height: 36px;
+}

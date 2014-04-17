@@ -180,6 +180,9 @@
 .popup.w-sidebar.no-title .popup_container {
   border-radius: 0 5px 5px 0;
 }
+.popup.w-sidebar.no-title .popup_sidebar LI:first-child {
+  border-radius: 5px 0 0 0;
+}
 .popup.no-padding .popup_container {
   padding: 0;
 }
