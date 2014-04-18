@@ -92,6 +92,16 @@ H4,
 P {
   margin: 0 0 18px;
 }
+.dropdown H2:last-child,
+.popup H2:last-child,
+.dropdown H3:last-child,
+.popup H3:last-child,
+.dropdown H4:last-child,
+.popup H4:last-child,
+.dropdown P:last-child,
+.popup P:last-child {
+  margin-bottom: 0;
+}
 H2 {
   font-size: 22px;
   line-height: 30px;

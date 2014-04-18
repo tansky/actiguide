@@ -20,49 +20,23 @@ actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
 
 			$scope.caller = $sce.trustAsHtml($attrs.caller);
 
-			$element.bind('click', function() {
+			$scope.toggleDropdown = function() {
 
-				/* Клик по элементу, вызывающему дропдаун не из дерева активных слоёв игнорируется, передав при этом
-				управление слушателю кликов из сервиса layers */
-
-				if (layers.layersList.length > 1 && !layers.isUpInTree(this)) {
-					return;
+				if (layers.layersList.length === 0) {
+					$scope.visible = true;
+					layers.layersList.push($element[0]);
+				} else if (layers.layersList.length > 0 && layers.isUpInTree($element[0]) && layers.layersList.indexOf($element[0]) < 0) {
+					$scope.visible = true;
+					layers.layersList.push($element[0]);
+				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1 && layers.layersList[layers.layersList.length-1] === $element[0]) {
+					$scope.visible = false;
+					layers.layersList.pop();
+				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1) {
+					angular.element(layers.layersList[layers.layersList.length-1]).scope().visible = false;
+					layers.layersList.pop();
 				}
 
-
-				/* Открытие дропдауна и добавление его к слоям */
-
-				var clickedElement = angular.element(this),
-					clickedElementScope = clickedElement.scope();
-
-				layers.updateLayers(this);
-				clickedElementScope.visible = true;
-
-				if (layers.layersList.indexOf(this) < 0) {
-					layers.layersList.push(this);
-				}
-
-
-				/* Проверка ширины элемента, открывающего дропдаун (смещаем стрелку ближе к краю, если ширина < 50px) */
-
-				if (clickedElement[0].offsetWidth < 50) {
-					$scope.smallWrap = true;
-				}
-
-				clickedElementScope.$apply();
-
-
-				/* Проверка границ выпавшего дропдауна */
-
-				var doc = angular.element(document).find('BODY')[0];
-
-				angular.forEach(clickedElement.children(), function(element) {
-					$scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
-					$scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
-					clickedElementScope.$apply();
-				});
-
-			});
+			};
 
 		}
 	};
