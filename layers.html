@@ -6,6 +6,25 @@
 	<link rel="stylesheet" href="out/style.min.css"/>
 	<script type="text/javascript" src="out/libs.min.js"></script>
 	<script type="text/javascript" src="out/app.min.js"></script>
+	<script>
+
+		actiGuide.mainModule.controller('DemoLayersCtrl', function($scope) {
+			$scope.dynOnLoad = function(data) {
+				console.log('Коллбэк из DemoLayersCtrl. Вызывается сразу после загрузки динамического элемента');
+				if (data.section) {
+					console.log('section', data.section);
+				}
+			};
+
+			$scope.dynOnOpen = function(data) {
+				console.log('Функция из DemoLayersCtrl. Вызывается при каждом открытии уже загруженного динамического элемента');
+				if (data.section) {
+					console.log('section', data.section);
+				}
+			};
+		});
+
+	</script>
 </head>
 <body ng-class="{'no-scroll':noScroll}" ng-controller="DemoLayersCtrl">
 
@@ -232,40 +251,26 @@
 					<popup id="popup-7" ng-controller="DemoLayersCtrl" popup-config='{
 						"title": "Попап с меню и динамикой",
 						"menu": [
-							{"title": "Секция 1", "section": "section-1"},
+							{"title": "Секция без динамики", "section": "section-1"},
 							{"title": "Секция 2", "section": "section-2"},
-							{"title": "Секция без динамики", "section": "section-3"}
+							{"title": "Секция 3", "section": "section-3"}
 						]
 					}'>
-						<popup-section target="section-1" dyn-load="tmp/sample.html" dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
-						<popup-section target="section-2" dyn-load="tmp/sample-2.html" dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
-						<popup-section target="section-3">
-							Секция 3
+						<popup-section target="section-1">
+							Секция 1
 						</popup-section>
+						<popup-section target="section-2"
+									   dyn-load="tmp/sample.html"
+									   dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
+						<popup-section target="section-3"
+									   dyn-load="tmp/sample-2.html"
+									   dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
 					</popup>
 
 					<dropdown class="dropdown__huge"
 							  caller="<a>Дропдаун с динамическим содержимым</a>"
 							  dyn-load="tmp/sample.html"
 							  dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></dropdown>
-
-					<script>
-						actiGuide.mainModule.controller('DemoLayersCtrl', function($scope) {
-							$scope.dynOnLoad = function(data) {
-								console.log('Коллбэк из DemoLayersCtrl. Вызывается сразу после загрузки динамического элемента. Загрузили содержимоего для всего попапа');
-								if (data.section) {
-									console.log('section', data.section);
-								}
-							};
-
-							$scope.dynOnOpen = function(data) {
-								console.log('Функция из DemoLayersCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыт попап с динамическим содержимым');
-								if (data.section) {
-									console.log('section', data.section);
-								}
-							};
-						});
-					</script>
 
 				</div>
 			</div>
