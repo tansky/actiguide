@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>ActiGuide - Datepickers demo</title>
+    <link rel="stylesheet" href="out/style.min.css" />
+    <script type="text/javascript" src="out/libs.min.js"></script>
+    <script type="text/javascript" src="out/app.min.js"></script>
+    <script>
+
+        /* Controllers */
+        actiGuide.mainModule.controller( 'DatepickerCtrl', ['$scope', 'ranges', function ($scope, RangesService) {
+
+            $scope.Date =  moment( new Date).format('DD.MM.YYYY' );
+            $scope.Date2 = moment( new Date).format('DD.MM.YYYY' );
+            $scope.Date3 = moment( new Date).format('DD.MM.YYYY' );
+            $scope.Date4 = moment( new Date).format('DD.MM.YYYY' );
+
+
+            window.rs = $scope;
+
+            var MOMENT_DATEFORMAT = 'D.M.YYYY',
+
+            // для удобства
+                    datepickerA = 'Date',
+                    datepickerB = 'Date2',
+                    datepickerC = 'Date3',
+                    datepickerD = 'Date4',
+
+            // Зависимости
+                    Bdependence1 = RangesService.createDependentRange( null, $scope.Date, datepickerB, 'не раньше A' ),
+                    Bdependence2 = RangesService.createDependentRange( $scope.Date, null, datepickerB, 'не позже A+10' ),
+
+                    Cdependence1 = RangesService.createDependentRange( null, $scope.Date2, datepickerC, 'не раньше B' ),
+                    Cdependence2 = RangesService.createDependentRange( $scope.Date, null, datepickerC, 'не позже A+15' ),
+
+                    Ddependence1 = RangesService.createDependentRange( null, $scope.Date, datepickerD, 'не раньше А-5' ),
+                    Ddependence2 = RangesService.createDependentRange( $scope.Date2, null, datepickerD, 'не позже C+5' ),
+
+            // на первом блокируем с 12 по 14 марта
+                    blockedA = RangesService.createDependentRange( moment( [2014, new Date().getMonth(), 12] ), moment( [2014,  new Date().getMonth(), 14] ), datepickerA, 'заблокировано, разрыв в периодах' ),
+
+            // блокировки зависимых календарей, в которых даты должны быть в активном периоде datepickerA
+                    blockedB = RangesService.createDependentRange( null, null, datepickerB, 'заблочено из-за неактивного периода в А' ),
+                    blockedC = RangesService.createDependentRange( null, null, datepickerC, 'заблочено из-за неактивного периода в А' );
+
+
+            RangesService.addRange( Bdependence1 )
+            RangesService.addRange( Bdependence2 )
+            RangesService.addRange( Cdependence1 )
+            RangesService.addRange( Cdependence2 )
+            RangesService.addRange( Ddependence1 )
+            RangesService.addRange( Ddependence2 )
+            RangesService.addRange( blockedA )
+            RangesService.addRange( blockedB )
+            RangesService.addRange( blockedC )
+
+
+            $scope.$watch( datepickerA, function (newVal, oldVal) {
+
+                if ( oldVal !== newVal ) {
+                    ADeps();
+                    RangesService.broadcastChange()
+                }
+
+            } );
+
+
+            $scope.$watch( datepickerB, function (newVal, oldVal, $scope) {
+                if ( oldVal !== newVal ) {
+                    CDeps();
+                    RangesService.broadcastChange( $scope )
+                }
+
+            } )
+
+            $scope.$watch( datepickerC, function (newVal, oldVal, $scope) {
+                if ( oldVal !== newVal ) {
+                    DDeps();
+                    RangesService.broadcastChange( $scope )
+                }
+            } )
+
+            window.R = RangesService;
+
+            function ADeps () {
+
+                var _d = moment( $scope.Date, MOMENT_DATEFORMAT ),
+                        AActiveRange = RangesService.getActiveRangeForDatepicker( datepickerA, $scope.Date ),
+                        DATE1 = AActiveRange.from,
+                        DATE2 = AActiveRange.to;
+
+                if ( _d.isBefore( DATE2 ) ) {
+                    blockedB.from = DATE2.clone();
+                    blockedC.from = DATE2.clone();
+
+                    blockedB.to = null;
+                    blockedC.to = null;
+                } else {
+                    blockedB.from = null;
+                    blockedC.from = null;
+                    blockedB.to = DATE1.clone();
+                    blockedC.to = DATE1.clone();
+                }
+
+                BDeps();
+                CDeps();
+                DDeps();
+            }
+
+
+            function BDeps () {
+
+                var _d = moment( $scope.Date, MOMENT_DATEFORMAT );
+
+                Bdependence1.to = _d.clone().subtract( 'days', 1 );
+                Bdependence2.from = _d.clone().add( 'days', 11 )
+
+            }
+
+            function CDeps () {
+
+                var _d1 = moment( $scope.Date, MOMENT_DATEFORMAT ),
+                        _d2 = moment( $scope.Date2, MOMENT_DATEFORMAT );
+
+                Cdependence1.to = _d2.clone()
+                Cdependence2.from = _d1.clone().add( 'days', 16 )
+            }
+
+            function DDeps () {
+
+                var _d1 = moment( $scope.Date, MOMENT_DATEFORMAT ),
+                        _d2 = moment( $scope.Date3, MOMENT_DATEFORMAT );
+
+                Ddependence1.to = _d1.clone().subtract( 'days', 6 )
+                Ddependence2.from = _d2.clone().add( 'days', 6 )
+
+            }
+
+
+            $scope.isBlockAppear = true;
+
+            $scope.removeBlock = function () {
+                blockedA.detach()
+                ADeps()
+                RangesService.broadcastChange()
+                $scope.isBlockAppear = false;
+            }
+
+            $scope.addBlock = function () {
+                RangesService.addRange( blockedA )
+                ADeps()
+                RangesService.broadcastChange()
+                $scope.isBlockAppear = true;
+            }
+
+
+            setTimeout( function ( ){
+
+              $('.datepicker-day-item.current').next().click()
+            }, 300 )
+            $scope.datepickerHovered = 'a';
+            angular.element( '.datepicker-wrap' ).on( 'mouseover', function (ev) {
+                $scope.datepickerHovered = $( this ).children( 'h2' ).text().toLowerCase()
+                $scope.$apply()
+            } ).on( 'mouseout', function (ev) {
+                $scope.datepickerHovered = 'a'
+                $scope.$apply()
+            } )
+
+
+        }] );
+    </script>
+</head>
+<style>
+    .datepicker-wrap {
+        float: left;
+        height: 390px;
+        margin-right: 70px;
+    }
+    .datepicker-wrap h2 {
+        margin-bottom: 16px;
+        padding-bottom: 0;
+        padding-left: 30px;
+    }
+    .datepicker-wrap .datepiker {
+        border: 1px solid #CCCCCC;
+        border-radius: 4px;
+    }
+
+    .demo-rules {
+        margin-top: 35px;
+    }
+    .demo-rules .rules-text {
+        line-height: 1.3;
+        white-space: pre-wrap;
+    }
+
+    .demo-rules .default span {
+        color: black;
+    }
+    .demo-rules span {
+        color: #aaa;
+    }
+    .demo-rules .highlight {
+        color: #121212;
+    }
+
+    .demo-rules  h1 {
+        margin-bottom:0px;
+    }
+
+    code {
+        /*//font-family:arial, sans-serif;*/
+        font-size: 14px;
+        line-height: 1.3;
+        white-space: pre-wrap;
+    }
+
+    h3 {
+        margin: 0;
+        margin-top: 25px;
+        margin-bottom: 7px;
+        line-height: 1;
+    }
+</style>
+<body>
+<div class="layout-static">
+    <div class="wrapper" data-ng-app="mainModule">
+        <section class="content" data-ng-controller="DatepickerCtrl">
+            <div class="m-box">
+                <h1>Datepickers</h1>
+
+                <div class="col-4">
+                    <div class="box">
+                        <div class="datepicker-wrap">
+                            <h2>A</h2>
+                            <datepicker m-date="Date"></datepicker>
+                        </div>
+                        <div class="datepicker-wrap">
+                            <h2>B</h2>
+                            <datepicker m-date="Date2"></datepicker>
+                        </div>
+                        <div class="datepicker-wrap">
+                            <h2>C</h2>
+                            <datepicker m-date="Date3"></datepicker>
+                        </div>
+                        <div class="datepicker-wrap">
+                            <h2>D</h2>
+                            <datepicker m-date="Date4"></datepicker>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="box demo-rules">
+                        <h1>Условия для демо </h1>
+                        <p class="rules-text" data-ng-class="{default : datepickerHovered == 'a'}">
+Есть 4 даты: A, B, C и D.
+Даты в календарях должны удовлетворять следующим условиям:
+
+	<span data-ng-class="{highlight: datepickerHovered == 'b'}">B &gt;= A
+	B &lt;= A+10</span>
+	<span data-ng-class="{highlight: datepickerHovered == 'c'}">C &gt; B
+	C &lt;= A+15</span>
+	<span data-ng-class="{highlight: datepickerHovered == 'd'}">D &gt;= A-5
+	D &lt;= C+5</span>
+
+Недоступный период для A,B,C: с 12-го по 14-е число включительно. B и C должны находиться в одном активном периоде, который определяется в A (либо до недоступного периода, либо после).</p>
+<!--<button class="btn btn__positive" data-ng-click="removeBlock()" data-ng-show="isBlockAppear">
+<div class="btn-in">Удалить недоступный период</div>
+</button>
+<button class="btn btn__positive" data-ng-click="addBlock()" data-ng-show="!isBlockAppear">
+<div class="btn-in">Добавить недоступный период</div>
+</button>-->
+
+<p style="margin-left: 161px; line-height: 1.3; padding: 9px; width: 164px; border: 1px dashed rgb(170, 170, 170); color: rgb(153, 153, 153); border-radius: 6px; font-size: 12px; margin-top: -288px;">
+причину недоступности той или иной даты можно узнать, если кликнуть по ней
+</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+</body>
+</html>

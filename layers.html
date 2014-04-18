@@ -6,8 +6,27 @@
 	<link rel="stylesheet" href="out/style.min.css"/>
 	<script type="text/javascript" src="out/libs.min.js"></script>
 	<script type="text/javascript" src="out/app.min.js"></script>
+	<script>
+
+		actiGuide.mainModule.controller('DemoLayersCtrl', function($scope) {
+			$scope.dynOnLoad = function(data) {
+				console.log('Коллбэк из DemoLayersCtrl. Вызывается сразу после загрузки динамического элемента');
+				if (data.section) {
+					console.log('section', data.section);
+				}
+			};
+
+			$scope.dynOnOpen = function(data) {
+				console.log('Функция из DemoLayersCtrl. Вызывается при каждом открытии уже загруженного динамического элемента');
+				if (data.section) {
+					console.log('section', data.section);
+				}
+			};
+		});
+
+	</script>
 </head>
-<body ng-class="{'no-scroll':noScroll}">
+<body ng-class="{'no-scroll':noScroll}" ng-controller="DemoLayersCtrl">
 
 <div class="wrapper">
 	<section class="content">
@@ -28,48 +47,25 @@
 				<div class="box">
 
 					<p>
-						<dropdown class="dropdown__default">
-							<d-caller>
-								<a>Обычный дропдаун</a> |
-							</d-caller>
-							<d-container>
-								Привет!
-							</d-container>
+						<dropdown class="dropdown__default" caller="<a>Обычный дропдаун</a>">
+							Привет!
 						</dropdown>
 
-						<dropdown class="dropdown__big">
-							<d-caller>
-								<a>Вложенные дропдауны</a>
-							</d-caller>
-							<d-container>
-								<dropdown class="dropdown__giant">
-									<d-caller>
-										<a>Дропдаун в дропдауне</a>
-									</d-caller>
-									<d-container>
-										<dropdown class="dropdown__huge">
-											<d-caller>
-												<a>Ещё один дропдаун в дропдауне</a>
-											</d-caller>
-											<d-container>
-												Кстати, кнопка &laquo;ESC&raquo; поочерёдно закрывает открытые слои.<br />
-												Здесь тоже <a popup-caller="popup-1">открытие попапа 1</a>.
-											</d-container>
-										</dropdown>
-									</d-container>
+						|
+
+						<dropdown class="dropdown__big" caller="<a>Вложенные дропдауны</a>">
+							<dropdown class="dropdown__giant" caller="<a>Дропдаун в дропдауне</a>">
+								<dropdown class="dropdown__huge" caller="<a>Ещё один дропдаун в дропдауне</a>">
+									Кстати, кнопка &laquo;ESC&raquo; поочерёдно закрывает открытые слои.<br />
+									Здесь тоже <a popup-caller="popup-1">открытие попапа 1</a>.
 								</dropdown>
-							</d-container>
+							</dropdown>
 						</dropdown>
 					</p>
 
 					<p>
-						<dropdown>
-							<d-caller>
-								<a>!!!</a>
-							</d-caller>
-							<d-container>
-								Привет!
-							</d-container>
+						<dropdown caller="<a>!!!</a>">
+							Привет!
 						</dropdown>
 
 						&mdash; ширина элемента, открывающего дропдаун меньше 50px.
@@ -81,26 +77,16 @@
 				<div class="box">
 
 					<p class="fr">
-						<dropdown class="dropdown__huge">
-							<d-caller>
-								<a>Отражён</a>
-							</d-caller>
-							<d-container>
-								Если правый край выпавшего дропдауна не помещается в ширину окна, он будет отражён по горизонтали. На о-о-о-оочень большом разрешении, скорее всего, будет выглядеть как обычный.
-							</d-container>
+						<dropdown class="dropdown__huge" caller="<a>Отражён</a>">
+							Если правый край выпавшего дропдауна не помещается в ширину окна, он будет отражён по горизонтали. На о-о-о-оочень большом разрешении, скорее всего, будет выглядеть как обычный.
 						</dropdown>
 					</p>
 
 					<div class="clear-fix"></div>
 
 					<p class="fr">
-						<dropdown class="dropdown__huge">
-							<d-caller>
-								<a>!!!</a>
-							</d-caller>
-							<d-container>
-								Ширина элемента, открывающего этот дропдаун тоже меньше 50px.
-							</d-container>
+						<dropdown class="dropdown__huge" caller="<a>!!!</a>">
+							Ширина элемента, открывающего этот дропдаун тоже меньше 50px.
 						</dropdown>
 					</p>
 
@@ -260,50 +246,31 @@
 					<a popup-caller="popup-6">Открытие попапа 6</a>.
 					<a popup-caller="popup-7">Открытие попапа 7</a>.
 
-					<popup id="popup-6" ng-controller="TestCtrl" dyn-load="tmp/sample.html"></popup>
+					<popup id="popup-6" ng-controller="DemoLayersCtrl" dyn-load="tmp/sample.html" dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup>
 
-					<popup id="popup-7" ng-controller="TestCtrl" dyn-load="tmp/sample.html" popup-config='{
+					<popup id="popup-7" ng-controller="DemoLayersCtrl" popup-config='{
 						"title": "Попап с меню и динамикой",
 						"menu": [
-							{"type": "hilite", "title": "Секция 1", "section": "section-1"},
-							{"type": "divider", "title": "Разделитель в несколько строк"},
-							{"title": "Секция 2", "section": "section-2"}
+							{"title": "Секция без динамики", "section": "section-1"},
+							{"title": "Секция 2", "section": "section-2"},
+							{"title": "Секция 3", "section": "section-3"}
 						]
 					}'>
-						<popup-section target="section-1" dyn-load="tmp/sample.html">
-							<p>Section 1</p>
+						<popup-section target="section-1">
+							Секция 1
 						</popup-section>
-						<popup-section target="section-2" dyn-load="tmp/sample-2.html">
-							<p>Section 2</p>
-						</popup-section>
+						<popup-section target="section-2"
+									   dyn-load="tmp/sample.html"
+									   dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
+						<popup-section target="section-3"
+									   dyn-load="tmp/sample-2.html"
+									   dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
 					</popup>
 
-					<dropdown class="dropdown__default" ng-controller="TestCtrl" dyn-load="tmp/sample.html">
-						<d-caller>
-							<a>Дропдаун с динамическим содержимым</a>
-						</d-caller>
-						<d-container></d-container>
-					</dropdown>
-
-					<script>
-						actiGuide.mainModule.controller('TestCtrl', function($scope) {
-							$scope.dynOnLoad = function(section) {
-								if (!section) {
-									console.log('Коллбэк из TestCtrl. Вызывается сразу после загрузки динамического элемента. Загрузили содержимоего для всего попапа');
-								} else {
-									console.log('Коллбэк из TestCtrl. Вызывается сразу после загрузки динамического элемента. Загрузили секцию в попапе', section);
-								}
-							};
-
-							$scope.dynOnOpen = function(section) {
-								if (!section) {
-									console.log('Коллбэк из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыт попап с динамическим содержимым');
-								} else {
-									console.log('Коллбэк из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыта секция в попапе с динамическим содержимым', section);
-								}
-							};
-						});
-					</script>
+					<dropdown class="dropdown__huge"
+							  caller="<a>Дропдаун с динамическим содержимым</a>"
+							  dyn-load="tmp/sample.html"
+							  dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></dropdown>
 
 				</div>
 			</div>

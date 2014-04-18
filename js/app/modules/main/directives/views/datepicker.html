@@ -1,0 +1,48 @@
+<div class="datepicker no-select">
+
+    <div class="datepicker-head">
+            <span class="datepicker-btn-left" ng-click="prevMonth()">
+                <i class="datepicker-btn-left-tail"></i>
+            </span>
+
+        <span class="datepicker-value">{{ title }}</span>
+
+            <span class="datepicker-btn-right" ng-click="nextMonth()">
+                <i class="datepicker-btn-right-tail"></i>
+            </span>
+
+    </div>
+
+    <div class="datepicker-week">
+        <span ng-repeat="item in week">{{ item }}</span>
+    </div>
+
+    <div class="datepicker-body">
+        <div class="datepicker-day-off"></div>
+            <span class="helper datepicker-day-item" ng-repeat="(key, item) in days track by $index" ng-class="{'disable' : item.isDisabled, 'current' : item.isCurrent, 'selfDay' : item.isToday}" ng-click="choose(item)">
+                <span class="helper-block helper-block__datepicker" ng-show="item.isShow">
+                    <i class="helper-block-tail"></i>
+                    {{ item.tooltip }}
+                </span>
+                {{ item.day }}
+            </span>
+        <div class="datepicker-clear"></div>
+    </div>
+
+    <div class="datepicker-footer">
+        <div class="ctrl-group">
+
+            <input class="t-input t-input__micro first" maxlength="2" placeholder="ДД" type="text" data-ng-model="inputValue.day" data-qa="{{ atm }}.day"/>
+            <input class="t-input t-input__micro" maxlength="2" placeholder="ММ" type="text" data-ng-model="inputValue.month" data-qa="{{ atm }}.month"/>
+            <input class="t-input t-input__mini last" maxlength="4" placeholder="ГГГГ" type="text" data-ng-model="inputValue.year" data-qa="{{ atm }}.year"/>
+
+                <span class="btn" style="margin-left:5px;" ng-class="{'disable' : isSubmitDisabled}" ng-click="clickBtn()">
+                    <span class="helper-block helper-block__datepicker" ng-show="showSubmitTooltip">
+                        <i class="helper-block-tail"></i>
+                        {{ submitTooltip }}
+                    </span>
+                    <span class="btn-in" data-qa="{{ atm }}.ok">OK</span>
+                </span>
+        </div>
+    </div>
+</div>

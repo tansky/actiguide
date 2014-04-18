@@ -143,6 +143,7 @@
 .popup_sidebar LI.is-active {
   background: #555F64;
   color: #fff;
+  cursor: default;
 }
 .popup_sidebar LI.is-active:after {
   position: absolute;
