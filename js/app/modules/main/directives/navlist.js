@@ -10,7 +10,9 @@ actiGuide.mainModule.directive('navList', function () {
     return {
         restrict: 'C',
         link: function (scope, element) {
-            var listItems = $('li:not(.list-title, .list-subtitle)', element);
+            if (element.hasClass('select-dropdown')) return;
+
+            var listItems = $('li:not(.list-title, .list-subtitle, .disabled)', element);
             listItems.click(function () {
                 listItems.removeClass('active');
                 $(this).addClass('active');

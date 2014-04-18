@@ -12,13 +12,14 @@
 /**
 * Цвета кнопок
 */
+/* Focus bg */
 /* Active bg */
 /* Pushed / Preload bg */
 /* FRAME bg Pushed / Preload / Active */
 /* Box-shadow Pushed / Preload / Active */
 /* Mixins
     =========================================================================================*/
-/* Buttons 
+/* Buttons
     ==============================================*/
 .size-b-frame {
   position: relative;

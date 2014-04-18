@@ -60,18 +60,120 @@ H4 {
 }
 
 .tech {
-	font-size: 12px;
-	line-height: 18px;
+    font-family: Consolas,Monaco,monospace;
+    font-size: 12px;
+    line-height: 18px;
+    }
+
+.code {
+	font: 14px "Courier New", Courier, monospace;
 }
 
 
 
-/**
-* Наборные тексты
-*/
+/* TEXT style
+      ==============================================*/
 
-.typesetting {
-	P {
-		margin: 0;
-	}
-}
+.text-box{
+    ul, ol{
+    font-size: 16px;
+    margin: 0 0 30px 30px;
+    padding: 0;
+    line-height: 22px;
+    }
+    h2 {
+      margin-top: 40px;
+      margin-bottom: 20px;
+      }
+      h2:first-child{
+        margin-top: 0;
+        }
+
+  h3 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    }
+    h3:first-child{
+      margin-top: 0;
+      }
+  h4 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    }
+        ol ol,
+        ul ul{
+            margin-top: 15px; 
+            margin-bottom: 0;
+            }
+
+        ol li{
+            margin-bottom: 20px;
+            }
+            ol ol li{
+                list-style-type: lower-alpha;
+                }
+        ul li{
+            margin-bottom: 20px;
+            list-style-type: none;
+
+            &:before{
+                position: absolute;
+                content: '—';
+                margin-left: -17px;
+                margin-top: -0.05em;  
+                }
+            }
+
+
+        table{
+            margin: 0 0 30px 30px;
+
+            td, th{
+                padding: 0 20px;
+                vertical-align: bottom;
+                }
+            thead th{
+              font-family: @f-bold;
+              font-size: 18px;
+              }
+            th{
+              font-size: 12px;
+              line-height: 16px;
+              padding-top: 5px;
+              padding-bottom: 5px;
+              }
+          td{
+            border-top: 1px solid #e2e2e2;
+            line-height: 22px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            }
+            td:first-child,
+            th:first-child{
+                padding-right: 0;
+                padding-left: 0;
+                }
+          tr.first td{
+            border-top: none;
+          }
+        }
+
+      .text,
+      .secondary,
+      .tech  {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          }
+      .text{
+        line-height: 26px;
+        }
+      .secondary {
+        line-height: 22px;
+        }
+      .tech {
+        line-height: 18px;
+        }
+    }
+
+
+

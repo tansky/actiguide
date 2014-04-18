@@ -25,9 +25,9 @@
 @font-face {
 	font-family: 'Web Symbols';
 	src: url('@{dir-fonts}web-symbols-liga-regular.eot?#iefix') format('embedded-opentype'),
-	url('@{dir-fonts}web-symbols-liga-regular.svg') format('svg'),
 	url('@{dir-fonts}web-symbols-liga-regular.woff') format('woff'),
-	url('@{dir-fonts}web-symbols-liga-regular.ttf') format('truetype');
+	url('@{dir-fonts}web-symbols-liga-regular.ttf') format('truetype'),
+    url('@{dir-fonts}web-symbols-liga-regular.svg#WebSymbolsRegular') format('svg');
 }
 
 
@@ -155,4 +155,11 @@ BODY {
 
 .mt-giant {
 	margin-top: 60px !important;
+}
+
+
+
+.spinner {
+	background: url('@{dir-images}spin.gif') no-repeat center;
+	height: 36px;
 }

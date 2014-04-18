@@ -8,8 +8,9 @@
 @import 'popup.css';
 @import 'nav-list.css';
 @import 't-inputs.css';
-@import 'validation.css';
 @import 'ctrl-group.css';
+@import 'select.css';
+@import 'validation.css';
 /**
 * Корневой файл стилей. Здесь можно управлять порядком подключения стилей
 */

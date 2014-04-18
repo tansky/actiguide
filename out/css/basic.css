@@ -12,13 +12,14 @@
 /**
 * Цвета кнопок
 */
+/* Focus bg */
 /* Active bg */
 /* Pushed / Preload bg */
 /* FRAME bg Pushed / Preload / Active */
 /* Box-shadow Pushed / Preload / Active */
 /* Mixins
     =========================================================================================*/
-/* Buttons 
+/* Buttons
     ==============================================*/
 .size-b-frame {
   position: relative;
@@ -75,7 +76,7 @@
 }
 @font-face {
   font-family: 'Web Symbols';
-  src: url('../fonts/web-symbols-liga-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/web-symbols-liga-regular.svg') format('svg'), url('../fonts/web-symbols-liga-regular.woff') format('woff'), url('../fonts/web-symbols-liga-regular.ttf') format('truetype');
+  src: url('../fonts/web-symbols-liga-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/web-symbols-liga-regular.woff') format('woff'), url('../fonts/web-symbols-liga-regular.ttf') format('truetype'), url('../fonts/web-symbols-liga-regular.svg#WebSymbolsRegular') format('svg');
 }
 /**
 * Цвета
@@ -271,4 +272,8 @@ BODY {
 }
 .mt-giant {
   margin-top: 60px !important;
+}
+.spinner {
+  background: url('../img/spin.gif') no-repeat center;
+  height: 36px;
 }

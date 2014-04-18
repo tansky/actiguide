@@ -1,0 +1,1 @@
+actiGuide.mainModule.constant('VIEWS_PATH', 'js/app/modules/main/directives/views/');

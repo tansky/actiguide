@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
 <head>
 	<meta charset="UTF-8">
@@ -9,63 +9,157 @@
 </head>
 <body>
 
-<div class="wrapper">
+    <div class="wrapper">
 
-	<div class="m-box">
-		<div class="box">
-			<h1>Типографика</h1>
-		</div>
-	</div>
+        <div class="m-box">
+            <div class="box">
+                <h1>Типографика</h1>
+            </div>
+        </div>
 
-	<div class="m-box m-giant">
-		<div class="col-edge-1">
-			<div class="box">
-				<h3>Интерфейсные тексты</h3>
-			</div>
-		</div>
-		<div class="col-4">
-			<div class="box">
-				<h2>Заголовок второго уровня &mdash; &lt;H2&gt;</h2>
 
-				<h3>Заголовок третьего уровня &mdash; &lt;H3&gt;</h3>
-				<h4>Заголовок четвертого уровня &mdash; &lt;H4&gt;</h4>
 
-				<p>Текст</p>
 
-				<p class="secondary">Второстепенный текст &mdash; &lt;p class=&quot;<strong>secondary</strong>&quot;&gt;...</p>
+        <div class="m-box text-box">
+            <div class="box">
+                <p class="text text__small">Фирменный шрифт &mdash; Proxima Nova (<a href="http://31.44.93.246:8090/download/attachments/4325696/proximanova.zip" class="link_secondary">Desktop ZIP</a> и <a href="http://31.44.93.246:8090/download/attachments/4325696/proximanova-webfont.zip" class="link_secondary">Web font ZIP</a>). Используются нормальное и жирное начертание. Шрифт для пиктограмм &mdash; WebSymbolsLyga (<a href="http://31.44.93.246:8090/download/attachments/4325696/websymbolsliga.zip" class="link_secondary">Web font ZIP</a>).</p>
+                <p class="text">Стили набора отличаются в зависимости от области применения: для набора в интерфейсах и при верстке текстов.</p>
 
-				<p class="tech">Технический текст &mdash; &lt;p class=&quot;<strong>tech</strong>&quot;&gt;...</p>
+                <p class="secondary">Авторы шрифтов: <a href="http://www.marksimonson.com/fonts/view/proxima-nova">Mark Simonson</a> и <a href="http://www.marksimonson.com/fonts/view/proxima-nova">JustBeNice</a> </p>
+            </div>
+        </div>
 
-				<hr/>
+        <div class="m-box">
+            <div class="box">
+                <hr>
+            </div>
+        </div>
 
-				<p>Разделительные линии (<strong>&lt;hr /&gt;</strong>) только одного стиля, не заходят в выносы колонок.</p>
 
-				<hr/>
+        <div class="m-box">
+            <div class="box">
+                <h1>В интерфейсах </h1>
+            </div>
+        </div>
 
-			</div>
-		</div>
-	</div>
 
-	<div class="m-box m-giant">
-		<div class="col-edge-1">
-			<div class="box">
-				<h3>Наборные тексты</h3>
-			</div>
-		</div>
-		<div class="col-4">
-			<div class="box">
-				<div class="typesetting">
-					<p>Первый параграф наборного текста.</p>
+        <div class="col66">
+            <div class="box">
+                <h2>Заголовок второго уровня</h2>
+                <h3>Заголовок третьего уровня</h3>
+                <h4>Заголовок четвертого уровня</h4>
+                <p class="text">Текст</p>
+                <p class="secondary">Второстепенный текст</p>
+                <p class="tech">Технический текст</p>
 
-					<p>Второй параграф наборного текста.</p>
+                <!--NEW CLASS FOR HR-->
+                <hr>
+                <p class="text">Разделительные линии только одного стиля, не заходят в выносы колонок - тег "hr"</p>
+                <!--NEW CLASS FOR HR-->
+                <hr>
+                <p class="text m-middle">Используются пять размеров отступов снизу:</p>
 
-					<p>Третий параграф наборного текста.</p>
-				</div>
-			</div>
-		</div>
-	</div>
+                <div style="background: #FFFDBE; height: 5px; width: 110px; float:left; margin:0 5px 40px 0;"><span style="position:relative;top:-20px;">nano - 5px </span></div>
+                <div style="background: #FFFDBE; height: 10px; width: 110px; float: left; margin: 0 5px 40px 0;"><span style="position:relative;top:-20px;">micro -10px</span></div>
+                <div style="background: #FFFDBE; height: 20px; width: 110px; float: left; margin: 0 5px 40px 0;"><span style="position:relative;top:-20px;">default 20px</span></div>
+                <div style="background: #FFFDBE; height: 30px; width: 110px; float: left; margin: 0 5px 40px 0;"><span style="position:relative;top:-20px;">normal - 30px</span></div>
+                <div style="background: #FFFDBE; height: 40px; width: 110px; float: left; margin: 0 5px 40px 0;"><span style="position:relative;top:-20px;">middle - 40px</span></div>
+                <div style="background: #FFFDBE; height: 50px; width: 110px; float: left; margin: 0 5px 40px 0;"><span style="position:relative;top:-20px;">big - 50px</span></div>
+                <div style="background: #FFFDBE; height: 60px; width: 110px; float: left; margin: 0 5px 40px 0;"><span style="position:relative;top:-20px;">giant - 60px</span></div>
 
-</div>
+
+
+            </div>
+        </div>
+
+
+
+        <div class="m-box">
+            <div class="box"><hr></div>
+        </div>
+
+        <div class="m-box">
+            <div class="box">
+                <h1>В текстах (обертка с классом text-box)</h1>
+            </div>
+
+
+            <div class="box text-box">
+                <h2>Заголовок второго уровня</h2>
+                <h3>Заголовок третьего уровня</h3>
+                <h4>Заголовок четвертого уровня</h4>
+                <p class="text">Текст</p>
+                <p class="secondary">Второстепенный текст</p>
+                <p class="tech">Технический текст</p>
+
+                <!--NEW CLASS FOR HR-->
+                <hr class="small">
+
+                <h3>Таблица</h3>
+                <p class="text">
+                    У таблиц свои стили-исключения: вертикальные отступы, которыми окружены разделителей строк, micro и заголовки столбцов micro. Если таблица
+                    не умещается в экран по вертикали, то заголовки столбцов удерживаются
+                    у верхней границы и отделяются своим разделителем, который появляется только в этом случае. Столбцы с численными значениями выравниваются по правому краю и по разряду. Опционально, строки таблицы могут подсвечиваться при наведении курсора.
+                </p>
+
+                <p class="text">Небольшая и <a style="text-decoration: none" href="#">объемная</a> таблица</p>
+                <h4 class="m-left30">Доход чиновников за 2012-й год</h4>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Доход</th>
+                        </tr>
+                        <tr class="first">
+                            <td style="padding:15px 0;">Владимир Груздев</td>
+                            <td align="right">1.35</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:15px 0;">Григорий Аникеев</td>
+                            <td align="right">9.2</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:15px 0;">Сергей Петров</td>
+                            <td align="right">8.2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!--NEW CLASS FOR HR-->
+                <hr class="small">
+                <h3>Список</h3>
+                <p class="text">
+                    Между элементами списка отступ small, интерлиньяж пункта равен интерлиньяжу используемого начертания. Списки бывают без буллитов и с буллитом тире «&mdash;». Каждый последующий уровень вложенности втягивается на 30 px.
+                </p>
+                <ul>
+                    <li>Первый элемент списка</li>
+                    <li>
+                        Второй элемент списка длиной <br> аж в две строки
+                        <ul>
+                            <li>Первый вложенный</li>
+                            <li>Второй вложенный</li>
+                        </ul>
+                    </li>
+                    <li>Третий элемент списка</li>
+                </ul>
+                <!--NEW CLASS FOR HR-->
+                <hr class="small">
+
+                <ol>
+                    <li>Первый элемент списка</li>
+                    <li>
+                        Второй элемент списка длиной <br> аж в две строки
+                        <ol>
+                            <li>Первый вложенный</li>
+                            <li>Второй вложенный</li>
+                        </ol>
+                    </li>
+                    <li>Третий элемент списка</li>
+                </ol>
+
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

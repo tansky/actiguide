@@ -12,7 +12,7 @@
  *  @param {string} [id] Стандартный атрибут id. На поля для рублей и копеек будут проставлены атрибуты id
  *  соответственно как {id}_Rub и {id}_Kop
  *  @param {string} [name] Стандартный атрибут name. На поля для рублей и копеек будут проставлены атрибуты name
- *  соответственно как {id}_Rub и {id}_Kop
+ *  соответственно как {name}_Rub и {name}_Kop
  *  @param {string} [disabled] Стандартный атрибут
  *  @param {string} [readonly] Стандартный атрибут
  *  @param {string} [required] Стандартный параметр AngularJs

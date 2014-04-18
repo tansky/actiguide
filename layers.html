@@ -6,8 +6,27 @@
 	<link rel="stylesheet" href="out/style.min.css"/>
 	<script type="text/javascript" src="out/libs.min.js"></script>
 	<script type="text/javascript" src="out/app.min.js"></script>
+	<script>
+
+		actiGuide.mainModule.controller('DemoLayersCtrl', function($scope) {
+			$scope.dynOnLoad = function(data) {
+				console.log('Коллбэк из DemoLayersCtrl. Вызывается сразу после загрузки динамического элемента');
+				if (data.section) {
+					console.log('section', data.section);
+				}
+			};
+
+			$scope.dynOnOpen = function(data) {
+				console.log('Функция из DemoLayersCtrl. Вызывается при каждом открытии уже загруженного динамического элемента');
+				if (data.section) {
+					console.log('section', data.section);
+				}
+			};
+		});
+
+	</script>
 </head>
-<body>
+<body ng-class="{'no-scroll':noScroll}" ng-controller="DemoLayersCtrl">
 
 <div class="wrapper">
 	<section class="content">
@@ -28,48 +47,25 @@
 				<div class="box">
 
 					<p>
-						<dropdown class="dropdown__default">
-							<d-caller>
-								<a>Обычный дропдаун</a> |
-							</d-caller>
-							<d-container>
-								Привет!
-							</d-container>
+						<dropdown class="dropdown__default" caller="<a>Обычный дропдаун</a>">
+							Привет!
 						</dropdown>
 
-						<dropdown class="dropdown__big">
-							<d-caller>
-								<a>Вложенные дропдауны</a>
-							</d-caller>
-							<d-container>
-								<dropdown class="dropdown__giant">
-									<d-caller>
-										<a>Дропдаун в дропдауне</a>
-									</d-caller>
-									<d-container>
-										<dropdown class="dropdown__huge">
-											<d-caller>
-												<a>Ещё один дропдаун в дропдауне</a>
-											</d-caller>
-											<d-container>
-												Кстати, кнопка &laquo;ESC&raquo; поочерёдно закрывает открытые слои.
-												Здесь тоже <a popup-caller="popup-1">откртие попапа №1</a>.
-											</d-container>
-										</dropdown>
-									</d-container>
+						|
+
+						<dropdown class="dropdown__big" caller="<a>Вложенные дропдауны</a>">
+							<dropdown class="dropdown__giant" caller="<a>Дропдаун в дропдауне</a>">
+								<dropdown class="dropdown__huge" caller="<a>Ещё один дропдаун в дропдауне</a>">
+									Кстати, кнопка &laquo;ESC&raquo; поочерёдно закрывает открытые слои.<br />
+									Здесь тоже <a popup-caller="popup-1">открытие попапа 1</a>.
 								</dropdown>
-							</d-container>
+							</dropdown>
 						</dropdown>
 					</p>
 
 					<p>
-						<dropdown>
-							<d-caller>
-								<a>!!!</a>
-							</d-caller>
-							<d-container>
-								Привет!
-							</d-container>
+						<dropdown caller="<a>!!!</a>">
+							Привет!
 						</dropdown>
 
 						&mdash; ширина элемента, открывающего дропдаун меньше 50px.
@@ -81,26 +77,16 @@
 				<div class="box">
 
 					<p class="fr">
-						<dropdown class="dropdown__huge">
-							<d-caller>
-								<a>Отражён</a>
-							</d-caller>
-							<d-container>
-								Если правый край выпавшего дропдауна не помещается в ширину окна, он будет отражён по горизонтали. На о-о-о-оочень большом разрешении, скорее всего, будет выглядеть как обычный.
-							</d-container>
+						<dropdown class="dropdown__huge" caller="<a>Отражён</a>">
+							Если правый край выпавшего дропдауна не помещается в ширину окна, он будет отражён по горизонтали. На о-о-о-оочень большом разрешении, скорее всего, будет выглядеть как обычный.
 						</dropdown>
 					</p>
 
 					<div class="clear-fix"></div>
 
 					<p class="fr">
-						<dropdown class="dropdown__huge">
-							<d-caller>
-								<a>!!!</a>
-							</d-caller>
-							<d-container>
-								Ширина элемента, открывающего этот дропдаун тоже меньше 50px.
-							</d-container>
+						<dropdown class="dropdown__huge" caller="<a>!!!</a>">
+							Ширина элемента, открывающего этот дропдаун тоже меньше 50px.
 						</dropdown>
 					</p>
 
@@ -117,55 +103,175 @@
 			<div class="col-4">
 				<div class="box">
 
-					<a popup-caller="popup-1">Откртие попапа №1</a>.
-					<a popup-caller="popup-2">Откртие попапа №2</a>.
+					<a popup-caller="popup-1">Открытие попапа 1</a>.
+					<a popup-caller="popup-2">Открытие попапа 2</a>.
+					<a popup-caller="popup-3">Открытие попапа 3</a>.
+					<a popup-caller="popup-4">Открытие попапа 4</a>.
 
-					<popup id="popup-1">
-						<popup-title>
-							Заголовок попапа №1
-						</popup-title>
-						<popup-container>
-							Содержимое попапа №1
-						</popup-container>
+					<br />
+
+					<a popup-caller="popup-5">Открытие попапа 5</a>.
+
+					<popup id="popup-1" popup-config='{
+						"title": "Тестовый попап",
+						"noCloseButton": true,
+						"customWidth": 950
+					}'>
+						<p>Попапы конфигурируются через аттрибут <strong>popup-config</strong>, представляющий из себя JSON. Ниже приведён пример попапа с полным набором всех возможных параметров:</p>
+
+						<p class="code">
+							&lt;popup id='popup-id' popup-config='{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Заголовок попапа&quot;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;noCloseButton&quot;: true,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(если true, то не будет отображён крестик в модельном окне)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;noPadding&quot;: true,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(если true, то у контейнера не будет внутреннего отступа, см. <a popup-caller="popup-4">Попап 4</a>)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;customWidth&quot;: 500&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(особая ширина попапа в пикселях, см. <a popup-caller="popup-3">Попап 3</a>)<br />
+							}'&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;Содержимое попапа<br />
+							&lt;/popup&gt;
+						</p>
+
+						<p>Отдельного внимания заслуживает меню попапа. Оно конфигурируется в том же аттрибуте следующим образом:</p>
+
+						<p class="code">
+							&lt;popup id='popup-id' popup-config='{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&quot;menu&quot;: [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(внутри попапа может находиться меню, см. <a popup-caller="popup-5">Попап 5</a>)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;: &quot;hilite&quot;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(данный пункт меню будет выделенным)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Ссылка 1&quot;,<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;section&quot;: &quot;section-1&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(секция контейнера, соответствующая этому пункту)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;: &quot;divider&quot;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(разделитель, не является ссылкой)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Разделитель&quot;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Ссылка 2&quot;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(обычный пункт меню)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;section&quot;: &quot;section-2&quot;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;]<br />
+							}'&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;popup-section target=&quot;section-1&quot;&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Содержимое секции 1<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;/popup-section&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;popup-section target=&quot;section-2&quot;&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Содержимое секции 2<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;/popup-section&gt;<br />
+							&lt;/popup&gt;
+						</p>
 					</popup>
 
 					<popup id="popup-2">
-						<popup-title>
-							Заголовок попапа №2
-						</popup-title>
-						<popup-container>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-							<p>Содержимое попапа №2</p>
-						</popup-container>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
+						<p>Попап с прокруткой</p>
 					</popup>
+
+					<popup id="popup-3" popup-config='{
+						"noCloseButton": true,
+						"customWidth": 400
+					}'>
+						<p>Для попапа также можно задать специальную ширину используя атрибут <strong>customWidth</strong> в popupConfig.</p>
+						<p>Ширина этого попапа &mdash; 400px.</p>
+					</popup>
+
+					<popup id="popup-4" popup-config='{
+						"noCloseButton": true,
+						"noPadding": true,
+						"customWidth": 400
+					}'>
+						<img src="tmp/grass.jpg" />
+					</popup>
+
+					<popup id="popup-5" popup-config='{
+						"title": "Заголовок попапа 5",
+						"menu": [
+							{"type": "hilite", "title": "Ссылка 1", "section": "section-1"},
+							{"type": "divider", "title": "Разделитель в несколько строк"},
+							{"title": "Ссылка 2", "section": "section-2"}
+						]
+					}'>
+						<popup-section target="section-1">
+							<p>Container</p>
+							<p>Section 1</p>
+						</popup-section>
+						<popup-section target="section-2">
+							<p>Container</p>
+							<p>Section 2</p>
+						</popup-section>
+					</popup>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="m-box m-giant">
+			<div class="col-edge-1">
+				<div class="box">
+					<h3>Подгрузка</h3>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="box">
+
+					<a popup-caller="popup-6">Открытие попапа 6</a>.
+					<a popup-caller="popup-7">Открытие попапа 7</a>.
+
+					<popup id="popup-6" ng-controller="DemoLayersCtrl" dyn-load="tmp/sample.html" dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup>
+
+					<popup id="popup-7" ng-controller="DemoLayersCtrl" popup-config='{
+						"title": "Попап с меню и динамикой",
+						"menu": [
+							{"title": "Секция без динамики", "section": "section-1"},
+							{"title": "Секция 2", "section": "section-2"},
+							{"title": "Секция 3", "section": "section-3"}
+						]
+					}'>
+						<popup-section target="section-1">
+							Секция 1
+						</popup-section>
+						<popup-section target="section-2"
+									   dyn-load="tmp/sample.html"
+									   dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
+						<popup-section target="section-3"
+									   dyn-load="tmp/sample-2.html"
+									   dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
+					</popup>
+
+					<dropdown class="dropdown__huge"
+							  caller="<a>Дропдаун с динамическим содержимым</a>"
+							  dyn-load="tmp/sample.html"
+							  dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></dropdown>
+
 				</div>
 			</div>
 		</div>

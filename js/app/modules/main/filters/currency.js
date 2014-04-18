@@ -1,5 +1,11 @@
+/**
+ *  @ngdoc filter
+ *  @name currency
+ *
+ *  @description Разбивает число по разрядам и округляет до второго знака
+ *
+ */
 actiGuide.mainModule.filter('currency', function() {
-    //currency - разбить число по разрядам и округлить до второго знака
     return function(value, format) {
         if (!value) return value;
         value = String(value).replace(',', '.');

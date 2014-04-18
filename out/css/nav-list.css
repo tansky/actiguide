@@ -12,13 +12,14 @@
 /**
 * Цвета кнопок
 */
+/* Focus bg */
 /* Active bg */
 /* Pushed / Preload bg */
 /* FRAME bg Pushed / Preload / Active */
 /* Box-shadow Pushed / Preload / Active */
 /* Mixins
     =========================================================================================*/
-/* Buttons 
+/* Buttons
     ==============================================*/
 .size-b-frame {
   position: relative;
@@ -62,11 +63,11 @@
 /* Box shadow */
 /* Gradients buttons */
 /* отменяет выделение текста при нажатии на кнопку */
-ul.nav-list {
+.nav-list {
   margin: 0;
   padding: 0;
 }
-ul.nav-list li {
+.nav-list li {
   list-style-type: none;
   margin: 0;
   padding: 0 10px;
@@ -83,23 +84,23 @@ ul.nav-list li {
   -ms-user-select: none;
   user-select: none;
 }
-ul.nav-list li:hover {
+.nav-list li:hover {
   background: #eefcfd;
 }
-ul.nav-list li:before {
+.nav-list li:before {
   content: '';
 }
-ul.nav-list li.active,
-ul.nav-list li.pushed {
+.nav-list li.active,
+.nav-list li.pushed {
   background: #565f64;
   color: #ffffff;
 }
-ul.nav-list li.list-title {
+.nav-list li.list-title {
   font-family: 'Proxima Nova Bold', sans-serif;
   background: none;
   color: #000000;
 }
-ul.nav-list li.list-subtitle {
+.nav-list li.list-subtitle {
   background: none;
   color: #cccccc;
   font-size: 12px;
@@ -108,4 +109,8 @@ ul.nav-list li.list-subtitle {
   text-transform: uppercase;
   padding-top: 3px;
   letter-spacing: 1px;
+}
+.nav-list li.disabled {
+  color: #e2e2e2;
+  background: none;
 }
