@@ -4,80 +4,82 @@ actiGuide.mainModule.directive('dynLoad', function ($http, $sce) {
 		replace: true,
 		controller: function($scope, $element, $attrs) {
 
-			console.log($element);
-
 			if ($element[0].tagName.toLowerCase() === 'popup-section') {
 
-				/* Динамическая загрузка для секций попапов с меню */
+				/* Загрузка контента в секции с динамическим содержимым попапов с меню */
 
-			} else {
+				var $popupScope = $element.parent().scope();
 
-				/* Динамическая загрузка для обычных попапов */
+				if (!$popupScope._dynLoadInited) {
+					$popupScope._dynLoadInited = true;
 
-				$scope.dynamic = true;
-				$scope.loaded = false;
-
-				$scope.$watch('visible', function(newVal) {
-					if ($scope.currentSection) {
+					$popupScope.$watch('visible', function(newVal) {
 						if (newVal) {
-							if (!$scope.sections[$scope.currentSection.section].loaded) {
-								loadContent($scope.sections[$scope.currentSection.section], function() {
-									if (typeof $scope.dynOnLoad === 'function') {
-										$scope.dynOnLoad($scope.currentSection.section);
+							touchSection();
+						}
+					});
+
+					$popupScope.$watch('currentSection', function(newVal) {
+						if ($popupScope.visible) {
+							touchSection();
+						}
+					});
+
+					function touchSection() {
+						var currentSection = $popupScope.sections[$popupScope.currentSection.section];
+						if (currentSection.dynLoad) {
+							$popupScope.dynamic = true;
+
+							if (!currentSection.loaded) {
+								$http.get(currentSection.dynLoad).success(function (response) {
+									currentSection.loaded = true;
+									currentSection.content = $sce.trustAsHtml(response);
+
+									if (typeof $scope[currentSection.dynOnLoad] === 'function') {
+										$scope[currentSection.dynOnLoad]({
+											response: response,
+											section: $popupScope.currentSection.section
+										});
 									}
 								});
-							} else {
-								if (typeof $scope.dynOnOpen === 'function') {
-									$scope.dynOnOpen($scope.currentSection.section);
-								}
+							} else if (typeof $scope[currentSection.dynOnOpen] === 'function') {
+								$scope[currentSection.dynOnOpen]({
+									section: $popupScope.currentSection.section
+								});
 							}
+						} else {
+							$popupScope.dynamic = false;
 						}
-					} else {
-						if (!$scope.loaded && newVal) {
+					}
+				}
+
+			} else if ($element.hasClass('popup') || $element.hasClass('dropdown')) {
+
+				/* Загрузка динамического содержимого в попапы без меню и дропдауны */
+
+				$scope.dynamic = true;
+
+				$scope.$watch('visible', function(newVal) {
+					if (newVal) {
+						if (!$scope.loaded) {
 							$http.get($attrs.dynLoad).success(function (response) {
 								$scope.loaded = true;
 								$scope.content = $sce.trustAsHtml(response);
 
-								if (typeof $scope.dynOnLoad === 'function') {
-									$scope.dynOnLoad();
+								if (typeof $scope[$attrs.dynOnLoad] === 'function') {
+									$scope[$attrs.dynOnLoad]({
+										response: response
+									});
 								}
 							});
+						} else if (typeof $scope[$attrs.dynOnOpen] === 'function') {
+							$scope[$attrs.dynOnOpen]({});
 						}
-
-						if ($scope.loaded && newVal && typeof $scope.dynOnOpen === 'function') {
-							$scope.dynOnOpen();
-						}
-					}
-				});
-
-				$scope.$watch('currentSection', function(newVal) {
-					if ($scope.visible && newVal) {
-						loadContent($scope.sections[newVal.section]);
-					}
-
-					if ($scope.visible && newVal && !$scope.sections[newVal.section].loaded && typeof $scope.dynOnLoad === 'function') {
-						$scope.dynOnLoad(newVal.section);
-					}
-
-					if ($scope.visible && newVal && $scope.sections[newVal.section].loaded && typeof $scope.dynOnOpen === 'function') {
-						$scope.dynOnOpen(newVal.section);
 					}
 				});
 
 			}
 
-			function loadContent(currentSection, callback) {
-				if (!currentSection.loaded) {
-					$http.get(currentSection.dynLoad).success(function (response) {
-						currentSection.loaded = true;
-						currentSection.content = $sce.trustAsHtml(response);
-
-						if (typeof callback === 'function') {
-							callback(response);
-						}
-					});
-				}
-			}
 		}
 	}
 });

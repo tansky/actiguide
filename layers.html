@@ -7,7 +7,7 @@
 	<script type="text/javascript" src="out/libs.min.js"></script>
 	<script type="text/javascript" src="out/app.min.js"></script>
 </head>
-<body ng-class="{'no-scroll':noScroll}">
+<body ng-class="{'no-scroll':noScroll}" ng-controller="DemoLayersCtrl">
 
 <div class="wrapper">
 	<section class="content">
@@ -227,9 +227,9 @@
 					<a popup-caller="popup-6">Открытие попапа 6</a>.
 					<a popup-caller="popup-7">Открытие попапа 7</a>.
 
-					<popup id="popup-6" ng-controller="TestCtrl" dyn-load="tmp/sample.html"></popup>
+					<popup id="popup-6" ng-controller="DemoLayersCtrl" dyn-load="tmp/sample.html" dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup>
 
-					<popup id="popup-7" ng-controller="TestCtrl" popup-config='{
+					<popup id="popup-7" ng-controller="DemoLayersCtrl" popup-config='{
 						"title": "Попап с меню и динамикой",
 						"menu": [
 							{"title": "Секция 1", "section": "section-1"},
@@ -237,32 +237,31 @@
 							{"title": "Секция без динамики", "section": "section-3"}
 						]
 					}'>
-						<popup-section target="section-1" dyn-load="tmp/sample.html"></popup-section>
-						<popup-section target="section-2" dyn-load="tmp/sample-2.html"></popup-section>
+						<popup-section target="section-1" dyn-load="tmp/sample.html" dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
+						<popup-section target="section-2" dyn-load="tmp/sample-2.html" dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
 						<popup-section target="section-3">
 							Секция 3
 						</popup-section>
 					</popup>
 
-					<dropdown class="dropdown__default" caller="<a>Дропдаун с динамическим содержимым</a>" ng-controller="TestCtrl" dyn-load="tmp/sample.html"></dropdown>
+					<dropdown class="dropdown__huge"
+							  caller="<a>Дропдаун с динамическим содержимым</a>"
+							  dyn-load="tmp/sample.html"
+							  dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></dropdown>
 
 					<script>
-						// TODO: Не передаём контроллер. Передаём конкретные функции!
-
-						actiGuide.mainModule.controller('TestCtrl', function($scope) {
-							$scope.dynOnLoad = function(section) {
-								if (!section) {
-									console.log('Коллбэк из TestCtrl. Вызывается сразу после загрузки динамического элемента. Загрузили содержимоего для всего попапа');
-								} else {
-									console.log('Коллбэк из TestCtrl. Вызывается сразу после загрузки динамического элемента. Загрузили секцию в попапе', section);
+						actiGuide.mainModule.controller('DemoLayersCtrl', function($scope) {
+							$scope.dynOnLoad = function(data) {
+								console.log('Коллбэк из DemoLayersCtrl. Вызывается сразу после загрузки динамического элемента. Загрузили содержимоего для всего попапа');
+								if (data.section) {
+									console.log('section', data.section);
 								}
 							};
 
-							$scope.dynOnOpen = function(section) {
-								if (!section) {
-									console.log('Функция из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыт попап с динамическим содержимым');
-								} else {
-									console.log('Функция из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыта секция в попапе с динамическим содержимым', section);
+							$scope.dynOnOpen = function(data) {
+								console.log('Функция из DemoLayersCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыт попап с динамическим содержимым');
+								if (data.section) {
+									console.log('section', data.section);
 								}
 							};
 						});

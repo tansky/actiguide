@@ -110,8 +110,11 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 
 			$parentScope.sections[$attrs.target].content = $sce.trustAsHtml($element.html());
 
-			if ($attrs.dynLoad) {
-				$parentScope.sections[$attrs.target].dynLoad = $attrs.dynLoad;
+			var portAttrs = ['dynLoad', 'dynOnLoad', 'dynOnOpen'];
+			for (var i in portAttrs) {
+				if (portAttrs.hasOwnProperty(i) && $attrs[portAttrs[i]]) {
+					$parentScope.sections[$attrs.target][portAttrs[i]] = $attrs[portAttrs[i]];
+				}
 			}
 		}
 	}

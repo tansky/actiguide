@@ -2,7 +2,10 @@
 	<span class="dropdown_caller">
 		<span ng-bind-html="caller"></span>
 	</span>
-	<span class="dropdown_container" ng-transclude>
+	<span ng-if="dynamic" class="dropdown_container">
+		<span ng-bind-html="content"></span>
+	</span>
+	<span ng-show="!dynamic" class="dropdown_container" ng-transclude>
 		{{content}}
 	</span>
 </span>
