@@ -1157,7 +1157,7 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
 
             // если выбранный изначально день заблокирован, нужно выбрать ближайший валидный
             if ( isDateDisabled( {year: DATE_SELECTED.getFullYear(), month: DATE_SELECTED.getMonth(), day: DATE_SELECTED.getDate()} )){
-                //$scope.renderDays( DATE_SELECTED.getFullYear(), DATE_SELECTED.getMonth())
+                $scope.renderDays( 1970, 1)
             } else {
                 $scope.choose()
             }
