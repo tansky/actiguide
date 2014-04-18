@@ -287,7 +287,21 @@
 
 					<script>
 						actiGuide.mainModule.controller('TestCtrl', function($scope) {
+							$scope.dynOnLoad = function(section) {
+								if (!section) {
+									console.log('Коллбэк из TestCtrl. Вызывается сразу после загрузки динамического элемента. Загрузили содержимоего для всего попапа');
+								} else {
+									console.log('Коллбэк из TestCtrl. Вызывается сразу после загрузки динамического элемента. Загрузили секцию в попапе', section);
+								}
+							};
 
+							$scope.dynOnOpen = function(section) {
+								if (!section) {
+									console.log('Коллбэк из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыт попап с динамическим содержимым');
+								} else {
+									console.log('Коллбэк из TestCtrl. Вызывается при каждом открытии уже загруженного динамического элемента. Открыта секция в попапе с динамическим содержимым', section);
+								}
+							};
 						});
 					</script>
 

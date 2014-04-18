@@ -660,10 +660,7 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
             var listener = function () {
                 var day = parseInt(inputDay.val()),
                     month = parseInt(inputMonth.val()),
-                    year = parseInt(inputYear.val()),
-                    totalValue;
-
-                console.log(day, month, year);
+                    year = parseInt(inputYear.val());
 
                 if (month == 2 && (year + '').length == 4) {
                     options.dayLimit = new Date(year, month, 0).getDate();
@@ -686,11 +683,7 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
                     inputYear.val(options.yearLimitMax);
                 }
 
-                totalValue = day + '.' + month + '.' + year;
-
-                scope.$apply(function () {
-                    ngModelCtrl.$setViewValue(totalValue);
-                });
+                setValue(day, month, year);
             };
 
             if ($sniffer.hasEvent('input')) {
@@ -729,19 +722,35 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
             inputs.on('focusout', function (e) {
                 var day = parseInt(inputDay.val()),
                     month = parseInt(inputMonth.val()),
-                    year = parseInt(inputYear.val()),
-                    totalValue;
+                    year = parseInt(inputYear.val());
 
-                if (day === 0) { inputDay.val('1'); }
-                if (month === 0) { inputMonth.val('1'); }
+                if (day === 0) {
+                    day = 1;
+                    inputDay.val(day);
+                }
+                if (month === 0) {
+                    month = 1;
+                    inputMonth.val(month);
+                }
+                if (year < options.yearLimitMin) {
+                    year = options.yearLimitMin;
+                    inputYear.val(year);
+                }
 
+                setValue(day, month, year);
+            });
 
-                totalValue = day + '.' + month + '.' + year;
+            function setValue(day, month, year) {
+                var totalValue;
+
+                if (day && month && (year + '').length == 4){
+                    totalValue = day + '.' + month + '.' + year;
+                }
 
                 scope.$apply(function () {
                     ngModelCtrl.$setViewValue(totalValue);
                 });
-            });
+            }
 
             //управление стрелками
 //            inputRub.on('keydown', function(event) {
@@ -909,14 +918,32 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 			$scope.$watch('visible', function(newVal) {
 				if ($scope.currentSection) {
 					if (newVal) {
-						loadContent($scope.sections[$scope.currentSection.section]);
+						if (!$scope.sections[$scope.currentSection.section].loaded) {
+							loadContent($scope.sections[$scope.currentSection.section], function() {
+								if (typeof $scope.dynOnLoad === 'function') {
+									$scope.dynOnLoad($scope.currentSection.section);
+								}
+							});
+						} else {
+							if (typeof $scope.dynOnOpen === 'function') {
+								$scope.dynOnOpen($scope.currentSection.section);
+							}
+						}
 					}
 				} else {
 					if (!$scope.loaded && newVal) {
 						$http.get($attrs.dynLoad).success(function (response) {
 							$scope.loaded = true;
 							$scope.content = $sce.trustAsHtml(response);
+
+							if (typeof $scope.dynOnLoad === 'function') {
+								$scope.dynOnLoad();
+							}
 						});
+					}
+
+					if ($scope.loaded && newVal && typeof $scope.dynOnOpen === 'function') {
+						$scope.dynOnOpen();
 					}
 				}
 			});
@@ -925,13 +952,25 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				if ($scope.visible && newVal) {
 					loadContent($scope.sections[newVal.section]);
 				}
+
+				if ($scope.visible && newVal && !$scope.sections[newVal.section].loaded && typeof $scope.dynOnLoad === 'function') {
+					$scope.dynOnLoad(newVal.section);
+				}
+
+				if ($scope.visible && newVal && $scope.sections[newVal.section].loaded && typeof $scope.dynOnOpen === 'function') {
+					$scope.dynOnOpen(newVal.section);
+				}
 			});
 
-			function loadContent(currentSection) {
+			function loadContent(currentSection, callback) {
 				if (!currentSection.loaded) {
 					$http.get(currentSection.dynLoad).success(function (response) {
 						currentSection.loaded = true;
 						currentSection.content = $sce.trustAsHtml(response);
+
+						if (typeof callback === 'function') {
+							callback(response);
+						}
 					});
 				}
 			}
