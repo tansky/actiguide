@@ -34,7 +34,12 @@ module.exports = function (grunt) {
 				dest: 'out/app.js'
 			},
 			libs: {
-				src: ['js/libs/jquery-1.8.3.min.js', 'js/libs/angular.js'],
+				src: [
+                    'js/libs/underscore.js',
+                    'js/libs/moment.js',
+                    'js/libs/jquery-1.8.3.min.js',
+                    'js/libs/angular.js'
+                ],
 				dest: 'out/libs.js'
 			}
 		},
