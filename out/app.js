@@ -825,6 +825,348 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
 });
 ;/**
  *  @ngdoc directive
+ *  @name datepicker
+ *  @restrict E
+ *
+ *  @description
+ *  Директива календаря для выбора дат с поддержкой периодов
+ */
+;actiGuide.mainModule.directive( 'datepicker', [ 'ranges', 'VIEWS_PATH', function ( RangesService, VIEWS_PATH) {
+
+    return {
+        restrict: 'E',
+        scope: {
+            mDate: '=' // дата в формате 1.1.2000
+        },
+        replace: true,
+        transclude: false,
+        templateUrl: VIEWS_PATH + 'datepicker.html',
+        link: function ($scope, $element, $attrs) {
+
+            var TODAY = new Date(),
+                RENDER_DATE = TODAY,
+                DATE_SELECTED = TODAY;
+
+            $scope.isDisableBtn = false;
+            $scope.RangesService = RangesService;
+            $scope.bindedTo = !!$attrs.alternativeBinding ? $attrs.alternativeBinding : $attrs.mDate;
+            $scope.inputValue = {
+                day: parseInt( TODAY.getDay(), 10 ),
+                month: parseInt( TODAY.getMonth(), 10 ),
+                year: parseInt( TODAY.getFullYear(), 10 )
+            };
+            $scope.showSubmitTooltip = false;
+            $scope.submitTooltip = '';
+            $scope.week = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+            $scope.month = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+
+
+            /**
+             * День недели
+             * @param date
+             * @returns {number}
+             */
+            function getDayOfWeek (date) {
+                var day = date.getDay();
+                if ( day == 0 ) day = 7;
+                return day - 1;
+            }
+
+
+            /**
+             * Количество дней в месяце
+             * @param date
+             * @returns {number}
+             */
+            function daysInMonth (date) {
+                return 33 - new Date( date.getFullYear(), date.getMonth(), 33 ).getDate();
+            }
+
+
+            /**
+             * Проверки вводимых символов из инпутов
+             * @param $scope
+             * @param inputValue
+             */
+            function checkInputsValue ($scope, inputValue) {
+
+                var _inputValue = _.clone( inputValue );
+
+                if ( _inputValue.year.length < 4 ){
+                    return;
+                }
+
+                _inputValue.month = parseInt( _inputValue.month, 10 ) == 0 ? 0 : _inputValue.month - 1;
+
+                var valueToCheck = [ _inputValue.year | 0 , _inputValue.month | 0, _inputValue.day | 0 ];
+
+                if ( moment( valueToCheck ).isValid() ) {
+
+                    if ( !isDateDisabled( _inputValue ) ) {
+                        DATE_SELECTED = new Date( _inputValue.year, _inputValue.month, _inputValue.day )
+                        $scope.renderDays( _inputValue.year, _inputValue.month )
+                        $scope.isSubmitDisabled = false;
+                        $scope.showSubmitTooltip = false;
+                    } else {
+                        $scope.isSubmitDisabled = true;
+                        $scope.submitTooltip = _inputValue.tooltip;
+                    }
+
+                }
+            }
+
+            $scope.$on( 'RangesChanged', function () {
+                $scope.renderDays( DATE_SELECTED.getFullYear(), DATE_SELECTED.getMonth() )
+            } )
+
+            /**
+             * Событие при клике на кнопку "ОК"
+             * если выбрана не валидная дата ругнется и покажет тултип
+             */
+            $scope.clickBtn = function () {
+                if ( $scope.isSubmitDisabled ) {
+                    $scope.showSubmitTooltip = true;
+                    setTimeout( function () {
+                        $scope.showSubmitTooltip = false;
+                        $scope.$apply();
+                    }, 1000 );
+                } else {
+                    $scope.choose()
+                }
+            };
+
+            // Формирование дат в календаре
+            $scope.renderDays = function (year, month) {
+
+                var date = new Date( year, month ),
+                    prevMonth = new Date( date.getFullYear(), date.getMonth() - 1 );
+
+                $scope.days = [];
+                $scope.title = $scope.month[date.getMonth()] + ', ' + date.getFullYear();
+
+                function addDay (d, m, y) {
+
+                    var day = {
+                        day: d,
+                        month: m,
+                        year: y
+                    }
+
+                    day.isCurrent = isCurrent( day );
+                    day.isDisabled = isDateDisabled( day );
+                    day.isToday = isToday( day )
+
+                    $scope.days.push( day )
+                }
+
+
+                for ( var i = 0; i < getDayOfWeek( date ); i++ ) { // Добавление дат до текушего месяца
+                    addDay( daysInMonth( prevMonth ) - (getDayOfWeek( date ) - i - 1), prevMonth.getMonth(), prevMonth.getFullYear() )
+                }
+
+                while (date.getMonth() == month) { // Добавляем даты с текущего месяца
+                    addDay( date.getDate(), date.getMonth(), date.getFullYear() )
+                    date.setDate( date.getDate() + 1 );
+                }
+
+                if ( getDayOfWeek( date ) != 0 ) { // Добавляем даты после текущего месяца
+                    for ( var i = getDayOfWeek( date ); i < 7; i++ ) {
+                        addDay( date.getDate(), date.getMonth(), date.getFullYear() )
+                        date.setDate( date.getDate() + 1 );
+                    }
+                }
+
+                /**
+                 * установка даты на первый валидный день
+                 */
+                var _dateSelected = {
+                    day: DATE_SELECTED.getDate(),
+                    month: DATE_SELECTED.getMonth(),
+                    year: DATE_SELECTED.getFullYear()
+                };
+
+                if ( isDateDisabled( _dateSelected ) ) {
+
+                    var activeRange = RangesService.getActiveRangeForDatepicker( $scope.bindedTo ),
+                        _d = moment( [_dateSelected.year, _dateSelected.month, _dateSelected.day] ),
+                        dStart = activeRange.from.add( 'day', 1 ),
+                        dEnd = activeRange.to.subtract( 'day', 1 ), result;
+
+                    if ( dStart.isAfter( dEnd ) ) {
+                        //$scope.title = 'Нет доступных дат';
+                    }
+                    if ( dStart.isSame( dEnd ) ) {
+                        result = dStart;
+                    } else {
+
+                        if ( _d.diff( dStart ) < 0 ) {
+
+                            if ( _d.diff( dStart ) < _d.diff( dEnd ) ) {
+                                result = dEnd;
+                            } else {
+                                result = dStart;
+                            }
+
+                        } else {
+                            if ( _d.diff( dStart ) < _d.diff( dEnd ) ) {
+                                result = dStart;
+                            } else {
+                                result = dEnd;
+                            }
+                        }
+
+                    }
+
+                    DATE_SELECTED = result.toDate();
+                    //RENDER_DATE = new Date( DATE_SELECTED.getFullYear(), DATE_SELECTED.getMonth() );
+                    $scope.mDate = result.format('DD.MM.YYYY')
+                }
+            };
+
+            /**
+             * на месяц вперёд
+             */
+            $scope.nextMonth = function () {
+                var year = RENDER_DATE.getFullYear(), month = RENDER_DATE.getMonth();
+
+                if (month == 11) {
+                    year++;
+                    month = 0;
+                } else {
+                    month++;
+                }
+
+                RENDER_DATE = new Date(year, month);
+                $scope.renderDays( year, month );
+
+            };
+
+            /**
+             * на месяц назад
+             */
+            $scope.prevMonth = function () {
+
+                var month = RENDER_DATE.getMonth(),
+                    year = RENDER_DATE.getFullYear();
+
+                if (month == 0) {
+                    year--;
+                    month = 11;
+                } else {
+                    month--;
+                }
+
+                RENDER_DATE = new Date(year, month);
+                $scope.renderDays(year, month);
+            };
+
+            /**
+             * Выбор даты
+             * @param [item] конкретный день
+             */
+            $scope.choose = function (item) {
+
+                var item = !!item ?
+                    item
+                    :
+                    {
+                        year: DATE_SELECTED.getFullYear(),
+                        month: DATE_SELECTED.getMonth(),
+                        day: DATE_SELECTED.getDate()
+                    };
+
+                if ( !isDateDisabled( item ) ) {
+                    var date = new Date( item.year, item.month, item.day );
+                    DATE_SELECTED = date;
+
+                    $scope.inputValue.day = item.day;
+                    $scope.inputValue.month = item.month + 1;
+                    $scope.inputValue.year = item.year;
+
+                    //RENDER_DATE = new Date( item.year, item.month, item.day );
+                    $scope.renderDays( item.year, item.month )
+                    $scope.mDate = moment( date).format( 'DD.MM.YYYY' )
+
+                } else { // показать подсказку
+                    item.isShow = true;
+                    setTimeout( function () {
+                        item.isShow = false;
+                        $scope.$apply();
+                    }, 1000 );
+                }
+
+            };
+
+            function parseDateString( date ){
+                var format = 'D.M.YYYY',
+                    result = moment( date, format);
+
+                return result.isValid() ? result.toDate() : date;
+            }
+
+            /**
+             * проверка из RangesService в разрезе конкретного дэйтпикера
+             * @type {function}
+             */
+            var isDaySelectable = RangesService.isDateSelectable.bind( $scope.bindedTo );
+
+            function isDateDisabled (date) {
+
+                var dateToCheck = new Date(date.year, date.month, date.day),
+                    result = isDaySelectable(dateToCheck);
+
+                date.tooltip = result.message
+
+                return !result.selectable;
+            }
+
+            function isToday (item) {
+                return TODAY.getDate() == item.day && TODAY.getMonth() == item.month && TODAY.getFullYear() == item.year
+            }
+
+            function isCurrent (item) {
+
+                var _d = DATE_SELECTED;
+
+                if ( _d.getFullYear() == item.year && _d.getMonth() == item.month && _d.getDate() == item.day ) {
+                    return !isDateDisabled( item );
+                }
+
+                return false
+            };
+
+            $scope.$watch( 'mDate', function (newVal, oldVal, $scope) {
+
+                if ( oldVal !== newVal ) {
+                    var date = parseDateString( newVal );
+
+                    DATE_SELECTED = date;
+                    RENDER_DATE = new Date( date.getFullYear(), date.getMonth() )
+
+                    $scope.renderDays( date.getFullYear(), date.getMonth() );
+                }
+            } );
+
+            $scope.$watch( 'inputValue', function (newVal, oldVal, $scope) {
+                if ( oldVal !== newVal ) {
+                    checkInputsValue( $scope, newVal );
+                }
+            }, true );
+
+
+
+            // если выбранный изначально день заблокирован, нужно выбрать ближайший валидный
+            if ( isDateDisabled( {year: DATE_SELECTED.getFullYear(), month: DATE_SELECTED.getMonth(), day: DATE_SELECTED.getDate()} )){
+                //$scope.renderDays( DATE_SELECTED.getFullYear(), DATE_SELECTED.getMonth())
+            } else {
+                $scope.choose()
+            }
+
+        }
+    };
+}] );
+;/**
+ *  @ngdoc directive
  *  @name dropdown
  *  @restrict E
  *
@@ -2302,4 +2644,415 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 		isDownInTree: isDownInTree,
 		popLastLayer: popLastLayer
 	}
-}]);;actiGuide.mainModule.constant('VIEWS_PATH', 'js/app/modules/main/directives/views/');
+}]);;actiGuide.mainModule.constant('VIEWS_PATH', 'js/app/modules/main/directives/views/');;/**
+ *  @ngdoc service
+ *  @name ranges
+ *
+ *  @description
+ *  Сервис работы с периодами. Фундамент "умного календаря".
+ *  Используется в директиве datepicker для получения заблокированных/активных периодов.
+ *  К нему возможно получить доступ из любого контроллера для реализации сложных блокировок.
+ */
+
+;(function (ng, app) {
+
+    /**
+     * @author Vitaly Gridnev
+     */
+
+    app.service( 'ranges', ['$rootScope', function ($rootScope) {
+        return new RangesService( $rootScope )
+    } ] );
+
+    var DATE_FORMAT = 'D.M.YYYY',// moment.js date format
+        RANGE_TYPES = {},
+        TODAY = moment();
+
+    var RangesService = function ($scope) {
+
+        var RANGES = [],
+            DATEPICKERS = [],
+            RANGE_MIN_VAL = moment( '01.01.1970', DATE_FORMAT ),
+            RANGE_MAX_VAL = moment( '01.01.2100', DATE_FORMAT );
+
+
+        /**
+         * Добавляет период в сервис
+         *
+         * @param {Range} range
+         * @returns {Range}
+         */
+        function addRange (range) {
+
+            RANGES.push( range )
+            return range
+
+        }
+
+
+        /**
+         * Получение активного периода для конкретного дейтпикера
+         *
+         * @param datepicker имя дейтпикера
+         * @param [date_selected] признак поиска активного периода, в который входит переданная дата
+         * @returns {Range}
+         */
+        function getActiveRangeForDatepicker (datepicker, date_selected) {
+
+            var _ranges = getRangesForDatepicker( datepicker ),
+                date_selected = !!date_selected ? moment( date_selected, DATE_FORMAT ).toDate() : false,
+                result = {
+                    //from: RANGE_MIN_VAL.clone(),
+                    //to: RANGE_MAX_VAL.clone()
+                };
+
+
+            _ranges.sort( function ( a, b ){
+                return b.to.diff(b.from) > a.to.diff(a.from) ;
+            })
+
+
+            var __ranges = _ranges;
+
+            for ( var i = 0, till = _ranges.length; i<_ranges.length; i++ ){
+
+                var range1 = _ranges[i];
+
+                for ( var j = i+1; j < till; j++ ){
+                    var range2 = _ranges[j];
+
+                    if ((range2.from.isSame(range1.from) || range2.from.isAfter(range1.from)) && (range2.to.isSame(range1.to) || range2.to.isBefore(range1.to))) {
+                        __ranges = _.without(__ranges, range2);
+                    }
+
+                }
+
+
+            }
+
+            _ranges = __ranges;
+
+            _ranges.sort( function (a, b) {
+
+                var result = 0;
+
+                if ( a.from.diff( b.from ) < 0 ) {
+                    result = -1;
+                } else if ( a.from.isSame( b.from ) ) {
+                    if ( a.to.diff( b.to ) < 0 ) {
+                        result = -1
+                    } else
+                        result = 1
+                } else {
+                    result = 1;
+                }
+
+                return result
+            } )
+
+            if ( date_selected ){
+                if ( !_ranges[0].from.isSame( RANGE_MIN_VAL ) ) { // если период не сначала
+                    if ( date_selected > RANGE_MIN_VAL.toDate() && date_selected < _ranges[0].from.toDate() ) { // если дата между минимумом и началом периода
+                        result.from = RANGE_MIN_VAL.clone()
+                        result.to = _ranges[0].from.clone();
+                        return result;
+                    }
+                }
+            }
+
+            for ( var i = 0, till = _ranges.length - 1; i < till; i++ ) {
+
+                var range1 = _ranges[i],
+                    range2 = _ranges[i + 1];
+
+                if ( range1.to.diff( range2.from ) < 0 ) { // если между ними есть разрыв
+                    if ( date_selected ) {
+                        if ( date_selected >= range1.to.toDate() && date_selected <= range2.from.toDate() ) { // если искомая дата входит в разрыв
+                            result.from = range1.to;
+                            result.to = range2.from;
+                            break;
+                        } else {
+                            result.from = range2.to;
+                        }
+                    } else {
+                        result.from = range1.to;
+                        result.to = range2.from;
+                        break;
+                    }
+                } else { // если нет разрыва
+                    if ( range1.to.diff( range2.to ) < 0 ) { // если конец второго позже конца первого
+                        result.from = range2.to;
+                    } else {
+                        if ( range1.from.diff( range2.from) < 0 ){
+                            result.from = range1.to;
+                        } else {
+                            result.from = range2.to;
+                        }
+                    }
+                }
+            }
+
+
+            result.from =  !!result.from ? result.from.clone() : RANGE_MIN_VAL.clone()
+            result.to =  !!result.to ? result.to.clone() : RANGE_MAX_VAL.clone()
+
+            return result
+        }
+
+        /**
+         * Оповещаем об изменениях
+         */
+        function broadcastChange () {
+            $scope.$broadcast( 'RangesChanged' )
+        }
+
+
+        function removeRange (range) {
+            RANGES.splice( RANGES.indexOf( range ), 1 );
+        }
+
+
+        /**
+         * сбросить периоды
+         * @param {String} [type] название типа
+         */
+        function flush(type) {
+
+            type = !!type ? type : undefined;
+
+            var rangesToFlush = [];
+
+            if (type) {
+
+                rangesToFlush = _.filter(RANGES, function (range) {
+                    return range.type == type
+                });
+
+                _.each(rangesToFlush, function (range) {
+                    range.remove()
+                })
+
+            } else {
+                // удаляем всё, кроме дефолтных ограничений
+                var rangesToFlush = _.filter(RANGES, function (range) {
+                    return range.type !== 'default'
+                })
+
+                _.each(rangesToFlush, function (range) {
+                    range.remove()
+                });
+
+                broadcastChange();
+            }
+        }
+
+
+        function getRangesForDatepicker (name) {
+
+            var result = [];
+
+            _.each( RANGES, function (range) {
+                if ( !/datepicker/.test( range.type ) ) {
+                    result.push( range )
+                } else {
+                    if ( range.type == 'datepicker_' + name ) {
+
+                        if ( range.from === null ) {
+                            range.from = RANGE_MIN_VAL.clone()
+                        }
+
+                        if ( range.to === null ) {
+                            range.to = RANGE_MAX_VAL.clone();
+                        }
+
+                        result.push( range )
+                    }
+                }
+            } )
+
+            return result;
+        }
+
+        function isDateSelectable (date) {
+
+            var datepicker = this,
+                result = {
+                    selectable: true,
+                    message: ''
+                },
+                date = moment( date ),
+                rangesToCheck = getRangesForDatepicker( datepicker );
+
+            for ( var i in rangesToCheck ) {
+
+                var range = rangesToCheck[i],
+                    _d = date.toDate(),
+                    _f = range.from.toDate(),
+                    _t = range.to.toDate();
+
+                if ( _d >= _f && _d <= _t ) {
+                    result.selectable = false;
+                    result.message = range.message;
+
+                    break;
+                }
+
+            }
+
+            return result;
+        }
+
+
+        /**
+         * Создание зависимого периода
+         * не отличается ничем, кроме типа, который устанавливается в 'datepicker_'+type
+         *
+         * @param from
+         * @param to
+         * @param type
+         * @param message
+         * @returns {Range}
+         */
+        function createDependentRange (from, to, type, message) {
+
+            var range = createRange( from, to, type, message );
+
+            range.type = 'datepicker_' + type;
+
+            return range
+        }
+
+
+        /**
+         * Парсинг даты
+         * @param {Variant} obj может быть строкой, стампом с бэкэнда или объектом Moment JS
+         * @returns {Moment}
+         */
+        function parseDate (obj) {
+
+            if ( obj === null ) {
+                return ''
+            }
+
+            // если строка
+            if ( typeof obj == 'string' ) {
+
+                var backendStampExp = /^\/Date\((\d+)\)\/$/, dependenceStampExp = /(\d+).(\d+).(\d+)/, date;
+
+                if ( backendStampExp.test( obj ) ) {
+                    date = new Date( parseInt( obj.match( backendStampExp )[1], 10 ) )
+                } else if ( dependenceStampExp.test( obj ) ) {
+                    var matches = obj.match( dependenceStampExp );
+                    date = new Date( matches[3], matches[2] - 1, matches[1] )
+                }
+                return moment( new Date( date ) ).startOf( 'day' )
+            }
+
+            if ( moment.isMoment( obj ) ) {
+                return obj.startOf( 'day' )
+            }
+
+            return ''
+        }
+
+
+        /**
+         * Создаёт период
+         *
+         * @param {Variant} from дата начала, либо null, либо /Date/, либо moment
+         * @param {Variant} to дата конца, либо null, либо /Date/, либо moment
+         * @param {String} type тип периода
+         * @param {String} message сообщение периода
+         * @returns {Range}
+         */
+        function createRange (from, to, type, message) {
+
+
+            var from = parseDate( from ),
+                to = parseDate( to ),
+                type = type,
+                message = message;
+
+            from = from == '' ? RANGE_MIN_VAL.clone() : from;
+            to = to == '' ? RANGE_MAX_VAL.clone() : to;
+
+            return {
+                from: from,
+                to: to,
+                type: type,
+                message: message,
+                remove: function () {
+                    removeRange( this )
+                }
+            }
+
+        }
+
+        /**
+         * Понимает формат периодов с бэкэнда
+         * Возвращает стандартный период
+         *
+         * @param _arr период с бэкэнда
+         * @returns {Range}
+         */
+        function createBackendRange (_arr) {
+
+            var from = _arr.DateStart,
+                to = _arr.DateEnd,
+                message = _arr.Reason;
+
+            return createRange( from, to, 'backend', message )
+        }
+
+
+        /**
+         * Возвращает весь список периодов
+         * Для какого-нибудь хардкодинга
+         *
+         * @returns {Ranges[]}
+         */
+        function getList () {
+            return RANGES;
+        }
+
+
+        /**
+         * Добавляет в сервис ограничения по умолчанию
+         */
+        function addDefaultBounds () {
+
+            var bounds = [];
+
+            for ( var bound in bounds ) {
+                addRange( bounds[bound] )
+            }
+        }
+
+
+        function init () {
+
+            addDefaultBounds()
+
+            /**
+             * @class RangesService
+             * @constructor
+             */
+            return {
+                addRange: addRange,
+                removeRange: removeRange,
+                createRange: createRange,
+                createBackendRange: createBackendRange,
+                broadcastChange: broadcastChange,
+                getRangesForDatepicker: getRangesForDatepicker,
+                getActiveRangeForDatepicker: getActiveRangeForDatepicker,
+                createDependentRange: createDependentRange,
+                isDateSelectable: isDateSelectable,
+                flush: flush,
+                getList: getList
+            }
+        }
+
+        return init()
+    }
+
+}( angular, actiGuide.mainModule ));
