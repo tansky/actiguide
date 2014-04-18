@@ -1,0 +1,11 @@
+<span class="dropdown" ng-class="{'is-visible':visible, 'reflect-hor':reflectHorizontal, 'reflect-ver':reflectVertical, 'small-wrap':smallWrap}">
+	<span class="dropdown_caller">
+		<span ng-bind-html="caller"></span>
+	</span>
+	<span ng-if="dynamic" class="dropdown_container">
+		<span ng-bind-html="content"></span>
+	</span>
+	<span ng-show="!dynamic" class="dropdown_container" ng-transclude>
+		{{content}}
+	</span>
+</span>

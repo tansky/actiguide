@@ -829,23 +829,23 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
  *  @restrict E
  *
  *  @description
- *  Директивы для генерации дропдаунов (см. примеры использования в layers.html).
+ *  Директива для генерации дропдаунов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('dropdown', function ($window, layers) {
-	var ngClasses = "{'is-visible':visible, 'reflect-hor':reflectHorizontal, 'reflect-ver':reflectVertical, 'small-wrap':smallWrap}";
-
+actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
 	return {
 		restrict: 'E',
 		transclude: true,
-		template: '<span class="dropdown" ng-class="' + ngClasses + '" ng-transclude />',
+		templateUrl: 'templates/dropdown.html',
 		replace: true,
 		scope: true,
-		link: function(scope, element) {
+		controller: function($scope, $element, $attrs) {
 
-			scope.visible = false;
+			$scope.visible = false;
 
-			element.bind('click', function() {
+			$scope.caller = $sce.trustAsHtml($attrs.caller);
+
+			$element.bind('click', function() {
 
 				/* Клик по элементу, вызывающему дропдаун не из дерева активных слоёв игнорируется, передав при этом
 				управление слушателю кликов из сервиса layers */
@@ -871,7 +871,7 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				/* Проверка ширины элемента, открывающего дропдаун (смещаем стрелку ближе к краю, если ширина < 50px) */
 
 				if (clickedElement[0].offsetWidth < 50) {
-					scope.smallWrap = true;
+					$scope.smallWrap = true;
 				}
 
 				clickedElementScope.$apply();
@@ -882,8 +882,8 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 				var doc = angular.element(document).find('BODY')[0];
 
 				angular.forEach(clickedElement.children(), function(element) {
-					scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
-					scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
+					$scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
+					$scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
 					clickedElementScope.$apply();
 				});
 
@@ -891,89 +891,88 @@ actiGuide.mainModule.directive('dropdown', function ($window, layers) {
 
 		}
 	};
-}).directive('dCaller', function () {
-	return {
-		restrict: 'E',
-		transclude: true,
-		replace : true,
-		scope: false,
-		template: '<span class="dropdown_caller" ng-transclude />'
-	}
-}).directive('dContainer', function () {
-	return {
-		restrict: 'E',
-		transclude: true,
-		replace: true,
-		scope: false,
-		template: '<span class="dropdown_container" ng-transclude />'
-	};
 });;actiGuide.mainModule.directive('dynLoad', function ($http, $sce) {
 	return {
 		restrict: 'A',
 		replace: true,
 		controller: function($scope, $element, $attrs) {
-			$scope.dynamic = true;
-			$scope.loaded = false;
 
-			$scope.$watch('visible', function(newVal) {
-				if ($scope.currentSection) {
-					if (newVal) {
-						if (!$scope.sections[$scope.currentSection.section].loaded) {
-							loadContent($scope.sections[$scope.currentSection.section], function() {
-								if (typeof $scope.dynOnLoad === 'function') {
-									$scope.dynOnLoad($scope.currentSection.section);
-								}
-							});
-						} else {
-							if (typeof $scope.dynOnOpen === 'function') {
-								$scope.dynOnOpen($scope.currentSection.section);
-							}
-						}
-					}
-				} else {
-					if (!$scope.loaded && newVal) {
-						$http.get($attrs.dynLoad).success(function (response) {
-							$scope.loaded = true;
-							$scope.content = $sce.trustAsHtml(response);
+			if ($element[0].tagName.toLowerCase() === 'popup-section') {
 
-							if (typeof $scope.dynOnLoad === 'function') {
-								$scope.dynOnLoad();
-							}
-						});
-					}
+				/* Загрузка контента в секции с динамическим содержимым попапов с меню */
 
-					if ($scope.loaded && newVal && typeof $scope.dynOnOpen === 'function') {
-						$scope.dynOnOpen();
-					}
-				}
-			});
+				var $popupScope = $element.parent().scope();
 
-			$scope.$watch('currentSection', function(newVal) {
-				if ($scope.visible && newVal) {
-					loadContent($scope.sections[newVal.section]);
-				}
+				if (!$popupScope._dynLoadInited) {
+					$popupScope._dynLoadInited = true;
 
-				if ($scope.visible && newVal && !$scope.sections[newVal.section].loaded && typeof $scope.dynOnLoad === 'function') {
-					$scope.dynOnLoad(newVal.section);
-				}
-
-				if ($scope.visible && newVal && $scope.sections[newVal.section].loaded && typeof $scope.dynOnOpen === 'function') {
-					$scope.dynOnOpen(newVal.section);
-				}
-			});
-
-			function loadContent(currentSection, callback) {
-				if (!currentSection.loaded) {
-					$http.get(currentSection.dynLoad).success(function (response) {
-						currentSection.loaded = true;
-						currentSection.content = $sce.trustAsHtml(response);
-
-						if (typeof callback === 'function') {
-							callback(response);
+					$popupScope.$watch('visible', function(newVal) {
+						if (newVal) {
+							touchSection();
 						}
 					});
+
+					$popupScope.$watch('currentSection', function(newVal) {
+						if ($popupScope.visible) {
+							touchSection();
+						}
+					});
+
+					function touchSection() {
+						var currentSection = $popupScope.sections[$popupScope.currentSection.section];
+						if (currentSection.dynLoad) {
+							$popupScope.dynamic = true;
+
+							if (!currentSection.loaded) {
+								$http.get(currentSection.dynLoad).success(function (response) {
+									currentSection.loaded = true;
+									currentSection.content = $sce.trustAsHtml(response);
+
+									if (typeof $scope[currentSection.dynOnLoad] === 'function') {
+										$scope[currentSection.dynOnLoad]({
+											response: response,
+											section: $popupScope.currentSection.section
+										});
+									}
+								});
+							} else if (typeof $scope[currentSection.dynOnOpen] === 'function') {
+								$scope[currentSection.dynOnOpen]({
+									section: $popupScope.currentSection.section
+								});
+							}
+						} else {
+							$popupScope.dynamic = false;
+						}
+					}
 				}
+
+			} else if ($element.hasClass('popup') || $element.hasClass('dropdown')) {
+
+				/* Загрузка динамического содержимого в попапы без меню и дропдауны */
+
+				$scope.dynamic = true;
+
+				$scope.$watch('visible', function(newVal) {
+					if (newVal) {
+						if (!$scope.loaded) {
+							$http.get($attrs.dynLoad).success(function (response) {
+								$scope.loaded = true;
+								$scope.content = $sce.trustAsHtml(response);
+
+								if (typeof $scope[$attrs.dynOnLoad] === 'function') {
+									$scope[$attrs.dynOnLoad]({
+										response: response
+									});
+								}
+							});
+						} else if (typeof $scope[$attrs.dynOnOpen] === 'function') {
+							$scope[$attrs.dynOnOpen]({});
+						}
+					}
+				});
+
 			}
+
 		}
 	}
 });;/**
@@ -1359,8 +1358,11 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 
 			$parentScope.sections[$attrs.target].content = $sce.trustAsHtml($element.html());
 
-			if ($attrs.dynLoad) {
-				$parentScope.sections[$attrs.target].dynLoad = $attrs.dynLoad;
+			var portAttrs = ['dynLoad', 'dynOnLoad', 'dynOnOpen'];
+			for (var i in portAttrs) {
+				if (portAttrs.hasOwnProperty(i) && $attrs[portAttrs[i]]) {
+					$parentScope.sections[$attrs.target][portAttrs[i]] = $attrs[portAttrs[i]];
+				}
 			}
 		}
 	}
