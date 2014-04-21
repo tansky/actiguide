@@ -20,8 +20,7 @@
     <div class="datepicker-body">
         <div class="datepicker-day-off"></div>
             <span class="helper datepicker-day-item" ng-repeat="(key, item) in days track by $index" ng-class="{'disable' : item.isDisabled, 'current' : item.isCurrent, 'selfDay' : item.isToday}" ng-click="choose(item)">
-                <span class="helper-block helper-block__datepicker" ng-show="item.isShow">
-                    <i class="helper-block-tail"></i>
+                <span class="hint-text type__datepicker" ng-show="item.isShow">
                     {{ item.tooltip }}
                 </span>
                 {{ item.day }}
@@ -37,8 +36,7 @@
             <input class="t-input t-input__mini last" maxlength="4" placeholder="ГГГГ" type="text" data-ng-model="inputValue.year" data-qa="{{ atm }}.year"/>
 
                 <span class="btn" style="margin-left:5px;" ng-class="{'disable' : isSubmitDisabled}" ng-click="clickBtn()">
-                    <span class="helper-block helper-block__datepicker" ng-show="showSubmitTooltip">
-                        <i class="helper-block-tail"></i>
+                    <span class="hint-text type__datepicker" ng-show="showSubmitTooltip">
                         {{ submitTooltip }}
                     </span>
                     <span class="btn-in" data-qa="{{ atm }}.ok">OK</span>

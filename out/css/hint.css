@@ -21,3 +21,8 @@
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
 }
+.hint-text.type__datepicker {
+  margin-top: -110%;
+  display: block;
+  margin-left: -30%;
+}
