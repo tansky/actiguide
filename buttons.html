@@ -6,7 +6,20 @@
 	<script type="text/javascript" src="out/libs.min.js"></script>
     <script type="text/javascript" src="out/app.min.js"></script>
     <link rel="stylesheet" href="out/style.min.css" />
-    
+
+    <script>
+        $(document).ready(function () {
+            $('.btn').on('mousedown', function () {
+                $('body').addClass('no-select');
+            });
+
+            $(document).on('mouseup', function () {
+                $('body').removeClass('no-select');
+            });
+        });
+    </script>
+
+
 </head>
 <body>
 
