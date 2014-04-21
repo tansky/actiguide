@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru" ng-app="mainModule">
+<head>
+	<meta charset="UTF-8">
+	<title>ActiGuide &mdash; Сетка</title>
+	<link rel="stylesheet" href="out/style.min.css"/>
+	<script type="text/javascript" src="out/libs.min.js"></script>
+	<script type="text/javascript" src="out/app.min.js"></script>
+	<script>
+
+		actiGuide.mainModule.controller('DemoAlertBoxCtrl', function($scope, alertBox) {
+
+			$scope.alertBox = function(text, config) {
+				alertBox.push(text, config);
+			}
+
+		});
+
+	</script>
+</head>
+<body ng-class="{'no-scroll':noScroll}" ng-controller="DemoAlertBoxCtrl">
+
+<div class="wrapper">
+	<section class="content">
+
+		<div class="m-box">
+			<div class="box">
+				<h1>Слои</h1>
+			</div>
+		</div>
+
+		<div class="m-box m-giant">
+			<div class="col-edge-1">
+				<div class="box">
+					<h3>Алертбоксы</h3>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="box">
+
+					<p>
+						<a ng-click="alertBox('Зелёный алертбокс. <a>Ссылка</a>')">Зелёный сверху</a>.
+						<a ng-click="alertBox('Красный алертбокс. <a>Ссылка</a>', {color: 'red'})">Красный сверху</a>.
+					</p>
+
+					<p>По умолчанию блок с алертбоксами появляется зафиксированным вверху страницы, с отступом в 50px сверху.</p>
+
+				</div>
+			</div>
+		</div>
+
+	</section>
+</div>
+
+</body>
+</html>
