@@ -28,9 +28,9 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 */
 	function updateLayers(element) {
 		if (_layers.length > 0 && (
+			angular.element(element).hasClass('pop-on-click') ||
 			(
 				!angular.element(element).data('popupCaller') &&
-				!angular.element(element).hasClass('pop-on-click') &&
 				!isUpInTree(element)
 			) || (
 				angular.element(element).data('popupCaller') &&
@@ -40,6 +40,9 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 				!isDownInTree(element, angular.element(_layers[_layers.length-1]))
 			)
 		)) {
+			if (angular.element(_layers[_layers.length-1]).hasClass('popup')) {
+				angular.element($document[0].body).scope().noScroll = false;
+			}
 			popLastLayer();
 		}
 	}
