@@ -7,7 +7,7 @@
  *  Директива для генерации дропдаунов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
+actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, layers) {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -36,8 +36,29 @@ actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
 					layers.layersList.pop();
 				}
 
+
+				/* Проверка ширины элемента, открывающего дропдаун (смещаем стрелку ближе к краю, если ширина < 50px) */
+
+				if ($element[0].offsetWidth < 50) {
+					$scope.smallWrap = true;
+				}
+
 			};
 
+			$scope.$watch('visible', function(newVal) {
+
+				/* Проверка границ выпавшего дропдауна */
+
+				var doc = angular.element(document).find('BODY')[0];
+				angular.forEach($element.children(), function(element) {
+					if (angular.element(element).hasClass('dropdown_container')) {
+						element.style.display = newVal ? "block" : "none";
+						$scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
+						$scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
+					}
+				});
+
+			});
 		}
 	};
 });
