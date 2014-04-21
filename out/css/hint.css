@@ -1,0 +1,23 @@
+.hint-text {
+  position: absolute;
+  margin-bottom: 10px;
+  left: 0;
+  display: none;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 10000;
+  font-size: 14px;
+  line-height: 16px;
+  padding: 7px 14px;
+  color: #fff;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.hint-text:after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 15px;
+  border-top: 10px solid rgba(0, 0, 0, 0.95);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+}

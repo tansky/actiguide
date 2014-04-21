@@ -12,6 +12,7 @@
 @import 'ctrl-group.css';
 @import 'select.css';
 @import 'validation.css';
+@import 'hint.css';
 /**
 * Корневой файл стилей. Здесь можно управлять порядком подключения стилей
 */
