@@ -63,13 +63,6 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 
 			$scope.visible = false;
 
-			$element.bind('click', function (e) {
-				if (angular.element(e.target).hasClass('pop-on-click')) {
-					angular.element($document[0].body).scope().noScroll = false;
-					layers.popLastLayer();
-				}
-			});
-
 			/* Включаем параметры из popup-config в scope */
 
 			if ($attrs.popupConfig) {

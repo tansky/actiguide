@@ -1,4 +1,4 @@
-actiGuide.mainModule.directive('dynLoad', function ($http, $sce) {
+actiGuide.mainModule.directive('dynLoad', function ($http, $sce, $timeout, $parse, $interpolate, $compile) {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -13,13 +13,13 @@ actiGuide.mainModule.directive('dynLoad', function ($http, $sce) {
 				if (!$popupScope._dynLoadInited) {
 					$popupScope._dynLoadInited = true;
 
-					$popupScope.$watch('visible', function(newVal) {
-						if (newVal) {
+					$popupScope.$watch('visible', function(visible) {
+						if (visible) {
 							touchSection();
 						}
 					});
 
-					$popupScope.$watch('currentSection', function(newVal) {
+					$popupScope.$watch('currentSection', function() {
 						if ($popupScope.visible) {
 							touchSection();
 						}
@@ -59,12 +59,19 @@ actiGuide.mainModule.directive('dynLoad', function ($http, $sce) {
 
 				$scope.dynamic = true;
 
-				$scope.$watch('visible', function(newVal) {
-					if (newVal) {
+				$scope.$watch('visible', function(visible) {
+					if (visible) {
 						if (!$scope.loaded) {
 							$http.get($attrs.dynLoad).success(function (response) {
 								$scope.loaded = true;
+
 								$scope.content = $sce.trustAsHtml(response);
+
+								$compile(response)($scope, function(res) {
+									$timeout(function() {
+										$scope.content = $sce.trustAsHtml(res.html());
+									});
+								});
 
 								if (typeof $scope[$attrs.dynOnLoad] === 'function') {
 									$scope[$attrs.dynOnLoad]({
@@ -77,7 +84,6 @@ actiGuide.mainModule.directive('dynLoad', function ($http, $sce) {
 						}
 					}
 				});
-
 			}
 
 		}

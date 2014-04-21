@@ -1174,7 +1174,7 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
  *  Директива для генерации дропдаунов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
+actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, layers) {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -1203,11 +1203,32 @@ actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
 					layers.layersList.pop();
 				}
 
+
+				/* Проверка ширины элемента, открывающего дропдаун (смещаем стрелку ближе к краю, если ширина < 50px) */
+
+				if ($element[0].offsetWidth < 50) {
+					$scope.smallWrap = true;
+				}
+
 			};
 
+			$scope.$watch('visible', function(newVal) {
+
+				/* Проверка границ выпавшего дропдауна */
+
+				var doc = angular.element(document).find('BODY')[0];
+				angular.forEach($element.children(), function(element) {
+					if (angular.element(element).hasClass('dropdown_container')) {
+						element.style.display = newVal ? "block" : "none";
+						$scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
+						$scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
+					}
+				});
+
+			});
 		}
 	};
-});;actiGuide.mainModule.directive('dynLoad', function ($http, $sce) {
+});;actiGuide.mainModule.directive('dynLoad', function ($http, $sce, $timeout, $parse, $interpolate, $compile) {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -1222,13 +1243,13 @@ actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
 				if (!$popupScope._dynLoadInited) {
 					$popupScope._dynLoadInited = true;
 
-					$popupScope.$watch('visible', function(newVal) {
-						if (newVal) {
+					$popupScope.$watch('visible', function(visible) {
+						if (visible) {
 							touchSection();
 						}
 					});
 
-					$popupScope.$watch('currentSection', function(newVal) {
+					$popupScope.$watch('currentSection', function() {
 						if ($popupScope.visible) {
 							touchSection();
 						}
@@ -1268,12 +1289,19 @@ actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
 
 				$scope.dynamic = true;
 
-				$scope.$watch('visible', function(newVal) {
-					if (newVal) {
+				$scope.$watch('visible', function(visible) {
+					if (visible) {
 						if (!$scope.loaded) {
 							$http.get($attrs.dynLoad).success(function (response) {
 								$scope.loaded = true;
+
 								$scope.content = $sce.trustAsHtml(response);
+
+								$compile(response)($scope, function(res) {
+									$timeout(function() {
+										$scope.content = $sce.trustAsHtml(res.html());
+									});
+								});
 
 								if (typeof $scope[$attrs.dynOnLoad] === 'function') {
 									$scope[$attrs.dynOnLoad]({
@@ -1286,7 +1314,6 @@ actiGuide.mainModule.directive('dropdown', function ($window, $sce, layers) {
 						}
 					}
 				});
-
 			}
 
 		}
@@ -1665,13 +1692,6 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 		controller: function($scope, $element, $attrs) {
 
 			$scope.visible = false;
-
-			$element.bind('click', function (e) {
-				if (angular.element(e.target).hasClass('pop-on-click')) {
-					angular.element($document[0].body).scope().noScroll = false;
-					layers.popLastLayer();
-				}
-			});
 
 			/* Включаем параметры из popup-config в scope */
 
@@ -2583,9 +2603,9 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 */
 	function updateLayers(element) {
 		if (_layers.length > 0 && (
+			angular.element(element).hasClass('pop-on-click') ||
 			(
 				!angular.element(element).data('popupCaller') &&
-				!angular.element(element).hasClass('pop-on-click') &&
 				!isUpInTree(element)
 			) || (
 				angular.element(element).data('popupCaller') &&
@@ -2595,6 +2615,9 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 				!isDownInTree(element, angular.element(_layers[_layers.length-1]))
 			)
 		)) {
+			if (angular.element(_layers[_layers.length-1]).hasClass('popup')) {
+				angular.element($document[0].body).scope().noScroll = false;
+			}
 			popLastLayer();
 		}
 	}
