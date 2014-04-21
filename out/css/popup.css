@@ -94,11 +94,10 @@
 .popup_inner-wrap {
   position: relative;
   width: 710px;
-  margin: 40px auto;
+  margin: 50px auto;
   background: #fff;
   box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
-  overflow: hidden;
 }
 .popup_title {
   padding: 18px 65px 15px 30px;
@@ -114,6 +113,8 @@
   display: table-cell;
   vertical-align: top;
   border-right: 1px solid #e0e0e0;
+  overflow: hidden;
+  border-radius: 0 0 0 5px;
 }
 .popup_sidebar UL,
 .popup_sidebar LI {
