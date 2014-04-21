@@ -27,16 +27,18 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
-		console.log('todo', isDownInTree(element, angular.element(_layers[_layers.length-1])));
-		if ((
-			_layers.length > 0 &&
-			!isUpInTree(element) &&
-			!angular.element(element).hasClass('pop-on-click') &&
-			!angular.element(element).data('popupCaller')
-		) || (
-			_layers.length > 0 &&
-			angular.element(element).data('popupCaller') &&
-			!isDownInTree(angular.element(element).data('targetPopup'))
+		if (_layers.length > 0 && (
+			(
+				!angular.element(element).data('popupCaller') &&
+				!angular.element(element).hasClass('pop-on-click') &&
+				!isUpInTree(element)
+			) || (
+				angular.element(element).data('popupCaller') &&
+				!isDownInTree(angular.element(element).data('targetPopup'))
+			) || (
+				angular.element(element).hasClass('dropdown_container') &&
+				!isDownInTree(element, angular.element(_layers[_layers.length-1]))
+			)
 		)) {
 			popLastLayer();
 		}
