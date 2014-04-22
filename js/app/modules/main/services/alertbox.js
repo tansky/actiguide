@@ -25,8 +25,12 @@ actiGuide.mainModule.service('alertBox', function ($timeout) {
 				angular.element(document.getElementsByClassName('alert-box-wrap')).append(element);
 			}
 
+			$timeout(function() {
+				element.addClass('opened');
+			});
+
 			var timeout = $timeout(function() {
-				angular.element(element).remove()
+				angular.element(element).removeClass('opened')
 			}, config.timeout ? config.timeout : 3000);
 
 			element.on('mouseover', function() {
@@ -35,7 +39,7 @@ actiGuide.mainModule.service('alertBox', function ($timeout) {
 
 			element.on('mouseout', function() {
 				timeout = $timeout(function() {
-					angular.element(element).remove()
+					angular.element(element).removeClass('opened')
 				}, config.timeout ? config.timeout : 3000);
 			});
 		}

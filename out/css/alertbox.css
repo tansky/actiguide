@@ -70,9 +70,7 @@
   width: 100%;
 }
 .alert-box {
-  left: 0;
-  right: 0;
-  padding: 0.5em 0;
+  padding: 0;
   text-align: center;
   color: #fff;
   background: #82c900;
@@ -92,6 +90,15 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#82c900', endColorstr='#7cb200',GradientType=0 );
   /* IE6-9 */
   box-shadow: inset 0 1px 0 0 #82c900, inset 0 2px 0 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 0 rgba(0, 0, 0, 0.1), 0 5px 15px 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  line-height: 34px;
+  -webkit-transition: max-height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  -moz-transition: max-height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  -o-transition: max-height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  -ms-transition: max-height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  transition: max-height 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 .alert-box.red {
   background: #fa0023;
@@ -111,6 +118,10 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fa0023', endColorstr='#e10017',GradientType=0 );
   /* IE6-9 */
   box-shadow: inset 0 1px 0 0 #fa0023, inset 0 2px 0 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 0 rgba(0, 0, 0, 0.1), 0 5px 15px 0 rgba(0, 0, 0, 0.1);
+}
+.alert-box.opened {
+  opacity: 1;
+  max-height: 34px;
 }
 .alert-box A {
   color: #fff;
