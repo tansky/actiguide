@@ -25,14 +25,14 @@
 
 		<div class="m-box">
 			<div class="box">
-				<h1>Слои</h1>
+				<h1>Алертбоксы</h1>
 			</div>
 		</div>
 
 		<div class="m-box m-giant">
 			<div class="col-edge-1">
 				<div class="box">
-					<h3>Алертбоксы</h3>
+					<h3>Простые</h3>
 				</div>
 			</div>
 			<div class="col-4">
@@ -41,9 +41,16 @@
 					<p>
 						<a ng-click="alertBox('Зелёный алертбокс. <a>Ссылка</a>')">Зелёный сверху</a>.
 						<a ng-click="alertBox('Красный алертбокс. <a>Ссылка</a>', {color: 'red'})">Красный сверху</a>.
+						<a ng-click="alertBox('Зелёный алертбокс с таймаутом 5 секунд', {timeout: 5000})">На 5 секунд</a>.
 					</p>
 
 					<p>По умолчанию блок с алертбоксами появляется зафиксированным вверху страницы, с отступом в 50px сверху.</p>
+
+					<p>
+						<a ng-click="alertBox('Алертбокс с целью', {target: 'alertbox-target'})">В контексте (с целью)</a>.
+					</p>
+
+					<p id="alertbox-target"></p>
 
 				</div>
 			</div>

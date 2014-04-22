@@ -2518,7 +2518,7 @@ actiGuide.mainModule.filter('getDigits', function() {
         if (!value || !String(value).match(/\d/g)) return value;
         return String(value).match(/\d/g).join('') || '';
     };
-});actiGuide.mainModule.service('alertBox', ['$animate', function ($animate) {
+});actiGuide.mainModule.service('alertBox', function ($timeout) {
 	var alertBoxes = [];
 
 	return {
@@ -2538,12 +2538,29 @@ actiGuide.mainModule.filter('getDigits', function() {
 			}
 
 			var element = angular.element('<div class="alert-box' + additionalClasses + '">' + text + '</div>');
-			angular.element(document.getElementsByClassName('alert-box-wrap')).append(element);
 
-			console.log('push', text, config)
+			if (config.target) {
+				angular.element(document.getElementById(config.target)).html(element);
+			} else {
+				angular.element(document.getElementsByClassName('alert-box-wrap')).append(element);
+			}
+
+			var timeout = $timeout(function() {
+				angular.element(element).remove()
+			}, config.timeout ? config.timeout : 3000);
+
+			element.on('mouseover', function() {
+				$timeout.cancel(timeout);
+			});
+
+			element.on('mouseout', function() {
+				timeout = $timeout(function() {
+					angular.element(element).remove()
+				}, config.timeout ? config.timeout : 3000);
+			});
 		}
 	}
-}]);;actiGuide.mainModule.factory('$caretPosition', function () {
+});;actiGuide.mainModule.factory('$caretPosition', function () {
     return {
         get: "selection" in document ? getCaretPositionForIe : getCaretPosition,
         set: document.createElement("input").createTextRange ? setCaretPositionForIe : setCaretPosition,
