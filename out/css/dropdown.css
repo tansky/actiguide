@@ -128,7 +128,7 @@
 .dropdown__small > .dropdown_container {
   width: 200px;
 }
-.dropdown__default > .dropdown_container {
+.dropdown__regular > .dropdown_container {
   width: 300px;
 }
 .dropdown__big > .dropdown_container {
@@ -136,9 +136,6 @@
 }
 .dropdown__giant > .dropdown_container {
   width: 500px;
-}
-.dropdown__giant > .dropdown_container {
-  width: 580px;
 }
 .dropdown__huge > .dropdown_container {
   width: 660px;

@@ -125,7 +125,7 @@
   display: block;
   position: relative;
   padding: 14px 60px 14px 30px;
-  cursor: pointer;
+  cursor: default;
   color: #00a2c4;
 }
 .popup_sidebar LI:hover {
@@ -133,7 +133,6 @@
 }
 .popup_sidebar LI.divider {
   background-color: transparent;
-  cursor: default;
   padding: 14px 60px 14px 30px;
   color: #cccccc;
 }
@@ -144,7 +143,6 @@
 .popup_sidebar LI.is-active {
   background: #555F64;
   color: #fff;
-  cursor: default;
 }
 .popup_sidebar LI.is-active:after {
   position: absolute;
