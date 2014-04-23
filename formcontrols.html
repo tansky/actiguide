@@ -68,7 +68,7 @@
                         </div>
 
                         <div class="m-normal">
-                            <input type="text" name="" value="" placeholder="По ширине контейнера" class="t-input"/>
+                            <input class="t-input" placeholder="По ширине контейнера" />
                         </div>
 
                         <p>Общие для сервисов кастомные текстовые поля (собраны из полей стандартных размеров)</p>
@@ -85,6 +85,15 @@
                             <money-field name="PriceKop" data-ng-model="Model.PriceKop" data-show-kop="true"></money-field>
                         </div>
 
+                        <div class="input-block">
+                            <div class="ctrl-group"  data-split-fields>
+                                <span class="ctrl__sim1_left" data-js-placeholder="Number1">№</span>
+                                <input type="text" name="Number1" class="t-input t-input__medium ctrl__sim1_left first">
+                                <span class="ctrl__sim1_left" data-js-placeholder="Number2">№</span>
+                                <input type="text" name="Number2" class="t-input t-input__mini ctrl__sim1_left last">
+                            </div>
+                        </div>
+
                         <div class="input-block ">
                             <div class="ctrl-group" data-split-fields>
                                 <input class="t-input t-input__normal first" data-ng-model="Model.F" name="F" placeholder="Фамилия" data-modifier='["EnToRu","RegExpFilter:[^-`а-яА-ЯёЁ]"]' data-val-tip="фамилию" />
@@ -96,7 +105,7 @@
                         <div class="input-block">
                             <div class="ctrl-group" data-split-fields>
                                 <input class="t-input t-input__mini ctrl__sim1 first" data-ng-model="Model.Value" data-modifier='["RegExpFilter:[^\\d]"]' maxlength="3"  name="Value">
-                                <span class="ctrl__sim1">%</span>
+                                <span class="ctrl__sim1" data-js-placeholder="Value">%</span>
                                 <input class="t-input t-input__big last" data-ng-model="Model.Name" name="Name" placeholder="Название надбавки">
                             </div>
                         </div>
@@ -116,7 +125,7 @@
                             </div>
                         </div>
 
-                        <div class="input-block">
+                        <div class="input-block m-big">
                             <div class="ctrl-group m-micro" data-split-fields>
                                 <input class="t-input t-input__bigger first" placeholder="Кем выдан">
                                 <div class="ctrl-group dib last">
@@ -125,14 +134,68 @@
                             </div>
                         </div>
 
+                        <p>Чекбоксы, радиобатоны</p>
+
+                        <div class="m-normal">
+                            <div class="radio-box">
+                                <label><input type="radio" name="a1" id="a1">Основной<br>длинный лейбл</label>
+                            </div>
+                            <div class="radio-box">
+                                <label><input type="radio" name="a1" id="a2">Улучшенный</label>
+                            </div>
+                            <div class="radio-box">
+                                <label><input type="checkbox" name="a3" id="a3">Доставка на дом</label>
+                            </div>
+                        </div>
+
+                        <p>КЛАДР</p>
+
+
+
 
                         <p>Выпадающие списки</p>
 
-                        <div class="custom-select m-big">
+                        <div class="custom-select m-small">
                             <select>
-                                <option>:-)</option>
-                                <option>:-(</option>
-                                <option>>:0</option>
+                                <option>1</option>
+                                <option>50</option>
+                                <option>100</option>
+                            </select>
+                        </div>
+
+                        <div class="custom-select custom-select__micro m-small">
+                            <select>
+                                <option>Микро</option>
+                            </select>
+                        </div>
+
+                        <div class="custom-select custom-select__small m-small">
+                            <select>
+                                <option>Малый</option>
+                            </select>
+                        </div>
+
+                        <div class="custom-select custom-select__medium m-small">
+                            <select>
+                                <option>Средний</option>
+                            </select>
+                        </div>
+
+                        <div class="custom-select custom-select__big m-small">
+                            <select>
+                                <option>Большой</option>
+                            </select>
+                        </div>
+
+                        <div class="custom-select custom-select__giant m-small">
+                            <select>
+                                <option>Огромный</option>
+                            </select>
+                        </div>
+
+                        <div class="custom-select custom-select__full m-big">
+                            <select>
+                                <option>По ширине контейнера</option>
                             </select>
                         </div>
 
@@ -157,7 +220,6 @@
                                 <li><a href="#">Пункт 2</a></li>
                                 <li><a href="#">Пункт 3</a></li>
                             </ul>
-
                         </button>
                     </div>
                 </div>

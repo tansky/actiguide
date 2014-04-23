@@ -15,6 +15,7 @@
 @import 'hint.css';
 @import 'tabs.css';
 @import "alertbox.css";
+@import "radiocheck.css";
 /**
 * Корневой файл стилей. Здесь можно управлять порядком подключения стилей
 */
