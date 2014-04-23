@@ -27,6 +27,14 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 						return;
 					}
 
+					/* Делаем все нижние попапы невидимыми. Снова видимыми по закрытию верхних попапов они делаются в layers.popLastLayer() */
+
+					angular.forEach(layers.layersList, function(item) {
+						if (angular.element(item).hasClass('popup')) {
+							angular.element(item).scope().visible = false;
+						}
+					});
+
 					scope.noScroll = true;
 
 					popupScope.visible = true;

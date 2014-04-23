@@ -14,7 +14,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 		updateLayers(e.target);
 	});
 
-	angular.element($document).bind('keyup', function(e) {
+	angular.element($document).bind('keydown', function(e) {
 		if (e.which == 27 && _layers.length > 0) {
 			popLastLayer();
 		}
@@ -31,7 +31,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			angular.element(element).hasClass('pop-on-click') ||
 			(
 				!angular.element(element).data('popupCaller') &&
-				!isUpInTree(element)
+				(!isUpInTree(element) || !isDownInTree(element, angular.element(_layers[_layers.length-1])))
 			) || (
 				angular.element(element).data('popupCaller') &&
 				!isDownInTree(angular.element(element).data('targetPopup'))
@@ -96,9 +96,20 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			topLayerScope = $topLayer.scope();
 
 		topLayerScope.visible = false;
-		topLayerScope.$apply();
 
 		_layers.pop();
+
+		topLayerScope.$apply();
+
+		/* После закрытия слоя проверяем, если новый верхний слой это попап, то делаем его видимым */
+
+		$topLayer = angular.element(_layers[_layers.length - 1]);
+		topLayerScope = $topLayer.scope();
+
+		if ($topLayer.hasClass('popup')) {
+			topLayerScope.visible = true;
+			topLayerScope.$apply();
+		}
 	}
 
 	return {
