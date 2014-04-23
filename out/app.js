@@ -2760,7 +2760,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			angular.element(element).hasClass('pop-on-click') ||
 			(
 				!angular.element(element).data('popupCaller') &&
-				!isUpInTree(element)
+				(!isUpInTree(element) || !isDownInTree(element, angular.element(_layers[_layers.length-1])))
 			) || (
 				angular.element(element).data('popupCaller') &&
 				!isDownInTree(angular.element(element).data('targetPopup'))
