@@ -13,6 +13,7 @@
 @import 'select.css';
 @import 'validation.css';
 @import 'hint.css';
+@import 'tabs.css';
 @import "alertbox.css";
 /**
 * Корневой файл стилей. Здесь можно управлять порядком подключения стилей

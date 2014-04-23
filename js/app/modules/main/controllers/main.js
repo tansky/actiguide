@@ -40,3 +40,13 @@ actiGuide.mainModule.controller('TestFormCtrl', function ($scope, $timeout, aler
 		return $scope.Model.PaymentType.Id == 4;
 	};
 });
+
+
+actiGuide.mainModule.controller('TabsCtrl', function ($scope, $timeout) {
+
+    $scope.Model = {};
+
+    $scope.handler = function (value) {
+        console.warn(value);
+    };
+});

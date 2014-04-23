@@ -1,0 +1,8 @@
+<div>
+    <div class="tab-btn-box">
+        <button class="tab-btn" data-ng-repeat="tab in tabs" data-ng-class="{active:tab.selected}" data-ng-click="select(tab)">
+            {{ tab.title }}
+        </button>
+    </div>
+    <div data-ng-transclude></div>
+</div>
