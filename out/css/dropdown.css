@@ -22,7 +22,7 @@
   position: absolute;
   z-index: 5;
   bottom: 100%;
-  margin-bottom: -0.75px;
+  margin-bottom: -1px;
   left: 20px;
   content: '';
   border: 10px solid;
@@ -63,7 +63,7 @@
   border-top-color: #ccc;
 }
 .dropdown.reflect-ver > .dropdown_container:after {
-  margin-top: -0.75px;
+  margin-top: -1px;
 }
 .dropdown.small-wrap > .dropdown_container:before,
 .dropdown.small-wrap > .dropdown_container:after {
