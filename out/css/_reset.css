@@ -1,13 +1,6 @@
 :focus {
   outline: none;
 }
-body {
-  color: #000;
-}
-html {
-  color: #333;
-  background: #fdfdfd;
-}
 body,
 div,
 dl,
