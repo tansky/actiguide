@@ -3,7 +3,6 @@
   margin: 0 auto;
   max-width: 1150px;
   min-width: 929px;
-  padding: 0 30px 30px;
 }
 .m-box {
   clear: both;
@@ -174,6 +173,7 @@
   opacity: 0.25;
   position: absolute;
   width: 35px;
+  height: 3000px !important;
 }
 .right-padding-grid {
   background: none repeat scroll 0 0 #717171;
@@ -183,4 +183,5 @@
   position: absolute;
   right: 0;
   width: 35px;
+  height: 3000px !important;
 }

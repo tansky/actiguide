@@ -213,19 +213,6 @@
   -moz-box-shadow: inset 3px 3px 5px -2px #cecece;
   box-shadow: inset 3px 3px 5px -2px #cecece;
 }
-/* pushed */
-.btn.pushed {
-  background: #cccccc;
-}
-.btn.pushed .btn-in {
-  background: #f9f9f9;
-  border: none;
-  line-height: 32px;
-  filter: none !important;
-  -webkit-box-shadow: inset 3px 3px 5px -2px #cecece;
-  -moz-box-shadow: inset 3px 3px 5px -2px #cecece;
-  box-shadow: inset 3px 3px 5px -2px #cecece;
-}
 /* preload */
 .btn__preload:hover .btn-in,
 .btn__preload .btn-in {
@@ -351,20 +338,6 @@
 .btn__positive:active .btn-in,
 .btn__positive.active .btn-in:hover {
   background: #70b700;
-  text-shadow: none;
-  -webkit-box-shadow: inset 3px 3px 5px -2px #578d00;
-  -moz-box-shadow: inset 3px 3px 5px -2px #578d00;
-  box-shadow: inset 3px 3px 5px -2px #578d00;
-}
-/* pushed */
-.btn__positive.pushed,
-.btn__positive.pushed:hover {
-  background: #619e00;
-  box-shadow: none;
-}
-.btn__positive.pushed .btn-in,
-.btn__positive.pushed .btn-in:hover {
-  background: #75c000;
   text-shadow: none;
   -webkit-box-shadow: inset 3px 3px 5px -2px #578d00;
   -moz-box-shadow: inset 3px 3px 5px -2px #578d00;
@@ -505,20 +478,6 @@
   -moz-box-shadow: inset 3px 3px 5px -2px #860017;
   box-shadow: inset 3px 3px 5px -2px #860017;
 }
-/* pushed */
-.btn__negative.pushed,
-.btn__negative.pushed:hover {
-  background: #9f0021;
-  box-shadow: none;
-}
-.btn__negative.pushed .btn-in,
-.btn__negative.pushed .btn-in:hover {
-  background: #cd002b;
-  text-shadow: none;
-  -webkit-box-shadow: inset 3px 3px 5px -2px #860017;
-  -moz-box-shadow: inset 3px 3px 5px -2px #860017;
-  box-shadow: inset 3px 3px 5px -2px #860017;
-}
 /* preload */
 .btn__negative.btn__preload,
 .btn__negative.btn__preload:hover {
@@ -649,20 +608,6 @@
 .btn__consult.active .btn-in:hover,
 .btn__consult:active .btn-in {
   background: #626895;
-  text-shadow: none;
-  -webkit-box-shadow: inset 3px 3px 5px -2px #51588b;
-  -moz-box-shadow: inset 3px 3px 5px -2px #51588b;
-  box-shadow: inset 3px 3px 5px -2px #51588b;
-}
-/* pushed */
-.btn__consult.pushed,
-.btn__consult.pushed:hover {
-  background: #626895;
-  box-shadow: none;
-}
-.btn__consult.pushed .btn-in,
-.btn__consult.pushed .btn-in:hover {
-  background: #747aa4;
   text-shadow: none;
   -webkit-box-shadow: inset 3px 3px 5px -2px #51588b;
   -moz-box-shadow: inset 3px 3px 5px -2px #51588b;
@@ -803,20 +748,6 @@
   -moz-box-shadow: inset 3px 3px 5px -2px #1c1c1c;
   box-shadow: inset 3px 3px 5px -2px #1c1c1c;
 }
-/* pushed */
-.btn__dark.pushed,
-.btn__dark.pushed:hover {
-  background: #383838;
-  box-shadow: none;
-}
-.btn__dark.pushed .btn-in,
-.btn__dark.pushed .btn-in:hover {
-  background: #2f2f2f;
-  text-shadow: none;
-  -webkit-box-shadow: inset 3px 3px 5px -2px #1c1c1c;
-  -moz-box-shadow: inset 3px 3px 5px -2px #1c1c1c;
-  box-shadow: inset 3px 3px 5px -2px #1c1c1c;
-}
 /* preload */
 .btn__dark.btn__preload,
 .btn__dark.btn__preload:hover {
@@ -952,20 +883,6 @@
   -moz-box-shadow: inset 3px 3px 5px -2px #ab4900;
   box-shadow: inset 3px 3px 5px -2px #ab4900;
 }
-/* pushed */
-.btn__orange.pushed,
-.btn__orange.pushed:hover {
-  background: #d95d00;
-  box-shadow: none;
-}
-.btn__orange.pushed .btn-in,
-.btn__orange.pushed .btn-in:hover {
-  background: #e26100;
-  text-shadow: none;
-  -webkit-box-shadow: inset 3px 3px 5px -2px #ab4900;
-  -moz-box-shadow: inset 3px 3px 5px -2px #ab4900;
-  box-shadow: inset 3px 3px 5px -2px #ab4900;
-}
 /* preload */
 .btn__orange.btn__preload,
 .btn__orange.btn__preload:hover {
@@ -1014,7 +931,7 @@
   text-rendering: optimizelegibility;
 }
 .websymbol__left {
-  margin-right: 14px;
+  margin-right: 8px;
 }
 /* BUTTON SECONDARY
     
@@ -1046,12 +963,7 @@
 .btn__secondary.btn__negative:focus,
 .btn__secondary.btn__consult:focus,
 .btn__secondary.btn__dark:focus,
-.btn__secondary.btn__orange:focus,
-.btn__secondary.btn__positive.pushed,
-.btn__secondary.btn__negative.pushed,
-.btn__secondary.btn__consult.pushed,
-.btn__secondary.btn__dark.pushed,
-.btn__secondary.btn__orange.pushed {
+.btn__secondary.btn__orange:focus {
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
@@ -1116,161 +1028,6 @@
 }
 /* END BUTTON PRINT
    ========================================================*/
-/*
-
-
-
-
-
-.print-box.disabled .btn.pressed,
-.print-box.active .btn-in,
-.print-box:active .btn-in{
-  .box-shadow(none);
-}
-
-
-
-.print-box.disabledp .btn.pressed .btn-in,
-.print-box.disabledp:active .btn-in,
-.print-box.disabledp:hover .btn-in,
-.print-box.disabledp .btn-in {
-
-  background: linear-gradient(to bottom, #fcfcfc 0%, #fcfcfc 50%, #eeeeee 100%) repeat scroll 0 0 transparent;
-  margin: 0;
-  text-align: center;
-  box-shadow: none !important;
-}
-.print-box.disable .btn-in .print_ico{ margin-top: -2px !important;}
-
-
-
-.dropdown_name .btn.btn__consult.hover,
-.dropdown_name .btn.btn__consult:hover,     */
-/*кнопка консалтинга с восклицательным знаком
-.dropdown_name .btn.btn__consult.pressed,    /*кнопка консалтинга с восклицательным знаком
-.dropdown_name.active .btn.btn__consult,     /*кнопка консалтинга с восклицательным знаком
-.btn.btn__consult:hover,
-.btn__consult .btn-in {
-  opacity: 1;
-  color: #fff;
-  text-shadow: 0 1px 0 #5d6494;
-  .gradient-base (@start: #999ec0, @stop: #747aa4);
-}
-*/
-/*кнопка консалтинга с восклицательным знаком
-.dropdown_name{
-  position: relative;
-}
-.dropdown_name_sim{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin-top: -11px;
-  margin-left: -2px;
-  color: #fff;
-  font-size: 20px !important;
-  font-family: 'Proxima Nova Bold';
-  text-shadow: 0 1px 0 rgba(93, 100, 148, 0.20);
-  cursor: default;
-}
-.dropdown_name.active .dropdown_name_sim{margin-top: -10px; }
-.btn.pressed + .dropdown_name_sim{margin-top: -10px;}
-.dropdown.dropdown__float .dropdown_name {
-  width: 35px;
-  height: 32px;
-  display: block;
-}
-.dropdown_name .btn.btn__consult {
-  opacity: .35;
-  .box-shadow(0 1px 3px 0 rgba(0, 0, 0, 0.3));
-}
-
-
-
-.for-btn {
-  float: right;
-  left: 27px;
-  position: relative;
-  top: -4px;
-  width: 34%;
-}
-.box-page-name .for-btn {
-  right: 0;
-  left: auto;
-  top: auto;
-  float: none;
-  bottom: 24px;
-  width: 34%;
-  position: absolute;
-}
-
-.end-form {
-  padding: 10px 15px;
-  margin-left: -15px;
-  background: rgba(0,0,0,0.05);
-  .rounded();
-}
-.end-form .btn{ margin-bottom: 0; }
-
-
-
-
-
-
-
-
-/*END-BUTTONS
-    -------------------------------------------------------*/
-/* -----------------------------------------------------> */
-/* BOX BTN 
-.box-btn {
-  display: inline-block;
-  vertical-align: top;
-  font-size: 0;
-  margin-right: 5px;
-}
-.box-btn .btn.active,
-.box-btn .btn:hover,
-.box-btn .btn:active,
-.box-btn .btn{
-  margin-right: 0;
-  padding-left: 0;
-}
-.box-btn .btn,
-.box-btn .btn-in {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-.box-btn .btn:first-child { padding-left: 1px; }
-
-.box-btn .btn.first .btn-in,
-.box-btn .btn.first,
-.box-btn .btn:first-child .btn-in,
-.box-btn .btn:first-child {
-  -webkit-border-radius: 2px 0 0 2px;
-  -moz-border-radius: 2px 0 0 2px;
-  border-radius: 2px 0 0 2px;
-}
-
-.box-btn .btn.last .btn-in,
-.box-btn .btn.last,
-.box-btn .btn:last-child .btn-in,
-.box-btn .btn:last-child {
-  -webkit-border-radius: 0 2px 2px 0;
-  -moz-border-radius: 0 2px 2px 0;
-  border-radius: 0 2px 2px 0;
-}
-
-
-
-
-
-.btn_obr
-{
-  z-index: 9999999 !important;
-}
-    */
 /* Cosmetics
     ==============================================*/
 /* Обнуляем отступ у button в ff */
@@ -1345,7 +1102,6 @@
 /* line-height big button */
 .btn.btn__big.btn__preload .btn-in,
 .btn.btn__big.active .btn-in,
-.btn.btn__big.pushed .btn-in,
 .btn.btn__big:active .btn-in,
 .btn.btn__big .btn-in:active {
   line-height: 40px !important;
