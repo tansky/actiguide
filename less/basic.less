@@ -66,20 +66,6 @@
 
 
 /**
-* Основные обозначения
-*/
-
-BODY {
-	color: #333;
-	background: #fdfdfd;
-	font-family: 'Proxima Nova', sans-serif;
-	font-size: 16px;
-	line-height: 22px;
-	margin: 0;
-	padding: 0;
-}
-
-/**
 * Отступы
 */
 
@@ -156,20 +142,93 @@ BODY {
 }
 
 
+/**
+* Состояния (States)
+*/
+
+.is-visible {
+	display: block;
+}
+
+.is-hidden {
+	display: none;
+}
+
+.di {
+	display: inline;
+}
+
+.dib {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.dib__middle {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.dni {
+	display: none !important;
+}
+
+
+/**
+* Floats
+*/
+
+.fl {
+	float: left;
+}
+
+.fr {
+	float: right;
+}
+
+
+/**
+* Разное
+*/
+
+INPUT:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 50px white inset !important; /* Change the color to your own background color */
+	-webkit-text-fill-color: #333;
+}
+
+.color-box {
+	DIV {
+		float: left;
+		text-align: center;
+		width: 50px;
+		height: 50px;
+		line-height: 50px;
+	}
+}
+
+HR {
+	border: none;
+	border-top: 1px solid #e2e2e2;
+	margin: 30px 0;
+}
+
+.clear-fix {
+	clear: both;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
 
 .spinner {
 	background: url('@{dir-images}spin.gif') no-repeat center;
 	height: 36px;
 }
 
-
-
-
 .no-select {
-  -moz-user-select: none;
-  -o-user-select:none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 } 

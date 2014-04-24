@@ -8,13 +8,23 @@ form, fieldset, legend, p, blockquote, th, td {
 	padding: 0;
 }
 
+BODY {
+	color: #333;
+	background: #fdfdfd;
+	font-family: 'Proxima Nova', sans-serif;
+	font-size: 16px;
+	line-height: 22px;
+	margin: 0;
+	padding: 0;
+}
+
 BODY.no-scroll {
 	overflow: hidden;
 }
 
 A {
 	cursor: pointer;
-    text-decoration:none;
+	text-decoration: none;
 }
 
 table {
@@ -81,7 +91,7 @@ select, input, button, textarea, button {
 }
 
 pre, code, kbd, samp, tt {
-    font-family: monospace;
+	font-family: monospace;
 	line-height: 100%;
 }
 
@@ -105,7 +115,6 @@ ul li {
 p, fieldset, table, pre {
 	margin-bottom: 10px;
 }
-
 
 .dropdown_block {
 	-webkit-backface-visibility: hidden;
@@ -136,84 +145,3 @@ p, fieldset, table, pre {
 	background: #7fcdea;
 }
 
-
-
-/**
-* Состояния (Stated)
-*/
-
-.is-visible {
-	display: block;
-}
-
-.is-hidden {
-	display: none;
-}
-
-.di {
-	display: inline;
-}
-
-.dib {
-	display: inline-block;
-	vertical-align: top;
-}
-
-.dib__middle {
-	display: inline-block;
-	vertical-align: middle;
-}
-
-.dni {
-	display: none !important;
-}
-
-
-
-/**
-* Floats
-*/
-
-.fl {
-	float: left;
-}
-
-.fr {
-	float: right;
-}
-
-
-
-/**
-* Разное
-*/
-
-
-INPUT:-webkit-autofill {
-	-webkit-box-shadow: 0 0 0 50px white inset !important; /* Change the color to your own background color */
-	-webkit-text-fill-color: #333;
-}
-
-.color-box {
-	DIV {
-		float: left;
-		text-align: center;
-		width: 50px;
-		height: 50px;
-		line-height: 50px;
-	}
-}
-
-HR {
-	border: none;
-	border-top: 1px solid #e2e2e2;
-	margin: 30px 0 30px 0;
-}
-
-.clear-fix {
-	clear: both;
-}
-
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-	display: none !important;
-}
