@@ -33,6 +33,10 @@ actiGuide.mainModule.directive('splitFields', function ($caretPosition, $timeout
                         }, 1);
                     }
                 });
+
+                console.log($(this).attr('maxlength'), this.value.length);
+
+
             });
         }
     };

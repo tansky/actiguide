@@ -27,6 +27,838 @@ $(document).keydown(function(e) {
 	}
 });
 ;/**
+ *  Ajax Autocomplete for jQuery, version 1.2.9
+ *  (c) 2013 Tomas Kirda
+ *
+ *  Ajax Autocomplete for jQuery is freely distributable under the terms of an MIT-style license.
+ *  For details, see the web site: https://github.com/devbridge/jQuery-Autocomplete
+ *
+ */
+
+/*jslint  browser: true, white: true, plusplus: true */
+/*global define, window, document, jQuery */
+
+// Expose plugin as an AMD module if AMD loader is present:
+(function (factory) {
+    'use strict';
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+} (function ($) {
+    'use strict';
+
+    var
+        utils = (function () {
+            return {
+                escapeRegExChars: function (value) {
+                    return value.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+                },
+                createNode: function (containerClass) {
+                    var div = document.createElement('div');
+                    div.className = containerClass;
+                    div.style.position = 'absolute';
+                    div.style.display = 'none';
+                    return div;
+                }
+            };
+        } ()),
+
+        keys = {
+            ESC: 27,
+            TAB: 9,
+            RETURN: 13,
+            LEFT: 37,
+            UP: 38,
+            RIGHT: 39,
+            DOWN: 40
+        };
+
+    function Autocomplete(el, options) {
+        var noop = function () { },
+            that = this,
+            defaults = {
+                autoSelectFirst: false,
+                appendTo: 'body',
+                serviceUrl: null,
+                lookup: null,
+                onSelect: null,
+                width: 'auto',
+                minChars: 1,
+                maxHeight: 300,
+                deferRequestBy: 0,
+                params: {},
+                formatResult: Autocomplete.formatResult,
+                delimiter: null,
+                zIndex: 9999,
+                type: 'GET',
+                noCache: false,
+                onSearchStart: noop,
+                onSearchComplete: noop,
+                onSearchError: noop,
+                containerClass: 'autocomplete-suggestions',
+                tabDisabled: false,
+                dataType: 'text',
+                currentRequest: null,
+                triggerSelectOnValidInput: true,
+                preventBadQueries: true,
+                lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+                    return suggestion.value.toLowerCase().indexOf(queryLowerCase) !== -1;
+                },
+                paramName: 'query',
+                transformResult: function (response) {
+                    return typeof response === 'string' ? $.parseJSON(response) : response;
+                }
+            };
+
+        // Shared variables:
+        that.element = el;
+        that.el = $(el);
+        that.suggestions = [];
+        that.badQueries = [];
+        that.selectedIndex = -1;
+        that.currentValue = that.element.value;
+        that.intervalId = 0;
+        that.cachedResponse = {};
+        that.onChangeInterval = null;
+        that.onChange = null;
+        that.isLocal = false;
+        that.suggestionsContainer = null;
+        that.options = $.extend({}, defaults, options);
+        that.classes = {
+            selected: 'autocomplete-selected',
+            suggestion: 'autocomplete-suggestion'
+        };
+        that.hint = null;
+        that.hintValue = '';
+        that.selection = null;
+
+        // Initialize and set options:
+        that.initialize();
+        that.setOptions(options);
+    }
+
+    Autocomplete.utils = utils;
+
+    $.Autocomplete = Autocomplete;
+
+    Autocomplete.formatResult = function (suggestion, currentValue) {
+        var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
+
+        return suggestion.value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>');
+    };
+
+    Autocomplete.prototype = {
+
+        killerFn: null,
+
+        initialize: function () {
+            var that = this,
+                suggestionSelector = '.' + that.classes.suggestion,
+                selected = that.classes.selected,
+                options = that.options,
+                container;
+
+            // Remove autocomplete attribute to prevent native suggestions:
+            that.element.setAttribute('autocomplete', 'off');
+
+            that.killerFn = function (e) {
+                if ($(e.target).closest('.' + that.options.containerClass).length === 0) {
+                    that.killSuggestions();
+                    that.disableKillerFn();
+                }
+            };
+
+            that.suggestionsContainer = Autocomplete.utils.createNode(options.containerClass);
+
+            container = $(that.suggestionsContainer);
+
+            container.appendTo(options.appendTo);
+
+            // Only set width if it was provided:
+            if (options.width !== 'auto') {
+                container.width(options.width);
+            }
+
+            // Listen for mouse over event on suggestions list:
+            container.on('mouseover.autocomplete', suggestionSelector, function () {
+                that.activate($(this).data('index'));
+            });
+
+            // Deselect active element when mouse leaves suggestions container:
+            container.on('mouseout.autocomplete', function () {
+                that.selectedIndex = -1;
+                container.children('.' + selected).removeClass(selected);
+            });
+
+            // Listen for click event on suggestions list:
+            container.on('click.autocomplete', suggestionSelector, function () {
+                that.select($(this).data('index'));
+            });
+
+            that.fixPosition();
+
+            that.fixPositionCapture = function () {
+                if (that.visible) {
+                    that.fixPosition();
+                }
+            };
+
+            $(window).on('resize.autocomplete', that.fixPositionCapture);
+
+            that.el.on('keydown.autocomplete', function (e) { that.onKeyPress(e); });
+            that.el.on('keyup.autocomplete', function (e) { that.onKeyUp(e); });
+            that.el.on('blur.autocomplete', function () { that.onBlur(); });
+            that.el.on('focus.autocomplete', function () { that.onFocus(); });
+            that.el.on('change.autocomplete', function (e) { that.onKeyUp(e); });
+        },
+
+        onFocus: function () {
+            var that = this;
+            that.fixPosition();
+            if (that.options.minChars <= that.el.val().length) {
+                that.onValueChange();
+            }
+        },
+
+        onBlur: function () {
+            this.enableKillerFn();
+        },
+
+        setOptions: function (suppliedOptions) {
+            var that = this,
+                options = that.options;
+
+            $.extend(options, suppliedOptions);
+
+            that.isLocal = $.isArray(options.lookup);
+
+            if (that.isLocal) {
+                options.lookup = that.verifySuggestionsFormat(options.lookup);
+            }
+
+            // Adjust height, width and z-index:
+            $(that.suggestionsContainer).css({
+                'max-height': options.maxHeight + 'px',
+                'width': options.width + 'px',
+                'z-index': options.zIndex
+            });
+        },
+
+        clearCache: function () {
+            this.cachedResponse = {};
+            this.badQueries = [];
+        },
+
+        clear: function () {
+            this.clearCache();
+            this.currentValue = '';
+            this.suggestions = [];
+        },
+
+        disable: function () {
+            var that = this;
+            that.disabled = true;
+            if (that.currentRequest) {
+                that.currentRequest.abort();
+            }
+        },
+
+        enable: function () {
+            this.disabled = false;
+        },
+
+        fixPosition: function () {
+            var that = this,
+                offset,
+                styles;
+
+            // Don't adjsut position if custom container has been specified:
+            if (that.options.appendTo !== 'body') {
+                return;
+            }
+
+            offset = that.el.offset();
+
+            styles = {
+                top: (offset.top + that.el.outerHeight()) + 'px',
+                left: offset.left + 'px'
+            };
+
+            if (that.options.width === 'auto') {
+                styles.width = (that.el.outerWidth() - 2) + 'px';
+            }
+
+            $(that.suggestionsContainer).css(styles);
+        },
+
+        enableKillerFn: function () {
+            var that = this;
+            $(document).on('click.autocomplete', that.killerFn);
+        },
+
+        disableKillerFn: function () {
+            var that = this;
+            $(document).off('click.autocomplete', that.killerFn);
+        },
+
+        killSuggestions: function () {
+            var that = this;
+            that.stopKillSuggestions();
+            that.intervalId = window.setInterval(function () {
+                that.hide();
+                that.stopKillSuggestions();
+            }, 50);
+        },
+
+        stopKillSuggestions: function () {
+            window.clearInterval(this.intervalId);
+        },
+
+        isCursorAtEnd: function () {
+            var that = this,
+                valLength = that.el.val().length,
+                selectionStart = that.element.selectionStart,
+                range;
+
+            if (typeof selectionStart === 'number') {
+                return selectionStart === valLength;
+            }
+            if (document.selection) {
+                range = document.selection.createRange();
+                range.moveStart('character', -valLength);
+                return valLength === range.text.length;
+            }
+            return true;
+        },
+
+        onKeyPress: function (e) {
+            var that = this;
+
+            // If suggestions are hidden and user presses arrow down, display suggestions:
+            if (!that.disabled && !that.visible && e.which === keys.DOWN && that.currentValue) {
+                that.suggest();
+                return;
+            }
+
+            if (that.disabled || !that.visible) {
+                return;
+            }
+
+            switch (e.which) {
+                case keys.ESC:
+                    that.el.val(that.currentValue);
+                    that.hide();
+                    break;
+                case keys.RIGHT:
+                    if (that.hint && that.options.onHint && that.isCursorAtEnd()) {
+                        that.selectHint();
+                        break;
+                    }
+                    return;
+                case keys.TAB:
+                    if (that.hint && that.options.onHint) {
+                        that.selectHint();
+                        return;
+                    }
+                // Fall through to RETURN
+                case keys.RETURN:
+                    if (that.selectedIndex === -1) {
+                        that.hide();
+                        return;
+                    }
+                    that.select(that.selectedIndex);
+                    if (e.which === keys.TAB && that.options.tabDisabled === false) {
+                        return;
+                    }
+                    break;
+                case keys.UP:
+                    that.moveUp();
+                    break;
+                case keys.DOWN:
+                    that.moveDown();
+                    break;
+                default:
+                    return;
+            }
+
+            // Cancel event if function did not return:
+            e.stopImmediatePropagation();
+            e.preventDefault();
+        },
+
+        onKeyUp: function (e) {
+            var that = this;
+
+            if (that.disabled) {
+                return;
+            }
+
+            switch (e.which) {
+                case keys.UP:
+                case keys.DOWN:
+                    return;
+            }
+
+            clearInterval(that.onChangeInterval);
+
+            if (that.currentValue !== that.el.val()) {
+                that.findBestHint();
+                if (that.options.deferRequestBy > 0) {
+                    // Defer lookup in case when value changes very quickly:
+                    that.onChangeInterval = setInterval(function () {
+                        that.onValueChange();
+                    }, that.options.deferRequestBy);
+                } else {
+                    that.onValueChange();
+                }
+            }
+        },
+
+        onValueChange: function () {
+            var that = this,
+                options = that.options,
+                value = that.el.val(),
+                query = that.getQuery(value),
+                index;
+
+            if (that.selection) {
+                that.selection = null;
+                (options.onInvalidateSelection || $.noop).call(that.element);
+            }
+
+            clearInterval(that.onChangeInterval);
+            that.currentValue = value;
+            that.selectedIndex = -1;
+
+            // Check existing suggestion for the match before proceeding:
+            if (options.triggerSelectOnValidInput) {
+                index = that.findSuggestionIndex(query);
+                if (index !== -1) {
+                    that.select(index);
+                    return;
+                }
+            }
+
+            if (query.length < options.minChars) {
+                that.hide();
+            } else {
+                that.getSuggestions(query);
+            }
+        },
+
+        findSuggestionIndex: function (query) {
+            var that = this,
+                index = -1,
+                queryLowerCase = query.toLowerCase();
+
+            $.each(that.suggestions, function (i, suggestion) {
+                if (suggestion.value.toLowerCase() === queryLowerCase) {
+                    index = i;
+                    return false;
+                }
+            });
+
+            return index;
+        },
+
+        getQuery: function (value) {
+            var delimiter = this.options.delimiter,
+                parts;
+
+            if (!delimiter) {
+                return value;
+            }
+            parts = value.split(delimiter);
+            return $.trim(parts[parts.length - 1]);
+        },
+
+        getSuggestionsLocal: function (query) {
+            var that = this,
+                options = that.options,
+                queryLowerCase = query.toLowerCase(),
+                filter = options.lookupFilter,
+                limit = parseInt(options.lookupLimit, 10),
+                data;
+
+            data = {
+                suggestions: $.grep(options.lookup, function (suggestion) {
+                    return filter(suggestion, query, queryLowerCase);
+                })
+            };
+
+            if (limit && data.suggestions.length > limit) {
+                data.suggestions = data.suggestions.slice(0, limit);
+            }
+
+            return data;
+        },
+
+        getSuggestions: function (q) {
+            var response,
+                that = this,
+                options = that.options,
+                serviceUrl = options.serviceUrl,
+                params,
+                cacheKey;
+
+            options.params[options.paramName] = q;
+            params = options.ignoreParams ? null : options.params;
+
+            if (that.isLocal) {
+                response = that.getSuggestionsLocal(q);
+            } else {
+                if ($.isFunction(serviceUrl)) {
+                    serviceUrl = serviceUrl.call(that.element, q);
+                }
+                cacheKey = serviceUrl + '?' + $.param(params || {});
+                response = that.cachedResponse[cacheKey];
+            }
+
+            if (response && $.isArray(response.suggestions)) {
+                that.suggestions = response.suggestions;
+                that.suggest();
+            } else if (!that.isBadQuery(q)) {
+                if (options.onSearchStart.call(that.element, options.params) === false) {
+                    return;
+                }
+                if (that.currentRequest) {
+                    that.currentRequest.abort();
+                }
+                that.currentRequest = $.ajax({
+                    url: serviceUrl,
+                    data: params,
+                    type: options.type,
+                    dataType: options.dataType
+                }).done(function (data) {
+                    var result;
+                    that.currentRequest = null;
+                    result = options.transformResult(data);
+                    that.processResponse(result, q, cacheKey);
+                    options.onSearchComplete.call(that.element, q, result.suggestions);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    options.onSearchError.call(that.element, q, jqXHR, textStatus, errorThrown);
+                });
+            }
+        },
+
+        isBadQuery: function (q) {
+            if (!this.options.preventBadQueries) {
+                return false;
+            }
+
+            var badQueries = this.badQueries,
+                i = badQueries.length;
+
+            while (i--) {
+                if (q.indexOf(badQueries[i]) === 0) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        hide: function () {
+            var that = this;
+            that.visible = false;
+            that.selectedIndex = -1;
+            $(that.suggestionsContainer).hide();
+            that.signalHint(null);
+        },
+
+        suggest: function () {
+            //если фокус переключили в другое поле, выходим //bugaev
+            if (document.activeElement.name !== this.element.name) return;
+
+            if (this.suggestions.length === 0) {
+                this.hide();
+                return;
+            }
+
+            var that = this,
+                options = that.options,
+                formatResult = options.formatResult,
+                value = that.getQuery(that.currentValue),
+                className = that.classes.suggestion,
+                classSelected = that.classes.selected,
+                container = $(that.suggestionsContainer),
+                beforeRender = options.beforeRender,
+                html = '',
+                index,
+                width;
+
+            if (options.triggerSelectOnValidInput) {
+                index = that.findSuggestionIndex(value);
+                if (index !== -1) {
+                    that.select(index);
+                    return;
+                }
+            }
+
+            // Build suggestions inner HTML:
+            $.each(that.suggestions, function (i, suggestion) {
+                html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) + '</div>';
+            });
+
+            // If width is auto, adjust width before displaying suggestions,
+            // because if instance was created before input had width, it will be zero.
+            // Also it adjusts if input width has changed.
+            // -2px to account for suggestions border.
+            if (options.width === 'auto') {
+                width = that.el.outerWidth() - 2;
+                container.width(width > 0 ? width : 300);
+            }
+
+            container.html(html);
+
+            // Select first value by default:
+            if (options.autoSelectFirst) {
+                that.selectedIndex = 0;
+                container.children().first().addClass(classSelected);
+            }
+
+            if ($.isFunction(beforeRender)) {
+                beforeRender.call(that.element, container);
+            }
+
+            container.show();
+            that.visible = true;
+
+            that.findBestHint();
+        },
+
+        findBestHint: function () {
+            var that = this,
+                value = that.el.val().toLowerCase(),
+                bestMatch = null;
+
+            if (!value) {
+                return;
+            }
+
+            $.each(that.suggestions, function (i, suggestion) {
+                var foundMatch = suggestion.value.toLowerCase().indexOf(value) === 0;
+                if (foundMatch) {
+                    bestMatch = suggestion;
+                }
+                return !foundMatch;
+            });
+
+            that.signalHint(bestMatch);
+        },
+
+        signalHint: function (suggestion) {
+            var hintValue = '',
+                that = this;
+            if (suggestion) {
+                hintValue = that.currentValue + suggestion.value.substr(that.currentValue.length);
+            }
+            if (that.hintValue !== hintValue) {
+                that.hintValue = hintValue;
+                that.hint = suggestion;
+                (this.options.onHint || $.noop)(hintValue);
+            }
+        },
+
+        verifySuggestionsFormat: function (suggestions) {
+            // If suggestions is string array, convert them to supported format:
+            if (suggestions.length && typeof suggestions[0] === 'string') {
+                return $.map(suggestions, function (value) {
+                    return { value: value, data: null };
+                });
+            }
+
+            return suggestions;
+        },
+
+        processResponse: function (result, originalQuery, cacheKey) {
+            var that = this,
+                options = that.options;
+
+            result.suggestions = that.verifySuggestionsFormat(result.suggestions);
+
+            // Cache results if cache is not disabled:
+            if (!options.noCache) {
+                that.cachedResponse[cacheKey] = result;
+                if (options.preventBadQueries && result.suggestions.length === 0) {
+                    that.badQueries.push(originalQuery);
+                }
+            }
+
+            // Return if originalQuery is not matching current query:
+            if (originalQuery !== that.getQuery(that.currentValue)) {
+                return;
+            }
+
+            that.suggestions = result.suggestions;
+            that.suggest();
+        },
+
+        activate: function (index) {
+            var that = this,
+                activeItem,
+                selected = that.classes.selected,
+                container = $(that.suggestionsContainer),
+                children = container.children();
+
+            container.children('.' + selected).removeClass(selected);
+
+            that.selectedIndex = index;
+
+            if (that.selectedIndex !== -1 && children.length > that.selectedIndex) {
+                activeItem = children.get(that.selectedIndex);
+                $(activeItem).addClass(selected);
+                return activeItem;
+            }
+
+            return null;
+        },
+
+        selectHint: function () {
+            var that = this,
+                i = $.inArray(that.hint, that.suggestions);
+
+            that.select(i);
+        },
+
+        select: function (i) {
+            var that = this;
+            that.hide();
+            that.onSelect(i);
+        },
+
+        moveUp: function () {
+            var that = this;
+
+            if (that.selectedIndex === -1) {
+                return;
+            }
+
+            if (that.selectedIndex === 0) {
+                $(that.suggestionsContainer).children().first().removeClass(that.classes.selected);
+                that.selectedIndex = -1;
+                that.el.val(that.currentValue);
+                that.findBestHint();
+                return;
+            }
+
+            that.adjustScroll(that.selectedIndex - 1);
+        },
+
+        moveDown: function () {
+            var that = this;
+
+            if (that.selectedIndex === (that.suggestions.length - 1)) {
+                return;
+            }
+
+            that.adjustScroll(that.selectedIndex + 1);
+        },
+
+        adjustScroll: function (index) {
+            var that = this,
+                activeItem = that.activate(index),
+                offsetTop,
+                upperBound,
+                lowerBound,
+                heightDelta = 25;
+
+            if (!activeItem) {
+                return;
+            }
+
+            offsetTop = activeItem.offsetTop;
+            upperBound = $(that.suggestionsContainer).scrollTop();
+            lowerBound = upperBound + that.options.maxHeight - heightDelta;
+
+            if (offsetTop < upperBound) {
+                $(that.suggestionsContainer).scrollTop(offsetTop);
+            } else if (offsetTop > lowerBound) {
+                $(that.suggestionsContainer).scrollTop(offsetTop - that.options.maxHeight + heightDelta);
+            }
+
+            //that.el.val(that.getValue(that.suggestions[index].value));
+            that.signalHint(null);
+        },
+
+        onSelect: function (index) {
+            var that = this,
+                onSelectCallback = that.options.onSelect,
+                suggestion = that.suggestions[index];
+
+            //that.currentValue = that.getValue(suggestion.value);
+            //that.el.val(that.currentValue);
+            that.signalHint(null);
+            that.suggestions = [];
+            that.selection = suggestion;
+
+            if ($.isFunction(onSelectCallback)) {
+                onSelectCallback.call(that.element, suggestion);
+            }
+        },
+
+        getValue: function (value) {
+            var that = this,
+                delimiter = that.options.delimiter,
+                currentValue,
+                parts;
+
+            if (!delimiter) {
+                return value;
+            }
+
+            currentValue = that.currentValue;
+            parts = currentValue.split(delimiter);
+
+            if (parts.length === 1) {
+                return value;
+            }
+
+            return currentValue.substr(0, currentValue.length - parts[parts.length - 1].length) + value;
+        },
+
+        dispose: function () {
+            var that = this;
+            that.el.off('.autocomplete').removeData('autocomplete');
+            that.disableKillerFn();
+            $(window).off('resize.autocomplete', that.fixPositionCapture);
+            $(that.suggestionsContainer).remove();
+        }
+    };
+
+    // Create chainable jQuery plugin:
+    $.fn.autocomplete = function (options, args) {
+        var dataKey = 'autocomplete';
+        // If function invoked without argument return
+        // instance of the first matched element:
+        if (arguments.length === 0) {
+            return this.first().data(dataKey);
+        }
+
+        return this.each(function () {
+            var inputElement = $(this),
+                instance = inputElement.data(dataKey);
+
+            if (typeof options === 'string') {
+                if (instance && typeof instance[options] === 'function') {
+                    instance[options](args);
+                }
+            } else {
+                // If instance already exists, destroy it:
+                if (instance && instance.dispose) {
+                    instance.dispose();
+                }
+                instance = new Autocomplete(this, options);
+                inputElement.data(dataKey, instance);
+            }
+        });
+    };
+}));
+;/**
  * jQuery CoreUISelect
  * Special thanks to Artem Terekhin, Yuriy Khabarov, Alexsey Shein
  *
@@ -1449,6 +2281,430 @@ actiGuide.mainModule.directive('jsPlaceholder', function() {
 });
 ;/**
  *  @ngdoc directive
+ *  @name kladr
+ *  @restrict E
+ *
+ *  @description КЛАДР
+ *
+ *  TODO: вынести класс inputCover в сервис
+ *  TODO: объеденить подключение автокомплита к инпутам
+ */
+actiGuide.mainModule.directive('kladr', function (VIEWS_PATH) {
+        var inputCover = new function () {
+            return {
+                create: createCover,
+                remove: removeCover,
+                $create: $createCover,
+                $remove: $removeCover
+            };
+
+            function createCover(element, text, className) {
+                var wrapper = document.createElement("div");
+                wrapper.style.position = "relative";
+                wrapper.setAttribute("data-type", "wrapper");
+                element.parentNode.insertBefore(wrapper, element);
+                wrapper.appendChild(element);
+
+                var valueText = document.createElement("span");
+                valueText.style.position = "absolute";
+                valueText.style.left = "-9999px";
+                copyFontStyle(element, valueText);
+                valueText.innerHTML = element.value + "&nbsp;&nbsp;";
+                document.body.appendChild(valueText);
+
+                var cover = document.createElement("div"),
+                    offset = valueText.clientWidth;
+
+                document.body.removeChild(valueText);
+
+                if (element.clientWidth < offset)
+                    return;
+
+                cover.style.position = "absolute";
+                cover.style.left = offset + "px";
+                cover.style.top = 0;
+                cover.style.overflow = "hidden";
+                cover.style.cursor = "text";
+
+                cloneMetrics(element, cover, offset);
+
+                if (className) cover.className = className;
+                cover.innerHTML = text;
+
+                cover.onclick = function () {
+                    element.focus();
+                };
+
+                $(cover).on('mousedown', function () {
+                    $('body').addClass('no-select');
+                });
+
+                wrapper.appendChild(cover);
+            }
+
+            function cloneMetrics(sourse, destination, offset) {
+                var computedStyle = window.getComputedStyle ? getComputedStyle(sourse, "") : sourse.currentStyle,
+                    width = parseInt(computedStyle.width, 10);
+
+                if (isNaN(width))
+                    width = sourse.clientWidth;
+
+                destination.style.mozBoxSizing = computedStyle.mozBoxSizing;
+                destination.style.webkitBoxSizing = computedStyle.webkitBoxSizing;
+                destination.style.boxSizing = computedStyle.boxSizing;
+
+                destination.style.width = width - offset + "px";
+                destination.style.height = computedStyle.height;
+                destination.style.lineHeight = computedStyle.height;
+                //    parseInt(computedStyle.height, 10) - parseInt(computedStyle.paddingTop, 10) - parseInt(computedStyle.paddingBottom, 10) + "px";
+                destination.style.marginLeft = computedStyle.marginLeft;
+                destination.style.marginRight = computedStyle.marginRight;
+                destination.style.marginTop = computedStyle.marginTop;
+                destination.style.marginBottom = computedStyle.marginBottom;
+                destination.style.borderLeftWidth = computedStyle.borderLeftWidth;
+                destination.style.borderRightWidth = computedStyle.borderRightWidth;
+                destination.style.borderTopWidth = computedStyle.borderTopWidth;
+                destination.style.borderBottomWidth = computedStyle.borderBottomWidth;
+                destination.style.paddingLeft = computedStyle.paddingLeft;
+                destination.style.paddingRight = computedStyle.paddingRight;
+                destination.style.paddingTop = computedStyle.paddingTop;
+                destination.style.paddingBottom = computedStyle.paddingBottom;
+            }
+
+            function copyFontStyle(sourse, destination) {
+                var computedStyle = window.getComputedStyle ? getComputedStyle(sourse, "") : sourse.currentStyle;
+
+                destination.style.fontFamily = computedStyle.fontFamily;
+                destination.style.fontSize = computedStyle.fontSize;
+                destination.style.fontStyle = computedStyle.fontStyle;
+            }
+
+            function removeCover(element) {
+                var wrapper = element.parentNode;
+                if (wrapper.getAttribute("data-type") != "wrapper")
+                    return;
+
+                var parent = wrapper.parentNode;
+                //caretPostion = Extensions.CaretPosition.get(element);
+                parent.insertBefore(element, wrapper);
+                parent.removeChild(wrapper);
+                element.focus();
+                //Extensions.CaretPosition.set(element, caretPostion);
+            }
+
+            function $createCover($element, text, className) {
+                return $element.each(function () {
+                    createCover(this, text, className);
+                });
+            }
+
+            function $removeCover($element) {
+                return $element.each(function () {
+                    removeCover(this);
+                });
+            }
+        };
+
+        return {
+            restrict: 'E',
+            //require: 'ngModel',
+            scope: {
+                Adress: '=adress',
+                label: '@'
+            },
+            link: function (scope, element, attrs) {
+                var cityInput = $('.js-kladr-city-input', element),
+                    cityInputParent = cityInput.parent('.input-block'),
+                    streetInput = $('.js-kladr-street-input', element),
+                    streetInputParent = streetInput.parent('.input-block'),
+                    rajonInput = $('.js-kladr-rajon-input', element),
+                    rajonInputParent = rajonInput.parent('.input-block'),
+                    regionInput = $('.js-kladr-region-input', element),
+                    regionInputParent = regionInput.parent('.input-block'),
+                    inputCollection = cityInput.add(streetInput).add(rajonInput).add(regionInput),
+                    inputParentCollection = inputCollection.parent('.input-block'),
+                    domInput = $('.js-kladr-dom-input', element);
+
+                inputCollection.on('focus', function () {
+                    inputParentCollection.css('position', 'static');
+                    $(this).parent('.input-block').css('position', 'relative');
+                });
+
+                cityInput.autocomplete({
+                    serviceUrl: cityInput.data('autocomplete-url'),
+                    type: 'POST',
+                    dataType: 'json',
+                    paramName: 'name',
+                    maxHeight: 'auto',
+                    deferRequestBy: 200,
+                    minChars: 3,
+                    tabDisabled: true,
+                    autoSelectFirst: true,
+                    preventBadQueries: false,
+                    triggerSelectOnValidInput: false,
+                    transformResult: function (response) {
+                        return {
+                            suggestions: $.map(response, function (item) {
+                                return { value: item.Label, data: item };
+                            })
+                        };
+                    },
+                    appendTo: cityInputParent,
+                    onSelect: function (suggestion) {
+                        onSelectCity(suggestion);
+
+                        streetInput.focus();
+                    },
+                    onSearchComplete: function (query, suggestions) {
+                        if (suggestions.length == 0) {
+                            setEmptyCodes();
+                        } else if (suggestions.length == 1) {
+                            cityInput.off('focusout.selectOneItem').one('focusout.selectOneItem', function () {
+                                onSelectCity(suggestions[0]);
+                            });
+                        } else {
+                            scope.$apply(scope.isNoneRegion = false);
+                        }
+                    },
+                    beforeRender: function (container) {
+                        inputCover.$remove(cityInput);
+                    }
+                });
+
+                streetInput.autocomplete({
+                    serviceUrl: streetInput.data('autocomplete-url'),
+                    type: 'POST',
+                    dataType: 'json',
+                    paramName: 'name',
+                    maxHeight: 'auto',
+                    deferRequestBy: 200,
+                    minChars: 3,
+                    tabDisabled: true,
+                    autoSelectFirst: true,
+                    preventBadQueries: false,
+                    triggerSelectOnValidInput: false,
+                    params: {
+                        regioncode: 0,
+                        rajoncode: 0,
+                        citycode: 0,
+                        towncode: 0
+                    },
+                    transformResult: function (response) {
+                        return {
+                            suggestions: $.map(response, function (item) {
+                                return { value: item.Label, data: item };
+                            })
+                        };
+                    },
+                    appendTo: streetInputParent,
+                    onSelect: function (suggestion) {
+                        scope.Adress.Street = suggestion.data.Street;
+                        scope.Adress.Street.Name = suggestion.value;
+
+                        scope.$apply();
+
+                        domInput.focus();
+                    },
+                    onSearchStart: function (query) {
+
+                    },
+                    onSearchComplete: function (query, suggestions) {
+                        if (suggestions.length == 0) {
+                            scope.Adress.Street.Code = scope.Adress.Street.CodeType = 0;
+                            scope.Adress.Street.NameType = null;
+                            scope.$apply();
+                        } else if (suggestions.length == 1) {
+                            streetInput.off('focusout.selectOneItem').one('focusout.selectOneItem', function () {
+                                scope.Adress.Street = suggestions[0].data.Street;
+
+                                scope.$apply();
+                            });
+                        }
+                    }
+                });
+
+                rajonInput.autocomplete({
+                    serviceUrl: rajonInput.data('autocomplete-url'),
+                    type: 'POST',
+                    dataType: 'json',
+                    paramName: 'name',
+                    maxHeight: 'auto',
+                    deferRequestBy: 200,
+                    minChars: 3,
+                    tabDisabled: true,
+                    preventBadQueries: false,
+                    triggerSelectOnValidInput: false,
+                    params: {
+                        regioncode: 0,
+                        rajoncode: 0,
+                        citycode: 0,
+                        towncode: 0
+                    },
+                    transformResult: function (response) {
+                        return {
+                            suggestions: $.map(response, function (item) {
+                                return { value: item.Label, data: item };
+                            })
+                        };
+                    },
+                    appendTo: rajonInputParent,
+                    onSelect: function (suggestion) {
+                        scope.Adress.Rajon = suggestion.data.Rajon;
+                        scope.Adress.Region = suggestion.data.Region;
+
+                        scope.$apply();
+
+                        streetInput.focus();
+                    },
+                    onSearchStart: function (query) {
+
+                    },
+                    onSearchComplete: function (query, suggestions) {
+                        if (suggestions.length == 0) {
+                            scope.Adress.Rajon.Code = scope.Adress.Rajon.CodeType = 0;
+                            scope.Adress.Rajon.NameType = null;
+                            scope.$apply();
+                        } else if (suggestions.length == 1) {
+                            rajonInput.off('focusout.selectOneItem').one('focusout.selectOneItem', function () {
+                                scope.Adress.Rajon = suggestions[0].data.Rajon;
+                                scope.Adress.Region = suggestions[0].data.Region;
+
+                                scope.$apply();
+                            });
+                        }
+                    }
+                });
+
+                regionInput.autocomplete({
+                    serviceUrl: regionInput.data('autocomplete-url'),
+                    type: 'POST',
+                    dataType: 'json',
+                    paramName: 'name',
+                    maxHeight: 'auto',
+                    deferRequestBy: 200,
+                    minChars: 3,
+                    tabDisabled: true,
+                    preventBadQueries: false,
+                    triggerSelectOnValidInput: false,
+                    transformResult: function (response) {
+                        return {
+                            suggestions: $.map(response, function (item) {
+                                return { value: item.Label, data: item };
+                            })
+                        };
+                    },
+                    appendTo: regionInputParent,
+                    onSelect: function (suggestion) {
+                        scope.Adress.Rajon = suggestion.data.Rajon;
+                        scope.Adress.Region = suggestion.data.Region;
+
+                        scope.$apply();
+
+                        rajonInput.focus();
+                    },
+                    onSearchStart: function (query) {
+
+                    },
+                    onSearchComplete: function (query, suggestions) {
+                        if (suggestions.length == 0) {
+                            scope.Adress.Region.Code = scope.Adress.Region.CodeType = 0;
+                            scope.Adress.Region.NameType = null;
+                            scope.$apply();
+                        } else if (suggestions.length == 1) {
+                            regionInput.off('focusout.selectOneItem').one('focusout.selectOneItem', function () {
+                                scope.Adress.Rajon = suggestions[0].data.Rajon;
+                                scope.Adress.Region = suggestions[0].data.Region;
+
+                                scope.$apply();
+                            });
+                        }
+                    }
+                });
+
+                scope.$watch('Adress', function (newValue, oldValue) {
+                    if (newValue) {
+                        var options = {
+                            params: {
+                                regioncode: scope.Adress.Region.Code,
+                                rajoncode: scope.Adress.Rajon.Code,
+                                citycode: scope.Adress.City.Code,
+                                towncode: scope.Adress.Town.Code
+                            }
+                        };
+                        streetInput.autocomplete('setOptions', options);
+                        rajonInput.autocomplete('setOptions', options);
+
+                        if (!newValue.CityTownName) {
+                            scope.isNoneRegion = false;
+                        }
+                    }
+                }, true);
+
+                //удаляем вызов саджеста при фокусе
+                inputCollection.off('focus.autocomplete');
+
+                function onSelectCity(suggestion) {
+                    scope.isNoneRegion = false;
+                    scope.Adress.City = suggestion.data.City;
+                    scope.Adress.Town = suggestion.data.Town;
+                    scope.Adress.Rajon = suggestion.data.Rajon;
+                    scope.Adress.Region = suggestion.data.Region;
+
+                    if (suggestion.data.City.CodeType != 0) {
+                        scope.Adress.CityTownName = suggestion.data.City.Name;
+                    }
+                    if (suggestion.data.Town.CodeType != 0) {
+                        scope.Adress.CityTownName = suggestion.data.Town.Name;
+                    }
+
+                    scope.$apply();
+
+                    inputCover.$remove(cityInput);
+                    if (suggestion.data.Region.Code == 77 || suggestion.data.Region.Code == 78) {
+                        //streetInput.focus();
+                        return;
+                    }
+
+                    var cover = [];
+
+                    if (suggestion.data.Region.CodeType != 0 && suggestion.data.Region.Name) cover.push(suggestion.data.Region.DisplayName || "");
+                    if (suggestion.data.Rajon.CodeType != 0 && suggestion.data.Rajon.Name) cover.push(suggestion.data.Rajon.Name + " " + suggestion.data.Rajon.NameType);
+
+
+                    inputCover.$create(cityInput, cover.join(", "), "text lightgray");
+                }
+
+                function setEmptyCodes() {
+                    inputCover.$remove(cityInput);
+                    scope.Adress.City.Code = scope.Adress.City.CodeType =
+                        scope.Adress.Town.Code = scope.Adress.Town.CodeType =
+                            scope.Adress.Rajon.Code = scope.Adress.Rajon.CodeType =
+                                scope.Adress.Region.Code = scope.Adress.Region.CodeType =
+                                    scope.Adress.Street.CodeType = 0;
+
+                    scope.Adress.City.Name = null;
+
+                    if (!scope.isNoneRegion) {
+                        scope.Adress.Rajon.Name = scope.Adress.Region.Name = null;
+                    }
+
+                    scope.isNoneRegion = true;
+                    scope.$apply();
+                }
+
+                scope.$on('$destroy', function () {
+                    cityInput.autocomplete('dispose');
+                    streetInput.autocomplete('dispose');
+                    regionInput.autocomplete('dispose');
+                    rajonInput.autocomplete('dispose');
+                });
+            },
+            templateUrl: VIEWS_PATH + 'kladr.html',
+            replace: true
+        };
+    });
+;/**
+ *  @ngdoc directive
  *  @name moneyField
  *  @restrict EA
  *
@@ -1870,6 +3126,10 @@ actiGuide.mainModule.directive('splitFields', function ($caretPosition, $timeout
                         }, 1);
                     }
                 });
+
+                console.log($(this).attr('maxlength'), this.value.length);
+
+
             });
         }
     };

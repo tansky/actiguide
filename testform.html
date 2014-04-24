@@ -71,18 +71,18 @@
 								<money-field name="Price" id="Price" data-ng-model="Model.Price" data-show-kop="true"
 											 required data-val-tip="сумму"></money-field>
 							</div>
-							<div class="ng-error" data-ng-show="TestForm.Price.$error.showError == 'checkRange'">Сумма
-								должна быть больше нуля
+							<div class="ng-error" data-ng-show="TestForm.Price.$error.showError == 'checkRange'">
+                                Сумма должна быть больше нуля
 							</div>
 						</div>
 
 						<div class="input-block">
-							<label class="text-label" for="Telephon">Телефон (необязательно)</label>
-							<input class="t-input t-input__medium" data-ng-model="Model.Telephon" name="Telephon"
-								   id="Telephon" data-modifier='["Telefon"]' data-ng-minlength="10"
+							<label class="text-label" for="Telefon">Телефон (необязательно)</label>
+							<input class="t-input t-input__medium" data-ng-model="Model.Telefon" name="Telefon"
+								   id="Telefon" data-modifier='["Telefon"]' data-ng-minlength="10"
 								   data-val-tip="телефон"/>
 
-							<div class="ng-error" data-ng-show="TestForm.Telephon.$error.showError == 'minlength'">
+							<div class="ng-error" data-ng-show="TestForm.Telefon.$error.showError == 'minlength'">
 								Необходимо ввести 10 цифр
 							</div>
 						</div>
@@ -95,6 +95,9 @@
 									data-validation-tip>
 								Сохранить
 							</button>
+                            <button class="btn">
+                                Отмена
+                            </button>
 						</div>
 					</form>
 				</div>

@@ -1,0 +1,30 @@
+<div class="kladr-conteiner">
+    <label class="text-label" for="City">{{ label }}</label>
+    <div class="input-block m-micro">
+        <input class="t-input t-input__big js-kladr-city-input" data-ng-model="Adress.CityTownName" name="City" id="City" data-autocomplete-url="/Address/GetCitiesAndTownsSorted" data-modifier='["EnToRu","RegExpFilter:[^-а-яА-ЯёЁ0-9\\s\\.]","FirstLetter"]' placeholder="Город, поселок или село"  autocomplete="off" />
+    </div>
+    <div class="none_region" data-ng-show="isNoneRegion">
+        <p>
+            Такого населенного пункта нет в государственном классификаторе, поэтому
+            необходимо ввести район (если есть) и область, край или республику. Также
+            обратите внимание на правильность написания населенного пункта, в случае
+            опечатки могут возникнуть проблемы при сдаче отчетов.
+        </p>
+
+        <div class="input-block m-micro">
+            <input type="text" class="t-input t-input__big js-kladr-rajon-input"  data-ng-model="Adress.Rajon.Name" name="Rajon" placeholder="Район (если есть)" data-autocomplete-url="/Address/GetRajons" data-modifier='["EnToRu","RegExpFilter:[^-а-яА-ЯёЁ0-9\\s\\.]","FirstLetter"]' maxlength="1000" autocomplete="off" />
+        </div>
+
+        <div class="input-block m-micro">
+            <input type="text" class="t-input t-input__big js-kladr-region-input"  data-ng-model="Adress.Region.Name" name="Region" placeholder="Область, край, республика" data-autocomplete-url="/Address/GetRegions" data-modifier='["EnToRu","RegExpFilter:[^-а-яА-ЯёЁ0-9\\s\\.]","FirstLetter"]' maxlength="1000" autocomplete="off" />
+        </div>
+    </div>
+    <div class="input-block m-micro">
+        <input class="t-input t-input__big js-kladr-street-input" data-ng-model="Adress.Street.Name" name="Street" data-autocomplete-url="/Address/GetStreets" data-modifier='["EnToRu","RegExpFilter:[^-а-яА-ЯёЁ0-9\\s\\.]","FirstLetter"]' placeholder="Улица" autocomplete="off" />
+    </div>
+    <div class="input-block">
+        <input class="t-input t-input__mini  js-kladr-dom-input" data-ng-model="Adress.Dom" name="Dom" data-modifier='["EnToRu","RegExpFilter:[^-а-яА-Я0-9\\s/]"]' placeholder="Дом" />
+        <input class="t-input t-input__mini" data-ng-model="Adress.Korpus" name="Korpus" data-modifier='["EnToRu","RegExpFilter:[^-а-яА-Я0-9\\s]"]' placeholder="Корп" />
+        <input class="t-input t-input__mini" data-ng-model="Adress.Kvartira" name="Kvartira" data-modifier='["EnToRu","RegExpFilter:[^-а-яА-Я0-9\\s]"]' placeholder="Офис" />
+    </div>
+</div>
