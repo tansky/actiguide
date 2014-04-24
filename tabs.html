@@ -20,30 +20,30 @@
 		</div>
 
 		<div class="m-box">
-			<div class="col-edge-3">
-				<div class="box">
-                    <div>Табы</div>
-                    <tabs class="m-normal">
-                        <tab title="Вход">Вкладка 1</tab>
-                        <tab title="Выход">Вкладка 2</tab>
-                    </tabs>
+            <div class="col-edge-3">
+                <div class="box">
+                    <div>Переключатели</div>
+                    <switcher class="m-normal">
+                        <item>Вход</item>
+                        <item>Выход</item>
+                    </switcher>
 
-                    <div>Табы с колбэком (вывод в консоль)</div>
-                    <tabs class="m-normal">
-                        <tab title="Вход" data-handler="handler('Кнопка Вход')"></tab>
-                        <tab title="Выход" data-handler="handler('Кнопка Выход')"></tab>
-                    </tabs>
+                    <div>Переключатели с колбэком (вывод в консоль)</div>
+                    <switcher class="m-normal">
+                        <item data-handler="handler('Кнопка Вход')">Вход</item>
+                        <item data-handler="handler('Кнопка Выход')">Выход</item>
+                    </switcher>
 
-                    <div>Табы с привязкой к модели</div>
-                    <tabs class="m-micro" data-ng-model="Model.TabValue">
-                        <tab title="Вход" data-model-value="ту-ту"></tab>
-                        <tab title="Выход" data-model-value="ку-ку"></tab>
-                    </tabs>
+                    <div>Переключатели с привязкой к модели</div>
+                    <switcher class="m-micro" data-ng-model="Model.TabValue">
+                        <item data-model-value="ту-ту">Вход</item>
+                        <item data-model-value="ку-ку">Выход</item>
+                    </switcher>
                     <div>
                         Значение в модели: {{ Model.TabValue }}
                     </div>
-				</div>
-			</div>
+                </div>
+            </div>
             <div class="col-edge-3">
                 <div class="box">
                     <div>Табы</div>
@@ -54,14 +54,14 @@
                         <tab title="Четыре">Вкладка 4</tab>
                         <tab title="Пять">Вкладка 5</tab>
                         <tab title="Шесть">Вкладка 6</tab>
-                        <tab title="Семь">Вкладка 7</tab>
+                        <!--<tab title="Семь">Вкладка 7</tab>
                         <tab title="Восемь">Вкладка 8</tab>
-                        <tab title="Девять">Вкладка 9</tab>
+                        <tab title="Девять">Вкладка 9</tab>-->
                     </tabs>
 
                 </div>
             </div>
-		</div>
+        </div>
 
 	</section>
 </div>

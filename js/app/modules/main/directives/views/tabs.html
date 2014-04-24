@@ -1,8 +1,15 @@
 <div>
     <div class="tab-btn-box">
-        <button class="tab-btn" data-ng-repeat="tab in tabs" data-ng-class="{active:tab.selected}" data-ng-click="select(tab)">
+        <button class="tab-btn" data-ng-repeat="tab in tabs" data-ng-class="{active:tab.selected}" data-ng-hide="tab.hidden" data-ng-click="select(tab)">
             {{ tab.title }}
         </button>
+
+        <!--<dropdown class="dropdown__list" caller="<button class=' tab-btn'>Еще</button>">
+            <ul class="nav-list">
+                <li>Раз</li>
+                <li>Два</li>
+            </ul>
+        </dropdown>-->
     </div>
     <div data-ng-transclude></div>
 </div>

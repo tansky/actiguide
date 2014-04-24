@@ -1,7 +1,7 @@
 /**
  *  @ngdoc directive
- *  @name hint
- *  @restrict A
+ *  @name tabs
+ *  @restrict E
  *
  *  @description Табы
  *
@@ -15,8 +15,7 @@ actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout) {
             modelValue: '=ngModel'
         },
         controller: function ($scope, $element, $attrs) {
-            var tabs = $scope.tabs = [],
-                tabElements = $scope.tabElements = [];
+            var tabs = $scope.tabs = [];
 
             $scope.select = function (tab) {
                 angular.forEach(tabs, function (tab) {
@@ -24,48 +23,60 @@ actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout) {
                 });
                 tab.selected = true;
 
-                if (angular.isDefined(tab.modelValue)) {
-                    $scope.modelValue = tab.modelValue;
-
-                } else if (tab.handler) tab.handler();
-            };
-
-            $scope.selectByValue = function () {
-                var tab;
-                angular.forEach(tabs, function (item) {
-                    item.selected = false;
-
-                    if (item.modelValue === 'true') item.modelValue = true;
-                    if (item.modelValue === 'false') item.modelValue = false;
-
-                    if (item.modelValue === $scope.modelValue) tab = item;
-                });
-
-                if (tab) {
-                    tab.selected = true;
-                    if (tab.handler) tab.handler();
-                }
+                if (tab.handler) tab.handler();
             };
 
             this.addTab = function (tab, element, isDefault) {
                 if (tabs.length == 0) $scope.select(tab);
                 if (isDefault) $scope.select(tab);
                 tabs.push(tab);
-                tabElements.push(element);
             };
         },
         link: function($scope, $element, $attrs) {
-            if ($attrs.ngModel) {
-                $scope.$watch('modelValue', function(newValue) {
-                    $scope.selectByValue();
+            if ($element.hasClass('nav-tabs')) {
+
+                var boxWidth = $element.width(),
+                    elementsWidthArray = [],
+                    elementsWidth = 0;
+
+                console.log($scope.tabs);
+
+                $timeout(function (){
+                    $('button', $element).each(function (index, item){
+                        var width = $(item).outerWidth();
+                        elementsWidthArray.push({
+                            element: item,
+                            width: width,
+                            hidden: false
+                        });
+
+                        elementsWidth += width;
+                    });
+
+                    if (elementsWidth > boxWidth) {
+                        var length = elementsWidthArray.length;
+
+                        elementsWidthArray[length - 1].hidden = true;
+                        elementsWidthArray[length - 2].hidden = true;
+
+                        elementsWidth = 0;
+                        angular.forEach(elementsWidthArray, function (item){
+                            if (!item.hidden) {
+                                elementsWidth += item.width;
+                            }
+                        });
+
+                        console.log($('.dropdown', $element));
+
+                        console.log(boxWidth, elementsWidth, elementsWidthArray);
+
+                        angular.forEach($scope.tabs, function(item, index){
+                            item.hidden = elementsWidthArray[index].hidden;
+                        });
+                    }
                 });
+
             }
-
-            console.log($scope.tabElements);
-
-            $('button', $element).each(function (index, item) {
-                console.log($(item).width());
-            });
         },
         templateUrl: VIEWS_PATH + 'tabs.html',
         replace: true
@@ -82,7 +93,7 @@ actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout) {
             modelValue: '@'
         },
         link: function (scope, element, attrs, tabsCtrl) {
-            tabsCtrl.addTab(scope, element, attrs.isDefault);
+            tabsCtrl.addTab(scope, attrs.isDefault);
         },
         template: '<div data-ng-show="selected" data-ng-transclude></div>',
         replace: true

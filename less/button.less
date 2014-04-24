@@ -1026,3 +1026,47 @@
   line-height: 40px !important;
   }
 
+
+
+.box-btn {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 0;
+    margin-right: 5px;
+
+    .btn {
+        margin-left: -1px;
+    }
+
+    .btn, .btn-in {
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        margin-right: 0;
+    }
+
+    .btn:first-child { padding-left: 1px; }
+
+    .btn.first .btn-in,
+    .btn.first,
+    .btn:first-child .btn-in,
+    .btn:first-child {
+        -webkit-border-radius: 2px 0 0 2px;
+        -moz-border-radius: 2px 0 0 2px;
+        border-radius: 2px 0 0 2px;
+    }
+
+    .btn.last .btn-in,
+    .btn.last,
+    .btn:last-child .btn-in,
+    .btn:last-child {
+        -webkit-border-radius: 0 2px 2px 0;
+        -moz-border-radius: 0 2px 2px 0;
+        border-radius: 0 2px 2px 0;
+    }
+
+    .btn:focus {
+        z-index: 2;
+    }
+}
+

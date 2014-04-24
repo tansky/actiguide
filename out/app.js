@@ -1337,7 +1337,163 @@ $(document).keydown(function(e) {
 
 
 
-})(jQuery);;actiGuide.mainModule = angular.module('mainModule', []);;actiGuide.mainModule.controller('TestFormCtrl', function ($scope, $timeout, alertBox) {
+})(jQuery);;/*! http://mths.be/placeholder v2.0.7 by @mathias */
+; (function (window, document, $) {
+
+    var isInputSupported = 'placeholder' in document.createElement('input'),
+        isTextareaSupported = 'placeholder' in document.createElement('textarea'),
+        prototype = $.fn,
+        valHooks = $.valHooks,
+        hooks,
+        placeholder;
+
+    if (isInputSupported && isTextareaSupported) {
+
+        placeholder = prototype.placeholder = function () {
+            return this;
+        };
+
+        placeholder.input = placeholder.textarea = true;
+
+    } else {
+
+        placeholder = prototype.placeholder = function () {
+            var $this = this;
+            $this
+                .filter((isInputSupported ? 'textarea' : ':input') + '[placeholder]')
+                .not('.placeholder')
+                .bind({
+                    'focus.placeholder': clearPlaceholder,
+                    'blur.placeholder': setPlaceholder
+                })
+                .data('placeholder-enabled', true)
+                .trigger('blur.placeholder');
+            return $this;
+        };
+
+        placeholder.input = isInputSupported;
+        placeholder.textarea = isTextareaSupported;
+
+        hooks = {
+            'get': function (element) {
+                var $element = $(element);
+                return $element.data('placeholder-enabled') && $element.hasClass('placeholder') ? '' : element.value;
+            },
+            'set': function (element, value) {
+                var $element = $(element);
+                if (!$element.data('placeholder-enabled')) {
+                    return element.value = value;
+                }
+                if (value == '') {
+                    element.value = value;
+                    // Issue #56: Setting the placeholder causes problems if the element continues to have focus.
+                    if (element != document.activeElement) {
+                        // We can't use `triggerHandler` here because of dummy text/password inputs :(
+                        setPlaceholder.call(element);
+                    }
+                } else if ($element.hasClass('placeholder')) {
+                    clearPlaceholder.call(element, true, value) || (element.value = value);
+                } else {
+                    element.value = value;
+                }
+                // `set` can not return `undefined`; see http://jsapi.info/jquery/1.7.1/val#L2363
+                return $element;
+            }
+        };
+
+        isInputSupported || (valHooks.input = hooks);
+        isTextareaSupported || (valHooks.textarea = hooks);
+
+        $(function () {
+            // Look for forms
+            $(document).delegate('form', 'submit.placeholder', function () {
+                // Clear the placeholder values so they don't get submitted
+                var $inputs = $('.placeholder', this).each(clearPlaceholder);
+                setTimeout(function () {
+                    $inputs.each(setPlaceholder);
+                }, 10);
+            });
+        });
+
+        // Clear placeholder values upon page reload
+        $(window).bind('beforeunload.placeholder', function () {
+            $('.placeholder').each(function () {
+                this.value = '';
+            });
+        });
+
+    }
+
+    function args(elem) {
+        // Return an object of element attributes
+        var newAttrs = {},
+            rinlinejQuery = /^jQuery\d+$/;
+        $.each(elem.attributes, function (i, attr) {
+            if (attr.specified && !rinlinejQuery.test(attr.name)) {
+                newAttrs[attr.name] = attr.value;
+            }
+        });
+        return newAttrs;
+    }
+
+    function clearPlaceholder(event, value) {
+        var input = this,
+            $input = $(input);
+        if (input.value == $input.attr('placeholder') && $input.hasClass('placeholder')) {
+            if ($input.data('placeholder-password')) {
+                $input = $input.hide().next().show().attr('id', $input.removeAttr('id').data('placeholder-id'));
+                // If `clearPlaceholder` was called from `$.valHooks.input.set`
+                if (event === true) {
+                    return $input[0].value = value;
+                }
+                $input.focus();
+            } else {
+                input.value = '';
+                $input.removeClass('placeholder');
+                input == document.activeElement && input.select();
+            }
+        }
+    }
+
+    function setPlaceholder() {
+        var $replacement,
+            input = this,
+            $input = $(input),
+            $origInput = $input,
+            id = this.id;
+        if (input.value == '') {
+            if (input.type == 'password') {
+                if (!$input.data('placeholder-textinput')) {
+                    try {
+                        $replacement = $input.clone().attr({ 'type': 'text' });
+                    } catch (e) {
+                        $replacement = $('<input>').attr($.extend(args(this), { 'type': 'text' }));
+                    }
+                    $replacement
+                        .removeAttr('name')
+                        .data({
+                            'placeholder-password': true,
+                            'placeholder-id': id
+                        })
+                        .bind('focus.placeholder', clearPlaceholder);
+                    $input
+                        .data({
+                            'placeholder-textinput': $replacement,
+                            'placeholder-id': id
+                        })
+                        .before($replacement);
+                }
+                $input = $input.removeAttr('id').hide().prev().attr('id', id).show();
+                // Note: `$input[0] != input` now!
+            }
+            $input.addClass('placeholder');
+            $input[0].value = $input.attr('placeholder');
+        } else {
+            $input.removeClass('placeholder');
+        }
+    }
+
+} (this, document, jQuery));;actiGuide.mainModule = angular.module('mainModule', []);;actiGuide.mainModule.controller('TestFormCtrl', function ($scope, $timeout, alertBox) {
 
 	$scope.Model = {};
 
@@ -2279,6 +2435,15 @@ actiGuide.mainModule.directive('jsPlaceholder', function() {
         }
     };
 });
+
+//actiGuide.mainModule.directive('placeholder', function() {
+//    return {
+//        restrict: 'A',
+//        link: function($scope, $element, $attrs) {
+//            $element.placeholder("#D7D7D7");
+//        }
+//    };
+//});
 ;/**
  *  @ngdoc directive
  *  @name kladr
@@ -3127,16 +3292,110 @@ actiGuide.mainModule.directive('splitFields', function ($caretPosition, $timeout
                     }
                 });
 
-                console.log($(this).attr('maxlength'), this.value.length);
+                var maxlength = $(this).attr('maxlength');
+                if(maxlength) {
+                    $(item).on('keyup', function (event) {
+                        var key = event.keyCode;
 
+                        if (key == 39 || key == 37) return;
 
+                        if (maxlength == $(this).val().length && fields[index + 1]) {
+                            $timeout(function() {
+                                $caretPosition.set(fields[index + 1], 0);
+                            }, 1);
+                        }
+                    });
+                }
             });
         }
     };
 });;/**
  *  @ngdoc directive
- *  @name hint
+ *  @name switcher
  *  @restrict A
+ *
+ *  @description Переключатели
+ *
+ *
+ */
+actiGuide.mainModule.directive('switcher', function () {
+    return {
+        restrict: 'E',
+        transclude: true,
+        scope: {
+            modelValue: '=ngModel'
+        },
+        controller: function ($scope, $element, $attrs) {
+            var items = $scope.items = [];
+
+            this.select = function (item) {
+                angular.forEach(items, function (item) {
+                    item.selected = false;
+                });
+                item.selected = true;
+
+                if (angular.isDefined(item.modelValue)) {
+                    $scope.modelValue = item.modelValue;
+
+                } else if (item.handler) item.handler();
+            };
+
+            $scope.selectByValue = function () {
+                var currentItem;
+                angular.forEach(items, function (item) {
+                    item.selected = false;
+
+                    if (item.modelValue === 'true') item.modelValue = true;
+                    if (item.modelValue === 'false') item.modelValue = false;
+
+                    if (item.modelValue === $scope.modelValue) currentItem = item;
+                });
+
+                if (currentItem) {
+                    currentItem.selected = true;
+                    if (currentItem.handler) currentItem.handler();
+                }
+            };
+
+            this.addItem = function (item, element, isDefault) {
+                if (items.length == 0) this.select(item);
+                if (isDefault) this.select(item);
+                items.push(item);
+            };
+        },
+        link: function($scope, $element, $attrs) {
+            if ($attrs.ngModel) {
+                $scope.$watch('modelValue', function(newValue) {
+                    $scope.selectByValue();
+                });
+            }
+        },
+        template: '<div class="tab-btn-box" data-ng-transclude></div>',
+        replace: true
+    };
+}).directive('item', function () {
+    return {
+        require: '^switcher',
+        restrict: 'E',
+        transclude: true,
+        scope: {
+            handler: '&',
+            isDefault: '@',
+            modelValue: '@'
+        },
+        link: function (scope, element, attrs, switcherCtrl) {
+            switcherCtrl.addItem(scope, attrs.isDefault);
+
+            scope.select = switcherCtrl.select;
+        },
+        template: '<button class="tab-btn" data-ng-class="{ active: selected }" data-ng-click="select(this)" data-ng-transclude></button>',
+        replace: true
+    };
+});
+;/**
+ *  @ngdoc directive
+ *  @name tabs
+ *  @restrict E
  *
  *  @description Табы
  *
@@ -3150,8 +3409,7 @@ actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout) {
             modelValue: '=ngModel'
         },
         controller: function ($scope, $element, $attrs) {
-            var tabs = $scope.tabs = [],
-                tabElements = $scope.tabElements = [];
+            var tabs = $scope.tabs = [];
 
             $scope.select = function (tab) {
                 angular.forEach(tabs, function (tab) {
@@ -3159,48 +3417,60 @@ actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout) {
                 });
                 tab.selected = true;
 
-                if (angular.isDefined(tab.modelValue)) {
-                    $scope.modelValue = tab.modelValue;
-
-                } else if (tab.handler) tab.handler();
-            };
-
-            $scope.selectByValue = function () {
-                var tab;
-                angular.forEach(tabs, function (item) {
-                    item.selected = false;
-
-                    if (item.modelValue === 'true') item.modelValue = true;
-                    if (item.modelValue === 'false') item.modelValue = false;
-
-                    if (item.modelValue === $scope.modelValue) tab = item;
-                });
-
-                if (tab) {
-                    tab.selected = true;
-                    if (tab.handler) tab.handler();
-                }
+                if (tab.handler) tab.handler();
             };
 
             this.addTab = function (tab, element, isDefault) {
                 if (tabs.length == 0) $scope.select(tab);
                 if (isDefault) $scope.select(tab);
                 tabs.push(tab);
-                tabElements.push(element);
             };
         },
         link: function($scope, $element, $attrs) {
-            if ($attrs.ngModel) {
-                $scope.$watch('modelValue', function(newValue) {
-                    $scope.selectByValue();
+            if ($element.hasClass('nav-tabs')) {
+
+                var boxWidth = $element.width(),
+                    elementsWidthArray = [],
+                    elementsWidth = 0;
+
+                console.log($scope.tabs);
+
+                $timeout(function (){
+                    $('button', $element).each(function (index, item){
+                        var width = $(item).outerWidth();
+                        elementsWidthArray.push({
+                            element: item,
+                            width: width,
+                            hidden: false
+                        });
+
+                        elementsWidth += width;
+                    });
+
+                    if (elementsWidth > boxWidth) {
+                        var length = elementsWidthArray.length;
+
+                        elementsWidthArray[length - 1].hidden = true;
+                        elementsWidthArray[length - 2].hidden = true;
+
+                        elementsWidth = 0;
+                        angular.forEach(elementsWidthArray, function (item){
+                            if (!item.hidden) {
+                                elementsWidth += item.width;
+                            }
+                        });
+
+                        console.log($('.dropdown', $element));
+
+                        console.log(boxWidth, elementsWidth, elementsWidthArray);
+
+                        angular.forEach($scope.tabs, function(item, index){
+                            item.hidden = elementsWidthArray[index].hidden;
+                        });
+                    }
                 });
+
             }
-
-            console.log($scope.tabElements);
-
-            $('button', $element).each(function (index, item) {
-                console.log($(item).width());
-            });
         },
         templateUrl: VIEWS_PATH + 'tabs.html',
         replace: true
@@ -3217,7 +3487,7 @@ actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout) {
             modelValue: '@'
         },
         link: function (scope, element, attrs, tabsCtrl) {
-            tabsCtrl.addTab(scope, element, attrs.isDefault);
+            tabsCtrl.addTab(scope, attrs.isDefault);
         },
         template: '<div data-ng-show="selected" data-ng-transclude></div>',
         replace: true

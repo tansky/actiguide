@@ -80,30 +80,6 @@
 .dropdown__list > .dropdown_container {
   padding: 5px 0;
 }
-.dropdown__list > .dropdown_container ul {
-  margin: 0;
-  padding: 0;
-}
-.dropdown__list > .dropdown_container li {
-  list-style-type: none;
-  margin: 0;
-  padding: 0 20px;
-  height: 30px;
-  line-height: 30px;
-  color: #555f64;
-  cursor: default;
-  white-space: nowrap;
-}
-.dropdown__list > .dropdown_container li:hover {
-  background: #eefcfd;
-}
-.dropdown__list > .dropdown_container li:before {
-  content: '';
-}
-.dropdown__list > .dropdown_container li.active {
-  background: #555f64;
-  color: #e2e2e2;
-}
 .dropdown__list > .dropdown_container table {
   cursor: default;
   margin: 0;

@@ -34,9 +34,20 @@ actiGuide.mainModule.directive('splitFields', function ($caretPosition, $timeout
                     }
                 });
 
-                console.log($(this).attr('maxlength'), this.value.length);
+                var maxlength = $(this).attr('maxlength');
+                if(maxlength) {
+                    $(item).on('keyup', function (event) {
+                        var key = event.keyCode;
 
+                        if (key == 39 || key == 37) return;
 
+                        if (maxlength == $(this).val().length && fields[index + 1]) {
+                            $timeout(function() {
+                                $caretPosition.set(fields[index + 1], 0);
+                            }, 1);
+                        }
+                    });
+                }
             });
         }
     };
