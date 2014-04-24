@@ -6,20 +6,6 @@
 	<script type="text/javascript" src="out/libs.min.js"></script>
     <script type="text/javascript" src="out/app.min.js"></script>
     <link rel="stylesheet" href="out/style.min.css" />
-
-    <script>
-        $(document).ready(function () {
-            $('.btn').on('mousedown', function () {
-                $('body').addClass('no-select');
-            });
-
-            $(document).on('mouseup', function () {
-                $('body').removeClass('no-select');
-            });
-        });
-    </script>
-
-
 </head>
 <body>
 
@@ -60,13 +46,6 @@
 					</div>
 
 					<div class="m-micro">
-						<span class="btn btn__big pushed">Кнопка</span>
-					    <span class="btn pushed">Кнопка</span>
-                        
-                        Pushed
-					</div>
-
-					<div class="m-micro">
 						<span class="btn btn__big btn__preload">Кнопка</span>
 					    <span class="btn btn__preload">Кнопка</span>
                         
@@ -102,11 +81,6 @@
 					</div>
 
 					<div class="m-micro">
-						<span class="btn btn__big btn__positive pushed">Кнопка</span>
-						<span class="btn btn__positive pushed">Кнопка</span>
-					</div>
-
-					<div class="m-micro">
 						<span class="btn btn__big btn__positive btn__preload">Кнопка</span>
 						<span class="btn btn__positive btn__preload">Кнопка</span>
 					</div>
@@ -135,11 +109,6 @@
 					<div class="m-micro">
 						<span class="btn btn__big btn__negative active">Кнопка</span>
 						<span class="btn btn__negative active">Кнопка</span>
-					</div>
-
-					<div class="m-micro">
-						<span class="btn btn__big btn__negative pushed">Кнопка</span>
-						<span class="btn btn__negative pushed">Кнопка</span>
 					</div>
 
 					<div class="m-micro">
@@ -176,11 +145,6 @@
                     </div>
 
                     <div class="m-micro">
-                        <span class="btn btn__big btn__consult pushed">Кнопка</span>
-                        <span class="btn btn__consult pushed">Кнопка</span>
-                    </div>
-
-                    <div class="m-micro">
                         <span class="btn btn__big btn__consult btn__preload">Кнопка</span>
                         <span class="btn btn__consult btn__preload">Кнопка</span>
                     </div>
@@ -211,11 +175,6 @@
                     <div class="m-micro">
                         <span class="btn btn__big btn__dark active">Кнопка</span>
                         <span class="btn btn__dark active">Кнопка</span>
-                    </div>
-
-                    <div class="m-micro">
-                        <span class="btn btn__big btn__dark pushed">Кнопка</span>
-                        <span class="btn btn__dark pushed">Кнопка</span>
                     </div>
 
                     <div class="m-micro">
@@ -252,11 +211,6 @@
                     </div>
 
                     <div class="m-micro">
-                        <span class="btn btn__big btn__orange pushed">Кнопка</span>
-                        <span class="btn btn__orange pushed">Кнопка</span>
-                    </div>
-
-                    <div class="m-micro">
                         <span class="btn btn__big btn__orange btn__preload">Кнопка</span>
                         <span class="btn btn__orange btn__preload">Кнопка</span>
                     </div>
@@ -289,11 +243,6 @@
 	                <div class="m-micro">
 	                    <button class="btn btn__big btn__negative"><span class="websymbol websymbol__left">w</span>Кнопка</button>
 	                    <button class="btn btn__negative"><span class="websymbol websymbol__left">w</span>Кнопка</button>
-	                </div>
-
-	                <div class="m-micro">
-	                    <button class="btn btn__big btn__dark pushed"><span class="websymbol websymbol__left">w</span>Кнопка</button>
-                        <button class="btn btn__dark pushed"><span class="websymbol websymbol__left">w</span>Кнопка</button>
 	                </div>
 
 	                <div class="m-micro">
@@ -348,16 +297,15 @@
             <div class="col-2">
                 <div class="box">
                     <p class="text m-micro">Кнопка печать</p>
-
                     <div class="m-normal">
-                        <span class="btn btn__print">
+                        <a href="#__JSNotWork" class="btn btn__print">
                             <span class="print_ico">Распечатать...</span>
-                        </span>
+                        </a>
                     </div>
                     <div class="m-normal">
-                        <span class="btn btn__print disable">
+                        <a href="#__JSNotWork" class="btn btn__print disable">
                             <span class="print_ico">Распечатать...</span>
-                        </span>
+                        </a>
                     </div>
                     <p class="text m-micro">Кнопка с выпадающим списком</p>
                     <div class="m-normal">

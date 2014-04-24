@@ -387,3 +387,6 @@ a:hover {
   margin-right: 8px;
   vertical-align: middle;
 }
+.breadcrumbs a:hover {
+  color: #dc692a;
+}

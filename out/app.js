@@ -12,7 +12,7 @@ $(document).keydown(function(e) {
 			agGridState = true;
 
 			$('BODY').append(
-				'<div id="in-guidelines"><div id="guidelines"><div class="for-guidelines">' +
+				'<div id="in-guidelines"><div class="wrapper" style="height: 100%"><div id="guidelines"><div class="for-guidelines">' +
 					'<div class="col-edge-1"><div class="box"><p class="grid-p"></p></div></div>' +
 					'<div class="col-1"><div class="box"><p class="grid-p"></p></div></div>' +
 					'<div class="col-1"><div class="box"><p class="grid-p"></p></div></div>' +
@@ -21,7 +21,7 @@ $(document).keydown(function(e) {
 					'<div class="col-edge-1"><div class="box"><p class="grid-p"></p></div></div>' +
 					'<div class="left-padding-grid"></div>' +
 					'<div class="right-padding-grid"></div>' +
-				'</div></div></div>'
+				'</div></div></div></div>'
 			);
 		}
 	}
@@ -2226,97 +2226,24 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 			});
 		}
 	};
-});;actiGuide.mainModule.directive('dynLoad', function ($http, $sce, $timeout, $parse, $interpolate, $compile) {
+});;actiGuide.mainModule.directive('onOpen', function () {
 	return {
 		restrict: 'A',
 		replace: true,
 		controller: function($scope, $element, $attrs) {
-
-			if ($element[0].tagName.toLowerCase() === 'popup-section') {
-
-				/* Загрузка контента в секции с динамическим содержимым попапов с меню */
-
-				var $popupScope = $element.parent().scope();
-
-				if (!$popupScope._dynLoadInited) {
-					$popupScope._dynLoadInited = true;
-
-					$popupScope.$watch('visible', function(visible) {
-						if (visible) {
-							touchSection();
-						}
-					});
-
-					$popupScope.$watch('currentSection', function() {
-						if ($popupScope.visible) {
-							touchSection();
-						}
-					});
-
-					function touchSection() {
-						var currentSection = $popupScope.sections[$popupScope.currentSection.section];
-						if (currentSection.dynLoad) {
-							$popupScope.dynamic = true;
-
-							if (!currentSection.loaded) {
-								$http.get(currentSection.dynLoad).success(function (response) {
-									currentSection.loaded = true;
-									currentSection.content = $sce.trustAsHtml(response);
-
-									if (typeof $scope[currentSection.dynOnLoad] === 'function') {
-										$scope[currentSection.dynOnLoad]({
-											response: response,
-											section: $popupScope.currentSection.section
-										});
-									}
-								});
-							} else if (typeof $scope[currentSection.dynOnOpen] === 'function') {
-								$scope[currentSection.dynOnOpen]({
-									section: $popupScope.currentSection.section
-								});
-							}
-						} else {
-							$popupScope.dynamic = false;
-						}
-					}
+			$scope.$watch('visible', function(visible) {
+				if (visible && typeof $scope[$attrs.onOpen] === 'function') {
+					$scope[$attrs.onOpen]();
 				}
+			});
 
-			} else if ($element.hasClass('popup') || $element.hasClass('dropdown')) {
-
-				/* Загрузка динамического содержимого в попапы без меню и дропдауны */
-
-				$scope.dynamic = true;
-
-				$scope.$watch('visible', function(visible) {
-					if (visible) {
-						if (!$scope.loaded) {
-							$http.get($attrs.dynLoad).success(function (response) {
-								$scope.loaded = true;
-
-								$scope.content = $sce.trustAsHtml(response);
-
-								$compile(response)($scope, function(res) {
-									$timeout(function() {
-										$scope.content = $sce.trustAsHtml(res.html());
-									});
-								});
-
-								if (typeof $scope[$attrs.dynOnLoad] === 'function') {
-									$scope[$attrs.dynOnLoad]({
-										response: response
-									});
-								}
-							});
-						} else if (typeof $scope[$attrs.dynOnOpen] === 'function') {
-							$scope[$attrs.dynOnOpen]({});
-						}
-					}
-				});
-			}
-
+			$scope.$watch('currentSection', function(currentSection) {
+//				console.log($element, currentSection, $attrs.onOpen);
+			});
 		}
 	}
-});;/**
+});
+;/**
  *  @ngdoc directive
  *  @name form
  *  @restrict E
@@ -3143,7 +3070,7 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
  *  Директивы для генерации попапов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('popup', function ($document, layers) {
+actiGuide.mainModule.directive('popup', function () {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -3177,27 +3104,32 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 
 		}
 	}
-}).directive('popupSection', function ($sce) {
+}).directive('popupSection', function () {
 	return {
 		restrict: 'E',
+		transclude: true,
+		template: '<div ng-show="section === currentSection" ng-transclude />',
+		replace: true,
+		scope: true,
 		controller: function($scope, $element, $attrs) {
 			var $parent = angular.element($element).parent(),
 				$parentScope = $parent.scope();
 
-			if (!$parentScope.sections) {
-				$parentScope.sections = {};
-			}
+			$scope.section = $attrs.anchor;
 
-			if (!$parentScope.sections[$attrs.target]) {
-				$parentScope.sections[$attrs.target] = {}
-			}
+			$parentScope.$watch('[currentSection, visible]', function() {
+				if ($parentScope.visible) {
+					touchSection();
+				}
+			}, true);
 
-			$parentScope.sections[$attrs.target].content = $sce.trustAsHtml($element.html());
+			function touchSection() {
+				$scope.currentSection = $parentScope.currentSection.anchor;
 
-			var portAttrs = ['dynLoad', 'dynOnLoad', 'dynOnOpen'];
-			for (var i in portAttrs) {
-				if (portAttrs.hasOwnProperty(i) && $attrs[portAttrs[i]]) {
-					$parentScope.sections[$attrs.target][portAttrs[i]] = $attrs[portAttrs[i]];
+				if ($scope.currentSection == $attrs.anchor) {
+					if (typeof $scope[$attrs.onOpen] === 'function'){
+						$scope[$attrs.onOpen]();
+					}
 				}
 			}
 		}

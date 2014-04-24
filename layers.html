@@ -8,19 +8,16 @@
 	<script type="text/javascript" src="out/app.min.js"></script>
 	<script>
 
-		actiGuide.mainModule.controller('DemoLayersCtrl', function($scope) {
-			$scope.dynOnLoad = function(data) {
-				console.log('Коллбэк из DemoLayersCtrl. Вызывается сразу после загрузки динамического элемента');
-				if (data.section) {
-					console.log('section', data.section);
-				}
-			};
+		actiGuide.mainModule.controller('DemoLayersCtrl', function($scope, $timeout) {
+			$scope.emitLoading = function() {
 
-			$scope.dynOnOpen = function(data) {
-				console.log('Функция из DemoLayersCtrl. Вызывается при каждом открытии уже загруженного динамического элемента');
-				if (data.section) {
-					console.log('section', data.section);
-				}
+				/* Для отображения спиннера в скоупе дропдауна/попапа/секции выставляем триггер loading */
+
+				$scope.loading = true;
+				$timeout(function() {
+					$scope.loading = false;
+				}, 1000);
+
 			};
 		});
 
@@ -141,14 +138,13 @@
 			<div class="col-4">
 				<div class="box">
 
-					<a popup-caller="popup-1">Открытие попапа 1</a>.
-					<a popup-caller="popup-2">Открытие попапа 2</a>.
-					<a popup-caller="popup-3">Открытие попапа 3</a>.
-					<a popup-caller="popup-4">Открытие попапа 4</a>.
-
-					<br />
-
-					<a popup-caller="popup-5">Открытие попапа 5</a>.
+					<ul>
+						<li><a popup-caller="popup-1">Конфигурация попапа</a></li>
+						<li><a popup-caller="popup-2">Попап с прокруткой</a></li>
+						<li><a popup-caller="popup-3">Дропдаун в попапе шириной 400px</a></li>
+						<li><a popup-caller="popup-4">Попап без внутренних отступов шириноу 400px</a></li>
+						<li><a popup-caller="popup-5">Попап с меню</a></li>
+					</ul>
 
 					<popup id="popup-1" popup-config='{
 						"title": "Тестовый попап",
@@ -176,7 +172,7 @@
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;: &quot;hilite&quot;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(данный пункт меню будет выделенным)<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Ссылка 1&quot;,<br />
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;section&quot;: &quot;section-1&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(секция контейнера, соответствующая этому пункту)<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;anchor&quot;: &quot;section-1&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(секция контейнера, соответствующая этому пункту)<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;: &quot;divider&quot;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(разделитель, не является ссылкой)<br />
@@ -184,14 +180,14 @@
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;title&quot;: &quot;Ссылка 2&quot;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(обычный пункт меню)<br />
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;section&quot;: &quot;section-2&quot;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;anchor&quot;: &quot;section-2&quot;<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;]<br />
 							}'&gt;<br />
-							&nbsp;&nbsp;&nbsp;&nbsp;&lt;popup-section target=&quot;section-1&quot;&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;popup-section anchor=&quot;section-1&quot;&gt;<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Содержимое секции 1<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&lt;/popup-section&gt;<br />
-							&nbsp;&nbsp;&nbsp;&nbsp;&lt;popup-section target=&quot;section-2&quot;&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;popup-section anchor=&quot;section-2&quot;&gt;<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Содержимое секции 2<br />
 							&nbsp;&nbsp;&nbsp;&nbsp;&lt;/popup-section&gt;<br />
 							&lt;/popup&gt;
@@ -256,20 +252,19 @@
 					</popup>
 
 					<popup id="popup-5" popup-config='{
-						"title": "Заголовок попапа 5",
+						"title": "Попап с меню",
 						"menu": [
-							{"type": "hilite", "title": "Ссылка 1", "section": "section-1"},
+							{"type": "hilite", "title": "Пункт меню 1", "anchor": "section-1"},
 							{"type": "divider", "title": "Разделитель в несколько строк"},
-							{"title": "Ссылка 2", "section": "section-2"}
+							{"title": "Пункт меню 2", "anchor": "section-2"}
 						]
 					}'>
-						<popup-section target="section-1">
-							<p>Container</p>
-							<p>Section 1</p>
+						<popup-section anchor="section-1">
+							<h3>Секция 1</h3>
+							<p>Обратите внимание на <strong>пункт меню 1</strong>. В описании попапа значение <strong>type</strong> у данного пункта меню &mdash; <strong>hilite</strong>, что делает его выделенным.</p>
 						</popup-section>
-						<popup-section target="section-2">
-							<p>Container</p>
-							<p>Section 2</p>
+						<popup-section anchor="section-2">
+							<h3>Секция 2</h3>
 						</popup-section>
 					</popup>
 
@@ -280,40 +275,50 @@
 		<div class="m-box m-giant">
 			<div class="col-edge-1">
 				<div class="box">
-					<h3>Подгрузка</h3>
+					<h3>Спиннер</h3>
 				</div>
 			</div>
 			<div class="col-4">
 				<div class="box">
 
-					<a popup-caller="popup-6">Открытие попапа 6</a>.
-					<a popup-caller="popup-7">Открытие попапа 7</a>.
+					<p>К дропдаунам, попапам и секциям можно применить директиву <strong>on-open</strong>. В этой директиве мы передаём функцию, которая будет вызвана в момент открытия элемента.</p>
+					<p>Также у дропдаунов, попапов и секций есть триггер <strong>loading</strong>. Если в скоупе элемента установить <strong>$scope.loading = true</strong>, то в центре элемента будет отображён спиннер.</p>
+					<p>Вначале данной страницы есть демонстрационный контроллер с функцией <strong>emitLoading</strong>, которая будет вызвана при открытии нижних элементов. В этой функции для триггера <strong>loading</strong> устанавливается значение <strong>true</strong>, а через секунду &mdash; <strong>false</strong>, так, что мы 1 секунду видим спиннер перед тем, как отобразится основной контент.</p>
 
-					<popup id="popup-6" ng-controller="DemoLayersCtrl" dyn-load="tmp/sample.html" dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup>
+					<ul>
+						<li><a popup-caller="popup-6">Обычный попап со спиннером</a></li>
+						<li><a popup-caller="popup-7">Попап с меню и спиннером в секции</a></li>
+						<li>
+							<dropdown class="dropdown__huge"
+									  caller="<a>Дропдаун со спиннером</a>"
+									  on-open="emitLoading">
+								Этот контент будет отображён через секунду после открытия дропдауна. Обратите внимание на функцию <strong>emitLoading</strong> на данной странице.
+							</dropdown>
+						</li>
+					</ul>
 
-					<popup id="popup-7" ng-controller="DemoLayersCtrl" popup-config='{
-						"title": "Попап с меню и динамикой",
-						"menu": [
-							{"title": "Секция без динамики", "section": "section-1"},
-							{"title": "Секция 2", "section": "section-2"},
-							{"title": "Секция 3", "section": "section-3"}
-						]
-					}'>
-						<popup-section target="section-1">
-							Секция 1
-						</popup-section>
-						<popup-section target="section-2"
-									   dyn-load="tmp/sample.html"
-									   dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
-						<popup-section target="section-3"
-									   dyn-load="tmp/sample-2.html"
-									   dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></popup-section>
+					<popup id="popup-6" on-open="emitLoading">
+						Этот контент будет отображён через секунду после открытия попапа. Обратите внимание на функцию <strong>emitLoading</strong> на данной странице.
 					</popup>
 
-					<dropdown class="dropdown__huge"
-							  caller="<a>Дропдаун с динамическим содержимым</a>"
-							  dyn-load="tmp/sample-2.html"
-							  dyn-on-load="dynOnLoad" dyn-on-open="dynOnOpen"></dropdown>
+					<popup id="popup-7" popup-config='{
+						"title": "Попап с меню и динамикой",
+						"menu": [
+							{"title": "Секция без динамики", "anchor": "section-1"},
+							{"title": "Секция с динамикой", "anchor": "section-2"},
+							{"title": "Тоже с динамикой", "anchor": "section-3"}
+						]
+					}'>
+						<popup-section anchor="section-1">
+							Секция без динамики.
+						</popup-section>
+						<popup-section anchor="section-2" on-open="emitLoading">
+							Этот контент будет отображён через секунду после открытия секции. Обратите внимание на функцию <strong>emitLoading</strong> на данной странице.
+						</popup-section>
+						<popup-section anchor="section-3" on-open="emitLoading">
+							Этот контент тоже будет отображён через секунду после открытия секции. Обратите внимание на функцию <strong>emitLoading</strong> на данной странице.
+						</popup-section>
+					</popup>
 
 				</div>
 			</div>

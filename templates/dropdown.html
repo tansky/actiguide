@@ -2,13 +2,10 @@
 	<div class="dropdown_caller" ng-click="toggleDropdown()">
 		<span ng-bind-html="caller"></span>
 	</div>
-	<div ng-if="dynamic" class="dropdown_container">
-		<div ng-if="!loaded">
-			<div class="spinner"></div>
-		</div>
-		<span ng-bind-html="content"></span>
+	<div ng-if="loading" class="dropdown_container">
+		<div class="spinner"></div>
 	</div>
-	<div ng-show="!dynamic" class="dropdown_container" ng-transclude>
+	<div ng-show="!loading" class="dropdown_container" ng-transclude>
 		{{content}}
 	</div>
 </div>
