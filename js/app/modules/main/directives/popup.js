@@ -60,7 +60,7 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
  *  Директивы для генерации попапов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('popup', function ($document, layers) {
+actiGuide.mainModule.directive('popup', function () {
 	return {
 		restrict: 'E',
 		transclude: true,
@@ -94,27 +94,32 @@ actiGuide.mainModule.directive('popup', function ($document, layers) {
 
 		}
 	}
-}).directive('popupSection', function ($sce) {
+}).directive('popupSection', function () {
 	return {
 		restrict: 'E',
+		transclude: true,
+		template: '<div ng-show="section === currentSection" ng-transclude />',
+		replace: true,
+		scope: true,
 		controller: function($scope, $element, $attrs) {
 			var $parent = angular.element($element).parent(),
 				$parentScope = $parent.scope();
 
-			if (!$parentScope.sections) {
-				$parentScope.sections = {};
-			}
+			$scope.section = $attrs.anchor;
 
-			if (!$parentScope.sections[$attrs.target]) {
-				$parentScope.sections[$attrs.target] = {}
-			}
+			$parentScope.$watch('[currentSection, visible]', function() {
+				if ($parentScope.visible) {
+					touchSection();
+				}
+			}, true);
 
-			$parentScope.sections[$attrs.target].content = $sce.trustAsHtml($element.html());
+			function touchSection() {
+				$scope.currentSection = $parentScope.currentSection.anchor;
 
-			var portAttrs = ['dynLoad', 'dynOnLoad', 'dynOnOpen'];
-			for (var i in portAttrs) {
-				if (portAttrs.hasOwnProperty(i) && $attrs[portAttrs[i]]) {
-					$parentScope.sections[$attrs.target][portAttrs[i]] = $attrs[portAttrs[i]];
+				if ($scope.currentSection == $attrs.anchor) {
+					if (typeof $scope[$attrs.onOpen] === 'function'){
+						$scope[$attrs.onOpen]();
+					}
 				}
 			}
 		}
