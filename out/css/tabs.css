@@ -85,6 +85,9 @@
   display: inline-block;
   word-wrap: normal;
   text-shadow: 0 1px 0 #FFF;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
   background: #fdfdfd;
   /* Old browsers */
   background: -moz-linear-gradient(top, #fdfdfd 0%, #f8f8f8 100%);
