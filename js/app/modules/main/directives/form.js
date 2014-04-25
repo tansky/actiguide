@@ -20,7 +20,14 @@ actiGuide.mainModule.directive('form', function () {
 
                     item.$element = control;
 
-                    control.on('focusout', function() {
+                    control.on('focusout', checkControl);
+
+                    control.on('keyup', function (){
+                        if (!item.$error.showError) return;
+                        checkControl();
+                    });
+
+                    function checkControl () {
                         var errorReason;
                         angular.forEach(item.$error, function(value, reason) {
                             if (value === true && reason !== 'required') {
@@ -50,7 +57,7 @@ actiGuide.mainModule.directive('form', function () {
                                 $scope.$apply(item.$warnings.showWarning = false);
                             }
                         }
-                    });
+                    }
                 }
             });
         },
