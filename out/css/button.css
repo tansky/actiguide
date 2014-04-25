@@ -935,7 +935,7 @@
   margin-right: 8px;
 }
 /* BUTTON SECONDARY
-    
+
     ======================================================= */
 .btn__secondary {
   background: none;
@@ -943,13 +943,16 @@
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 .btn__secondary .btn-in {
   background: none;
-  border: 1px solid rgba(0, 0, 0, 0.1);
   color: rgba(0, 0, 0, 0.25);
   text-shadow: none;
 }
+.btn__secondary:active,
+.btn__secondary:hover,
+.btn__secondary:focus,
 .btn__secondary.btn__positive:hover,
 .btn__secondary.btn__negative:hover,
 .btn__secondary.btn__consult:hover,
@@ -968,14 +971,7 @@
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
-}
-.btn__secondary.btn__positive:active,
-.btn__secondary.btn__negative:active,
-.btn__secondary.btn__consult:active,
-.btn__secondary.btn__dark:active,
-.btn__secondary.btn__orange:active {
-  color: #565f64;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 0;
 }
 /* END BUTTON SECONDARY
     ======================================================= */
