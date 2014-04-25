@@ -23,14 +23,36 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 			$scope.toggleDropdown = function() {
 
 				if (layers.layersList.length === 0) {
+
+					/* Открываем первый слой */
+
 					$scope.visible = true;
 					layers.layersList.push($element[0]);
+
+				} else if (layers.layersList.length == 1 && !layers.isUpInTree($element[0])) {
+
+					/* Закрываем верхний слой, если он единственный */
+
+					angular.element(layers.layersList[0]).scope().visible = false;
+					layers.layersList.pop();
+
+					$scope.visible = true;
+					layers.layersList.push($element[0]);
+
 				} else if (layers.layersList.length > 0 && layers.isUpInTree($element[0]) && layers.layersList.indexOf($element[0]) < 0) {
+
+					/* Открываем дропдаун, если он вызван внутри текущего дерева */
+
 					$scope.visible = true;
 					layers.layersList.push($element[0]);
+
 				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1 && layers.layersList[layers.layersList.length-1] === $element[0]) {
+
+					/* Закрываем слой, если была попытка открыть его же снова (клик по caller'у дропдауна) */
+
 					$scope.visible = false;
 					layers.layersList.pop();
+
 				}
 
 

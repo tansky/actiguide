@@ -26,7 +26,6 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
-
 		if (_layers.length > 0 && (
 			angular.element(element).hasClass('pop-on-click') ||
 			(
@@ -40,20 +39,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			popLastLayer();
 		}
 
-		/* Если текущий слой - попап, делаем BODY не скроллируемым */
-
-		var bodyScope = angular.element($document[0].body).scope(),
-			noScroll = false;
-
-		angular.forEach(_layers, function(layer) {
-			if (angular.element(layer).hasClass('popup')) {
-				noScroll = true;
-			}
-		});
-
-		bodyScope.noScroll = noScroll;
-		bodyScope.$apply();
-
+		updateScrollStatus();
 	}
 
 	/**
@@ -119,6 +105,31 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			topLayerScope.visible = true;
 			topLayerScope.$apply();
 		}
+
+		updateScrollStatus();
+	}
+
+	/**
+	 * Проверка наличия открытых попапов в слоях для отключения прокрутки основной страницы
+	 * @name updateScrollStatus
+	 * @function
+	 */
+	function updateScrollStatus() {
+
+		/* Если текущий слой - попап, делаем BODY не скроллируемым */
+
+		var bodyScope = angular.element($document[0].body).scope(),
+			noScroll = false;
+
+		angular.forEach(_layers, function(layer) {
+			if (angular.element(layer).hasClass('popup')) {
+				noScroll = true;
+			}
+		});
+
+		bodyScope.noScroll = noScroll;
+		bodyScope.$apply();
+
 	}
 
 	return {
