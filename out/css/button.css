@@ -938,18 +938,17 @@
 
     ======================================================= */
 .btn__secondary {
-  background: #e3e3e3;
+  background: none;
+  padding: 0;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
 }
 .btn__secondary .btn-in {
-  background: #fdfdfd;
-  color: #bdbdbd;
+  background: none;
+  color: rgba(0, 0, 0, 0.25);
   text-shadow: none;
-}
-.btn.btn__secondary:active {
-  color: #565f64 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 .btn__secondary.btn__positive:hover,
 .btn__secondary.btn__negative:hover,
@@ -964,16 +963,20 @@
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
+  border: 0;
 }
-.btn.btn__secondary.btn__positive:active,
-.btn.btn__secondary.btn__negative:active,
-.btn.btn__secondary.btn__consult:active,
-.btn.btn__secondary.btn__dark:active,
-.btn.btn__secondary.btn__orange:active {
+.btn__secondary.btn__positive:active,
+.btn__secondary.btn__negative:active,
+.btn__secondary.btn__consult:active,
+.btn__secondary.btn__dark:active,
+.btn__secondary.btn__orange:active {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  color: #ffffff !important;
+  color: #000000;
+}
+.btn__secondary:active .btn-in {
+  color: #ffffff;
 }
 /* END BUTTON SECONDARY
     ======================================================= */
