@@ -2007,17 +2007,36 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 			$scope.toggleDropdown = function() {
 
 				if (layers.layersList.length === 0) {
+
+					/* Открываем первый слой */
+
 					$scope.visible = true;
 					layers.layersList.push($element[0]);
+
+				} else if (layers.layersList.length == 1 && !layers.isUpInTree($element[0])) {
+
+					/* Закрываем верхний слой, если он единственный */
+
+					angular.element(layers.layersList[0]).scope().visible = false;
+					layers.layersList.pop();
+
+					$scope.visible = true;
+					layers.layersList.push($element[0]);
+
 				} else if (layers.layersList.length > 0 && layers.isUpInTree($element[0]) && layers.layersList.indexOf($element[0]) < 0) {
+
+					/* Открываем дропдаун, если он вызван внутри текущего дерева */
+
 					$scope.visible = true;
 					layers.layersList.push($element[0]);
+
 				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1 && layers.layersList[layers.layersList.length-1] === $element[0]) {
+
+					/* Закрываем слой, если была попытка открыть его же снова (клик по caller'у дропдауна) */
+
 					$scope.visible = false;
 					layers.layersList.pop();
-				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1) {
-					angular.element(layers.layersList[layers.layersList.length-1]).scope().visible = false;
-					layers.layersList.pop();
+
 				}
 
 
@@ -2029,14 +2048,14 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 
 			};
 
-			$scope.$watch('visible', function(newVal) {
+			$scope.$watch('visible', function(isVisible) {
 
 				/* Проверка границ выпавшего дропдауна */
 
 				var doc = angular.element(document).find('BODY')[0];
 				angular.forEach($element.children(), function(element) {
 					if (angular.element(element).hasClass('dropdown_container')) {
-						element.style.display = newVal ? "block" : "none";
+						element.style.display = isVisible ? "block" : "none";
 						$scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
 						$scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
 					}
@@ -2050,14 +2069,10 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 		restrict: 'A',
 		replace: true,
 		controller: function($scope, $element, $attrs) {
-			$scope.$watch('visible', function(visible) {
-				if (visible && typeof $scope[$attrs.onOpen] === 'function') {
+			$scope.$watch('visible', function(isVisible) {
+				if (isVisible && typeof $scope[$attrs.onOpen] === 'function') {
 					$scope[$attrs.onOpen]();
 				}
-			});
-
-			$scope.$watch('currentSection', function(currentSection) {
-//				console.log($element, currentSection, $attrs.onOpen);
 			});
 		}
 	}
@@ -2120,7 +2135,9 @@ actiGuide.mainModule.directive('form', function () {
         },
     };
 });
-;/**
+;actiGuide.mainModule.directive('grid', function($timeout) {
+
+});;/**
  *  @ngdoc directive
  *  @name hint
  *  @restrict A
@@ -2826,7 +2843,7 @@ actiGuide.mainModule.directive('navList', function () {
  *  Директива для открытия попапов.
  */
 
-actiGuide.mainModule.directive('popupCaller', function (layers) {
+actiGuide.mainModule.directive('popupCaller', function ($document, layers) {
 	return {
 		restrict: 'A',
 		scope: false,
@@ -2842,8 +2859,15 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 					/* Клик по элементу, вызывающему попап не из дерева активных слоёв игнорируется, передав при этом
 					 управление слушателю кликов из сервиса layers */
 
-					if (layers.layersList.length > 0 && !layers.isDownInTree(this)) {
+					if (layers.layersList.length > 1 && !layers.isDownInTree(this)) {
 						return;
+					}
+
+					/* Закрываем верхний слой, если он единственный */
+
+					if (layers.layersList.length == 1) {
+						angular.element(layers.layersList[0]).scope().visible = false;
+						layers.layersList.pop();
 					}
 
 					/* Делаем все нижние попапы невидимыми. Снова видимыми по закрытию верхних попапов они делаются в layers.popLastLayer() */
@@ -2853,8 +2877,6 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 							angular.element(item).scope().visible = false;
 						}
 					});
-
-					scope.noScroll = true;
 
 					popupScope.visible = true;
 
@@ -4025,8 +4047,7 @@ actiGuide.mainModule.filter('getDigits', function() {
  *  @name layers
  *
  *  @description
- *  Сервис работы со слоями. Его используют элементы типа дропдаун, для обеспечения поочерёдного
- *  открытия и закрытия элементов.
+ *  Сервис работы со слоями. Его используют дропдауны и попапы, для обеспечения поочерёдного открытия и закрытия слоёв.
  */
 
 actiGuide.mainModule.service('layers', ['$document', function ($document) {
@@ -4057,16 +4078,12 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			) || (
 				angular.element(element).data('popupCaller') &&
 				!isDownInTree(angular.element(element).data('targetPopup'))
-			) || (
-				angular.element(element).hasClass('dropdown_container') &&
-				!isDownInTree(element, angular.element(_layers[_layers.length-1]))
 			)
 		)) {
-			if (angular.element(_layers[_layers.length-1]).hasClass('popup')) {
-				angular.element($document[0].body).scope().noScroll = false;
-			}
 			popLastLayer();
 		}
+
+		updateScrollStatus();
 	}
 
 	/**
@@ -4132,6 +4149,31 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			topLayerScope.visible = true;
 			topLayerScope.$apply();
 		}
+
+		updateScrollStatus();
+	}
+
+	/**
+	 * Проверка наличия открытых попапов в слоях для отключения прокрутки основной страницы
+	 * @name updateScrollStatus
+	 * @function
+	 */
+	function updateScrollStatus() {
+
+		/* Если текущий слой - попап, делаем BODY не скроллируемым */
+
+		var bodyScope = angular.element($document[0].body).scope(),
+			noScroll = false;
+
+		angular.forEach(_layers, function(layer) {
+			if (angular.element(layer).hasClass('popup')) {
+				noScroll = true;
+			}
+		});
+
+		bodyScope.noScroll = noScroll;
+		bodyScope.$apply();
+
 	}
 
 	return {

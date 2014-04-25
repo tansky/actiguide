@@ -86,8 +86,8 @@
 /* active */
 
 .btn.active .btn-in,
-.btn.active .btn-in:hover,
-.btn:active .btn-in {
+.btn:active .btn-in,
+.btn.active .btn-in:hover{
   background: @active-default;
   .b-act-push();
   .box-shadow(inset 3px 3px 5px -2px @shadow-default);
@@ -96,8 +96,9 @@
 
 /* preload */
 
+.btn__preload .btn-in,
 .btn__preload:hover .btn-in,
-.btn__preload .btn-in {
+.btn__preload:active .btn-in{
   background-color: @preload-default;
   .b-preload();
   .box-shadow(inset 3px 3px 5px -2px @shadow-default);
@@ -593,9 +594,16 @@
 .btn__secondary.btn__consult:focus,
 .btn__secondary.btn__dark:focus,
 .btn__secondary.btn__orange:focus{
-    .box-shadow(0 1px 3px 0 rgba(0, 0, 0, 0.35)); 
+    .box-shadow(0 1px 3px 0 rgba(0, 0, 0, 0.35));
     }
-
+.btn__secondary.btn__positive:active,
+.btn__secondary.btn__negative:active,
+.btn__secondary.btn__consult:active,
+.btn__secondary.btn__dark:active,
+.btn__secondary.btn__orange:active{
+  color:#565f64;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  }
 
 
 /* END BUTTON SECONDARY
