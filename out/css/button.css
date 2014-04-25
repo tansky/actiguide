@@ -1016,9 +1016,6 @@
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.test:focus {
-  background: red !important;
-}
 .print_ico {
   position: relative;
   font-size: 18px;
