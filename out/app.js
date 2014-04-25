@@ -1559,9 +1559,9 @@ actiGuide.mainModule.directive('popupCaller', function ($document, layers) {
 						return;
 					}
 
-					/* Закрываем верхний слой, если он единственный */
+					/* Закрываем верхний слой, если он единственный и это не попап */
 
-					if (layers.layersList.length == 1) {
+					if (layers.layersList.length == 1 && !angular.element(layers.layersList[0]).hasClass('popup')) {
 						angular.element(layers.layersList[0]).scope().visible = false;
 						layers.layersList.pop();
 					}
