@@ -948,6 +948,9 @@
   color: rgba(0, 0, 0, 0.25);
   text-shadow: none;
 }
+.btn__secondary:active {
+  color: #565f64;
+}
 .btn__secondary.btn__positive:hover,
 .btn__secondary.btn__negative:hover,
 .btn__secondary.btn__consult:hover,
@@ -970,6 +973,7 @@
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+  color: #ffffff;
 }
 /* END BUTTON SECONDARY
     ======================================================= */
