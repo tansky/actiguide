@@ -69,14 +69,20 @@
 @font-face {
   font-family: 'Proxima Nova';
   src: url('../fonts/proxima-nova-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/proxima-nova-regular.svg') format('svg'), url('../fonts/proxima-nova-regular.woff') format('woff'), url('../fonts/proxima-nova-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 @font-face {
   font-family: 'Proxima Nova Bold';
   src: url('../fonts/proxima-nova-bold.eot?#iefix') format('embedded-opentype'), url('../fonts/proxima-nova-bold.svg') format('svg'), url('../fonts/proxima-nova-bold.woff') format('woff'), url('../fonts/proxima-nova-bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 @font-face {
   font-family: 'Web Symbols';
   src: url('../fonts/web-symbols-liga-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/web-symbols-liga-regular.woff') format('woff'), url('../fonts/web-symbols-liga-regular.ttf') format('truetype'), url('../fonts/web-symbols-liga-regular.svg#WebSymbolsRegular') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 /**
 * Цвета
