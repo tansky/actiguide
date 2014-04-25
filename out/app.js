@@ -824,9 +824,7 @@ actiGuide.mainModule.directive('form', function () {
         },
     };
 });
-;actiGuide.mainModule.directive('grid', function($timeout) {
-
-});;/**
+;/**
  *  @ngdoc directive
  *  @name hint
  *  @restrict A
