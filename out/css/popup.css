@@ -159,7 +159,7 @@
   color: #ffffff;
   font-size: 20px;
   font-family: 'Web Symbols';
-  line-height: 20px;
+  line-height: 1em;
 }
 .popup_container {
   padding: 20px 30px;
