@@ -42,14 +42,14 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 
 			};
 
-			$scope.$watch('visible', function(newVal) {
+			$scope.$watch('visible', function(isVisible) {
 
 				/* Проверка границ выпавшего дропдауна */
 
 				var doc = angular.element(document).find('BODY')[0];
 				angular.forEach($element.children(), function(element) {
 					if (angular.element(element).hasClass('dropdown_container')) {
-						element.style.display = newVal ? "block" : "none";
+						element.style.display = isVisible ? "block" : "none";
 						$scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
 						$scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
 					}

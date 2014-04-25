@@ -3,14 +3,10 @@ actiGuide.mainModule.directive('onOpen', function () {
 		restrict: 'A',
 		replace: true,
 		controller: function($scope, $element, $attrs) {
-			$scope.$watch('visible', function(visible) {
-				if (visible && typeof $scope[$attrs.onOpen] === 'function') {
+			$scope.$watch('visible', function(isVisible) {
+				if (isVisible && typeof $scope[$attrs.onOpen] === 'function') {
 					$scope[$attrs.onOpen]();
 				}
-			});
-
-			$scope.$watch('currentSection', function(currentSection) {
-//				console.log($element, currentSection, $attrs.onOpen);
 			});
 		}
 	}

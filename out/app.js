@@ -2207,14 +2207,14 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 
 			};
 
-			$scope.$watch('visible', function(newVal) {
+			$scope.$watch('visible', function(isVisible) {
 
 				/* Проверка границ выпавшего дропдауна */
 
 				var doc = angular.element(document).find('BODY')[0];
 				angular.forEach($element.children(), function(element) {
 					if (angular.element(element).hasClass('dropdown_container')) {
-						element.style.display = newVal ? "block" : "none";
+						element.style.display = isVisible ? "block" : "none";
 						$scope.reflectHorizontal = doc.clientWidth < element.getBoundingClientRect().right;
 						$scope.reflectVertical = doc.clientHeight < element.getBoundingClientRect().bottom;
 					}
@@ -2228,14 +2228,10 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 		restrict: 'A',
 		replace: true,
 		controller: function($scope, $element, $attrs) {
-			$scope.$watch('visible', function(visible) {
-				if (visible && typeof $scope[$attrs.onOpen] === 'function') {
+			$scope.$watch('visible', function(isVisible) {
+				if (isVisible && typeof $scope[$attrs.onOpen] === 'function') {
 					$scope[$attrs.onOpen]();
 				}
-			});
-
-			$scope.$watch('currentSection', function(currentSection) {
-//				console.log($element, currentSection, $attrs.onOpen);
 			});
 		}
 	}
@@ -3035,8 +3031,6 @@ actiGuide.mainModule.directive('popupCaller', function ($document, layers) {
 					if (layers.layersList.length > 0 && !layers.isDownInTree(this)) {
 						return;
 					}
-
-					console.log(layers.layersList);
 
 					/* Делаем все нижние попапы невидимыми. Снова видимыми по закрытию верхних попапов они делаются в layers.popLastLayer() */
 
