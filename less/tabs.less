@@ -112,4 +112,38 @@
             background: none;
         }
     }
+
+    .dropdown {
+        vertical-align: baseline;
+
+        .tab-btn span:after {
+            display: inline-block;
+            margin: 2px 0 0 7px;
+            vertical-align: middle;
+            content: '';
+            border: 4px solid;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+        }
+
+
+    }
+
+    /* хак для табов. после доработки дропдаунов, убрать */
+    .active .dropdown .tab-btn {
+        border-bottom: 1px solid @c-10;
+        line-height: 33px;
+        height: 33px;
+        color: #000;
+        cursor: default;
+        .rounded(3px 3px 0 0);
+        box-shadow: none;
+        background: none;
+    }
+
+    /* хак для табов. после доработки дропдаунов, убрать */
+    .fake-btn {
+        display: none;
+    }
 }
