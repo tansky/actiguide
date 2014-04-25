@@ -2188,14 +2188,36 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 			$scope.toggleDropdown = function() {
 
 				if (layers.layersList.length === 0) {
+
+					/* Открываем первый слой */
+
 					$scope.visible = true;
 					layers.layersList.push($element[0]);
+
+				} else if (layers.layersList.length == 1 && !layers.isUpInTree($element[0])) {
+
+					/* Закрываем верхний слой, если он единственный */
+
+					angular.element(layers.layersList[0]).scope().visible = false;
+					layers.layersList.pop();
+
+					$scope.visible = true;
+					layers.layersList.push($element[0]);
+
 				} else if (layers.layersList.length > 0 && layers.isUpInTree($element[0]) && layers.layersList.indexOf($element[0]) < 0) {
+
+					/* Открываем дропдаун, если он вызван внутри текущего дерева */
+
 					$scope.visible = true;
 					layers.layersList.push($element[0]);
+
 				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1 && layers.layersList[layers.layersList.length-1] === $element[0]) {
+
+					/* Закрываем слой, если была попытка открыть его же снова (клик по caller'у дропдауна) */
+
 					$scope.visible = false;
 					layers.layersList.pop();
+
 				}
 
 
@@ -3028,8 +3050,15 @@ actiGuide.mainModule.directive('popupCaller', function ($document, layers) {
 					/* Клик по элементу, вызывающему попап не из дерева активных слоёв игнорируется, передав при этом
 					 управление слушателю кликов из сервиса layers */
 
-					if (layers.layersList.length > 0 && !layers.isDownInTree(this)) {
+					if (layers.layersList.length > 1 && !layers.isDownInTree(this)) {
 						return;
+					}
+
+					/* Закрываем верхний слой, если он единственный */
+
+					if (layers.layersList.length == 1) {
+						angular.element(layers.layersList[0]).scope().visible = false;
+						layers.layersList.pop();
 					}
 
 					/* Делаем все нижние попапы невидимыми. Снова видимыми по закрытию верхних попапов они делаются в layers.popLastLayer() */
@@ -4232,7 +4261,6 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
-
 		if (_layers.length > 0 && (
 			angular.element(element).hasClass('pop-on-click') ||
 			(
@@ -4246,20 +4274,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			popLastLayer();
 		}
 
-		/* Если текущий слой - попап, делаем BODY не скроллируемым */
-
-		var bodyScope = angular.element($document[0].body).scope(),
-			noScroll = false;
-
-		angular.forEach(_layers, function(layer) {
-			if (angular.element(layer).hasClass('popup')) {
-				noScroll = true;
-			}
-		});
-
-		bodyScope.noScroll = noScroll;
-		bodyScope.$apply();
-
+		updateScrollStatus();
 	}
 
 	/**
@@ -4325,6 +4340,31 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			topLayerScope.visible = true;
 			topLayerScope.$apply();
 		}
+
+		updateScrollStatus();
+	}
+
+	/**
+	 * Проверка наличия открытых попапов в слоях для отключения прокрутки основной страницы
+	 * @name updateScrollStatus
+	 * @function
+	 */
+	function updateScrollStatus() {
+
+		/* Если текущий слой - попап, делаем BODY не скроллируемым */
+
+		var bodyScope = angular.element($document[0].body).scope(),
+			noScroll = false;
+
+		angular.forEach(_layers, function(layer) {
+			if (angular.element(layer).hasClass('popup')) {
+				noScroll = true;
+			}
+		});
+
+		bodyScope.noScroll = noScroll;
+		bodyScope.$apply();
+
 	}
 
 	return {

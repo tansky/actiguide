@@ -23,8 +23,15 @@ actiGuide.mainModule.directive('popupCaller', function ($document, layers) {
 					/* Клик по элементу, вызывающему попап не из дерева активных слоёв игнорируется, передав при этом
 					 управление слушателю кликов из сервиса layers */
 
-					if (layers.layersList.length > 0 && !layers.isDownInTree(this)) {
+					if (layers.layersList.length > 1 && !layers.isDownInTree(this)) {
 						return;
+					}
+
+					/* Закрываем верхний слой, если он единственный */
+
+					if (layers.layersList.length == 1) {
+						angular.element(layers.layersList[0]).scope().visible = false;
+						layers.layersList.pop();
 					}
 
 					/* Делаем все нижние попапы невидимыми. Снова видимыми по закрытию верхних попапов они делаются в layers.popLastLayer() */
