@@ -938,31 +938,21 @@
 
     ======================================================= */
 .btn__secondary {
-  background: none;
-  padding: 0;
+  background: #e3e3e3;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 .btn__secondary .btn-in {
-  background: none;
+  background: #fdfdfd;
   color: rgba(0, 0, 0, 0.25);
   text-shadow: none;
 }
-.btn__secondary:active,
-.btn__secondary:hover,
-.btn__secondary:focus,
 .btn__secondary.btn__positive:hover,
 .btn__secondary.btn__negative:hover,
 .btn__secondary.btn__consult:hover,
 .btn__secondary.btn__dark:hover,
 .btn__secondary.btn__orange:hover,
-.btn__secondary.btn__positive:active,
-.btn__secondary.btn__negative:active,
-.btn__secondary.btn__consult:active,
-.btn__secondary.btn__dark:active,
-.btn__secondary.btn__orange:active,
 .btn__secondary.btn__positive:focus,
 .btn__secondary.btn__negative:focus,
 .btn__secondary.btn__consult:focus,
@@ -971,7 +961,15 @@
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
-  border: 0;
+}
+.btn__secondary.btn__positive:active,
+.btn__secondary.btn__negative:active,
+.btn__secondary.btn__consult:active,
+.btn__secondary.btn__dark:active,
+.btn__secondary.btn__orange:active {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 /* END BUTTON SECONDARY
     ======================================================= */
