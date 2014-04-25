@@ -3,8 +3,7 @@
  *  @name layers
  *
  *  @description
- *  Сервис работы со слоями. Его используют элементы типа дропдаун, для обеспечения поочерёдного
- *  открытия и закрытия элементов.
+ *  Сервис работы со слоями. Его используют дропдауны и попапы, для обеспечения поочерёдного открытия и закрытия слоёв.
  */
 
 actiGuide.mainModule.service('layers', ['$document', function ($document) {
@@ -27,6 +26,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
+
 		if (_layers.length > 0 && (
 			angular.element(element).hasClass('pop-on-click') ||
 			(
@@ -35,16 +35,25 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			) || (
 				angular.element(element).data('popupCaller') &&
 				!isDownInTree(angular.element(element).data('targetPopup'))
-			) || (
-				angular.element(element).hasClass('dropdown_container') &&
-				!isDownInTree(element, angular.element(_layers[_layers.length-1]))
 			)
 		)) {
-			if (angular.element(_layers[_layers.length-1]).hasClass('popup')) {
-				angular.element($document[0].body).scope().noScroll = false;
-			}
 			popLastLayer();
 		}
+
+		/* Если текущий слой - попап, делаем BODY не скроллируемым */
+
+		var bodyScope = angular.element($document[0].body).scope(),
+			noScroll = false;
+
+		angular.forEach(_layers, function(layer) {
+			if (angular.element(layer).hasClass('popup')) {
+				noScroll = true;
+			}
+		});
+
+		bodyScope.noScroll = noScroll;
+		bodyScope.$apply();
+
 	}
 
 	/**

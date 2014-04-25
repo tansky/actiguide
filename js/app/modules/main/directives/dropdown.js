@@ -31,9 +31,6 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1 && layers.layersList[layers.layersList.length-1] === $element[0]) {
 					$scope.visible = false;
 					layers.layersList.pop();
-				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1) {
-					angular.element(layers.layersList[layers.layersList.length-1]).scope().visible = false;
-					layers.layersList.pop();
 				}
 
 

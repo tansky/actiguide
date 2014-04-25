@@ -2196,9 +2196,6 @@ actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, la
 				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1 && layers.layersList[layers.layersList.length-1] === $element[0]) {
 					$scope.visible = false;
 					layers.layersList.pop();
-				} else if (layers.layersList.length > 0 && layers.layersList.indexOf($element[0]) > -1) {
-					angular.element(layers.layersList[layers.layersList.length-1]).scope().visible = false;
-					layers.layersList.pop();
 				}
 
 
@@ -2301,7 +2298,9 @@ actiGuide.mainModule.directive('form', function () {
         },
     };
 });
-;/**
+;actiGuide.mainModule.directive('grid', function($timeout) {
+
+});;/**
  *  @ngdoc directive
  *  @name hint
  *  @restrict A
@@ -3017,7 +3016,7 @@ actiGuide.mainModule.directive('navList', function () {
  *  Директива для открытия попапов.
  */
 
-actiGuide.mainModule.directive('popupCaller', function (layers) {
+actiGuide.mainModule.directive('popupCaller', function ($document, layers) {
 	return {
 		restrict: 'A',
 		scope: false,
@@ -3037,6 +3036,8 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 						return;
 					}
 
+					console.log(layers.layersList);
+
 					/* Делаем все нижние попапы невидимыми. Снова видимыми по закрытию верхних попапов они делаются в layers.popLastLayer() */
 
 					angular.forEach(layers.layersList, function(item) {
@@ -3044,8 +3045,6 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 							angular.element(item).scope().visible = false;
 						}
 					});
-
-					scope.noScroll = true;
 
 					popupScope.visible = true;
 
@@ -4216,8 +4215,7 @@ actiGuide.mainModule.filter('getDigits', function() {
  *  @name layers
  *
  *  @description
- *  Сервис работы со слоями. Его используют элементы типа дропдаун, для обеспечения поочерёдного
- *  открытия и закрытия элементов.
+ *  Сервис работы со слоями. Его используют дропдауны и попапы, для обеспечения поочерёдного открытия и закрытия слоёв.
  */
 
 actiGuide.mainModule.service('layers', ['$document', function ($document) {
@@ -4240,6 +4238,7 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 	 * @param {object} element DOM-элемент по которому необходимо произвести проверку
 	 */
 	function updateLayers(element) {
+
 		if (_layers.length > 0 && (
 			angular.element(element).hasClass('pop-on-click') ||
 			(
@@ -4248,16 +4247,25 @@ actiGuide.mainModule.service('layers', ['$document', function ($document) {
 			) || (
 				angular.element(element).data('popupCaller') &&
 				!isDownInTree(angular.element(element).data('targetPopup'))
-			) || (
-				angular.element(element).hasClass('dropdown_container') &&
-				!isDownInTree(element, angular.element(_layers[_layers.length-1]))
 			)
 		)) {
-			if (angular.element(_layers[_layers.length-1]).hasClass('popup')) {
-				angular.element($document[0].body).scope().noScroll = false;
-			}
 			popLastLayer();
 		}
+
+		/* Если текущий слой - попап, делаем BODY не скроллируемым */
+
+		var bodyScope = angular.element($document[0].body).scope(),
+			noScroll = false;
+
+		angular.forEach(_layers, function(layer) {
+			if (angular.element(layer).hasClass('popup')) {
+				noScroll = true;
+			}
+		});
+
+		bodyScope.noScroll = noScroll;
+		bodyScope.$apply();
+
 	}
 
 	/**

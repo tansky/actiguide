@@ -7,7 +7,7 @@
  *  Директива для открытия попапов.
  */
 
-actiGuide.mainModule.directive('popupCaller', function (layers) {
+actiGuide.mainModule.directive('popupCaller', function ($document, layers) {
 	return {
 		restrict: 'A',
 		scope: false,
@@ -27,6 +27,8 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 						return;
 					}
 
+					console.log(layers.layersList);
+
 					/* Делаем все нижние попапы невидимыми. Снова видимыми по закрытию верхних попапов они делаются в layers.popLastLayer() */
 
 					angular.forEach(layers.layersList, function(item) {
@@ -34,8 +36,6 @@ actiGuide.mainModule.directive('popupCaller', function (layers) {
 							angular.element(item).scope().visible = false;
 						}
 					});
-
-					scope.noScroll = true;
 
 					popupScope.visible = true;
 
