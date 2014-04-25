@@ -1,31 +1,35 @@
 :focus {
   outline: none;
 }
-body,
-div,
-dl,
-dt,
-dd,
-ul,
-ol,
-li,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-pre,
-code,
-form,
-fieldset,
-legend,
-p,
-blockquote,
-th,
-td {
+BODY,
+DIV,
+DL,
+DT,
+DD,
+UL,
+OL,
+LI,
+H1,
+H2,
+H3,
+H4,
+H5,
+H6,
+PRE,
+CODE,
+FORM,
+FIELDSET,
+LEGEND,
+P,
+BLOCKQUOTE,
+TH,
+TD {
   margin: 0;
   padding: 0;
+}
+HTML,
+BODY {
+  min-height: 100%;
 }
 BODY {
   color: #333;
@@ -43,108 +47,108 @@ A {
   cursor: pointer;
   text-decoration: none;
 }
-table {
+TABLE {
   border-collapse: collapse;
   border-spacing: 0;
 }
-td {
+TD {
   vertical-align: top;
 }
-th {
+TH {
   font-weight: normal;
 }
-th,
-td {
+TH,
+TD {
   padding: 5px;
 }
-fieldset,
-img {
+FIELDSET,
+IMG {
   border: 0;
 }
-address,
-caption,
-cite,
-code,
-dfn,
-em,
-strong,
-th,
-var,
-optgroup {
+ADDRESS,
+CAPTION,
+CITE,
+CODE,
+DFN,
+EM,
+STRONG,
+TH,
+VAR,
+OPTGROUP {
   font-style: inherit;
   font-weight: inherit;
 }
-caption,
-th {
+CAPTION,
+TH {
   text-align: left;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+H1,
+H2,
+H3,
+H4,
+H5,
+H6 {
   font-weight: normal;
 }
-abbr,
-acronym {
+ABBR,
+ACRONYM {
   border-bottom: 1px dotted #000;
   cursor: help;
   font-variant: normal;
 }
-sup {
+SUP {
   vertical-align: super;
 }
-sub {
+SUB {
   vertical-align: sub;
 }
-legend {
+LEGEND {
   color: #000;
 }
-input,
-button,
-textarea,
-select,
-optgroup,
-option {
+INPUT,
+BUTTON,
+TEXTAREA,
+SELECT,
+OPTGROUP,
+OPTION {
   font-family: inherit;
   font-size: inherit;
   font-style: inherit;
   font-weight: inherit;
 }
-select,
-input,
-button,
-textarea,
-button {
+SELECT,
+INPUT,
+BUTTON,
+TEXTAREA,
+BUTTON {
   font: 99% 'Proxima Nova', helvetica, clean, sans-serif;
 }
-pre,
-code,
-kbd,
-samp,
-tt {
+PRE,
+CODE,
+KBD,
+SAMP,
+TT {
   font-family: monospace;
   line-height: 100%;
 }
-strong,
-dt {
+STRONG,
+DT {
   font-weight: normal;
   font-family: 'Proxima Nova Bold', sans-serif;
 }
-optgroup {
+OPTGROUP {
   font-weight: normal;
 }
-ol li {
+OL LI {
   list-style: decimal outside;
 }
-ul li {
+UL LI {
   list-style: disc outside;
 }
-p,
-fieldset,
-table,
-pre {
+P,
+FIELDSET,
+TABLE,
+PRE {
   margin-bottom: 10px;
 }
 .dropdown_block {

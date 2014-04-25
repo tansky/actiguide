@@ -7,11 +7,11 @@
  *  Директива для генерации дропдаунов (см. примеры использования в layers.html).
  */
 
-actiGuide.mainModule.directive('dropdown', function ($window, $timeout, $sce, layers) {
+actiGuide.mainModule.directive('dropdown', function (VIEWS_PATH, $window, $timeout, $sce, layers) {
 	return {
 		restrict: 'E',
 		transclude: true,
-		templateUrl: 'templates/dropdown.html',
+		templateUrl: VIEWS_PATH + 'dropdown.html',
 		replace: true,
 		scope: true,
 		controller: function($scope, $element, $attrs) {
