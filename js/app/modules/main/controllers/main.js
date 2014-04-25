@@ -39,6 +39,8 @@ actiGuide.mainModule.controller('TestFormCtrl', function ($scope, $timeout, aler
 	$scope.checkPaymentType = function () {
 		return $scope.Model.PaymentType.Id == 4;
 	};
+
+    $scope.Model.DisabledInput = "Текст";
 });
 
 

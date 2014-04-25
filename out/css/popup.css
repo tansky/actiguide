@@ -151,7 +151,8 @@
   top: 50%;
   right: 20px;
   margin-top: -11px;
-  height: 23px;
+  height: 13px;
+  padding-top: 9px;
   width: 23px;
   text-align: center;
   background-color: #929ea1;
@@ -159,7 +160,7 @@
   color: #ffffff;
   font-size: 20px;
   font-family: 'Web Symbols';
-  line-height: 20px;
+  line-height: 1px;
 }
 .popup_container {
   padding: 20px 30px;

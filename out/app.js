@@ -67,6 +67,8 @@ $(document).keydown(function(e) {
 	$scope.checkPaymentType = function () {
 		return $scope.Model.PaymentType.Id == 4;
 	};
+
+    $scope.Model.DisabledInput = "Текст";
 });
 
 
@@ -788,7 +790,14 @@ actiGuide.mainModule.directive('form', function () {
 
                     item.$element = control;
 
-                    control.on('focusout', function() {
+                    control.on('focusout', checkControl);
+
+                    control.on('keyup', function (){
+                        if (!item.$error.showError) return;
+                        checkControl();
+                    });
+
+                    function checkControl () {
                         var errorReason;
                         angular.forEach(item.$error, function(value, reason) {
                             if (value === true && reason !== 'required') {
@@ -818,7 +827,7 @@ actiGuide.mainModule.directive('form', function () {
                                 $scope.$apply(item.$warnings.showWarning = false);
                             }
                         }
-                    });
+                    }
                 }
             });
         },
@@ -1550,9 +1559,9 @@ actiGuide.mainModule.directive('popupCaller', function ($document, layers) {
 						return;
 					}
 
-					/* Закрываем верхний слой, если он единственный */
+					/* Закрываем верхний слой, если он единственный и это не попап */
 
-					if (layers.layersList.length == 1) {
+					if (layers.layersList.length == 1 && !angular.element(layers.layersList[0]).hasClass('popup')) {
 						angular.element(layers.layersList[0]).scope().visible = false;
 						layers.layersList.pop();
 					}
@@ -1851,7 +1860,7 @@ actiGuide.mainModule.directive('switcher', function () {
  *
  *
  */
-actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout) {
+actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout, layers) {
     return {
         restrict: 'E',
         transclude: true,
@@ -1883,8 +1892,6 @@ actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout) {
                     elementsWidthArray = [],
                     elementsWidth = 0;
 
-                console.log($scope.tabs);
-
                 $timeout(function (){
                     $('button', $element).each(function (index, item){
                         var width = $(item).outerWidth();
@@ -1893,33 +1900,78 @@ actiGuide.mainModule.directive('tabs', function (VIEWS_PATH, $timeout) {
                             width: width,
                             hidden: false
                         });
-
-                        elementsWidth += width;
                     });
 
-                    if (elementsWidth > boxWidth) {
-                        var length = elementsWidthArray.length;
+                    var length = elementsWidthArray.length,
+                        btnMoreWidth = $('.fake-btn',$element).outerWidth();
 
-                        elementsWidthArray[length - 1].hidden = true;
-                        elementsWidthArray[length - 2].hidden = true;
+                    calculateTabsWidth();
 
+                    $(window).on('resize', function () {
+                        calculateTabsWidth();
+                        $scope.$apply();
+                    });
+
+                    $scope.checkHiddenList = function (){
+                        return $scope.hiddenList.some(function (item){
+                            return item.selected;
+                        });
+                    };
+
+                    $scope.selectHiddenItem = function (){
+                        layers.popLastLayer();
+                    };
+
+                    function calculateTabsWidth () {
+
+                        $scope.hiddenList = [];
                         elementsWidth = 0;
+                        boxWidth = $element.width();
+
                         angular.forEach(elementsWidthArray, function (item){
-                            if (!item.hidden) {
-                                elementsWidth += item.width;
-                            }
+                            item.hidden = false;
+                            elementsWidth += item.width;
                         });
 
-                        console.log($('.dropdown', $element));
+                        elementsWidth += btnMoreWidth;
 
-                        console.log(boxWidth, elementsWidth, elementsWidthArray);
+                        if (elementsWidth > boxWidth) {
+                            var i = 1;
+
+                            elementsWidthArray[length - i].hidden = true;
+                            i++;
+                            elementsWidthArray[length - i].hidden = true;
+
+                            elementsWidth = 0;
+                            angular.forEach(elementsWidthArray, function (item){
+                                if (!item.hidden) {
+                                    elementsWidth += item.width;
+                                }
+                            });
+                            elementsWidth += btnMoreWidth;
+
+                            while (elementsWidth > boxWidth) {
+                                elementsWidth = 0;
+                                elementsWidthArray[length - i++].hidden = true;
+                                angular.forEach(elementsWidthArray, function (item){
+                                    if (!item.hidden) {
+                                        elementsWidth += item.width;
+                                    }
+                                });
+                                elementsWidth += btnMoreWidth;
+                            }
+                        }
 
                         angular.forEach($scope.tabs, function(item, index){
                             item.hidden = elementsWidthArray[index].hidden;
-                        });
-                    }
-                });
 
+                            if (item.hidden) {
+                                $scope.hiddenList.push(item);
+                            }
+                        });
+
+                    };
+                });
             }
         },
         templateUrl: VIEWS_PATH + 'tabs.html',

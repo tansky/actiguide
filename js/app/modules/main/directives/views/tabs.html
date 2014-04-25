@@ -4,12 +4,17 @@
             {{ tab.title }}
         </button>
 
-        <!--<dropdown class="dropdown__list" caller="<button class=' tab-btn'>Еще</button>">
-            <ul class="nav-list">
-                <li>Раз</li>
-                <li>Два</li>
-            </ul>
-        </dropdown>-->
+        <span class='tab-btn fake-btn'><span class="link_down">Еще</span></span>
+
+        <span data-ng-class="{ active: checkHiddenList() }">
+            <dropdown data-ng-show="hiddenList.length > 0" class="dropdown__list" caller="<button class='tab-btn'><span>Еще</span></button>">
+                <ul class="nav-list" data-ng-click="selectHiddenItem()">
+                    <li data-ng-repeat="item in hiddenList" data-ng-class="{active:item.selected}" data-ng-click="select(item)">
+                        {{ item.title }}
+                    </li>
+                </ul>
+            </dropdown>
+        </span>
     </div>
     <div data-ng-transclude></div>
 </div>

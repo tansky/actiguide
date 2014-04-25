@@ -87,9 +87,6 @@
 .nav-list li:hover {
   background: #eefcfd;
 }
-.nav-list li:before {
-  content: '';
-}
 .nav-list li.active,
 .nav-list li.pushed {
   background: #565f64;
