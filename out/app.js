@@ -929,7 +929,7 @@ $(document).keydown(function(e) {
         this.buildUI();
         this.hideDomSelect();
         if (this.domSelect.is(':disabled')) {
-            this.select.addClass('disabled');
+            this.select.addClass('disable');
             return this;
         }
         if (this.isJScrollPane) this.buildJScrollPane();
@@ -966,8 +966,8 @@ $(document).keydown(function(e) {
         this.dropdownItem = this.dropdown.find('.' + $(this.templates.dropdown.item).attr('class'));
 
         // Add classes for dropdown
-        this.dropdownItem.filter(':first-child').addClass('first');
-        this.dropdownItem.filter(':last-child').addClass('last');
+        this.dropdownItem.filter(':first-child').addClass('first-item');
+        this.dropdownItem.filter(':last-child').addClass('last-item');
 
         this.addOptionGroup();
 
@@ -1337,163 +1337,7 @@ $(document).keydown(function(e) {
 
 
 
-})(jQuery);;/*! http://mths.be/placeholder v2.0.7 by @mathias */
-; (function (window, document, $) {
-
-    var isInputSupported = 'placeholder' in document.createElement('input'),
-        isTextareaSupported = 'placeholder' in document.createElement('textarea'),
-        prototype = $.fn,
-        valHooks = $.valHooks,
-        hooks,
-        placeholder;
-
-    if (isInputSupported && isTextareaSupported) {
-
-        placeholder = prototype.placeholder = function () {
-            return this;
-        };
-
-        placeholder.input = placeholder.textarea = true;
-
-    } else {
-
-        placeholder = prototype.placeholder = function () {
-            var $this = this;
-            $this
-                .filter((isInputSupported ? 'textarea' : ':input') + '[placeholder]')
-                .not('.placeholder')
-                .bind({
-                    'focus.placeholder': clearPlaceholder,
-                    'blur.placeholder': setPlaceholder
-                })
-                .data('placeholder-enabled', true)
-                .trigger('blur.placeholder');
-            return $this;
-        };
-
-        placeholder.input = isInputSupported;
-        placeholder.textarea = isTextareaSupported;
-
-        hooks = {
-            'get': function (element) {
-                var $element = $(element);
-                return $element.data('placeholder-enabled') && $element.hasClass('placeholder') ? '' : element.value;
-            },
-            'set': function (element, value) {
-                var $element = $(element);
-                if (!$element.data('placeholder-enabled')) {
-                    return element.value = value;
-                }
-                if (value == '') {
-                    element.value = value;
-                    // Issue #56: Setting the placeholder causes problems if the element continues to have focus.
-                    if (element != document.activeElement) {
-                        // We can't use `triggerHandler` here because of dummy text/password inputs :(
-                        setPlaceholder.call(element);
-                    }
-                } else if ($element.hasClass('placeholder')) {
-                    clearPlaceholder.call(element, true, value) || (element.value = value);
-                } else {
-                    element.value = value;
-                }
-                // `set` can not return `undefined`; see http://jsapi.info/jquery/1.7.1/val#L2363
-                return $element;
-            }
-        };
-
-        isInputSupported || (valHooks.input = hooks);
-        isTextareaSupported || (valHooks.textarea = hooks);
-
-        $(function () {
-            // Look for forms
-            $(document).delegate('form', 'submit.placeholder', function () {
-                // Clear the placeholder values so they don't get submitted
-                var $inputs = $('.placeholder', this).each(clearPlaceholder);
-                setTimeout(function () {
-                    $inputs.each(setPlaceholder);
-                }, 10);
-            });
-        });
-
-        // Clear placeholder values upon page reload
-        $(window).bind('beforeunload.placeholder', function () {
-            $('.placeholder').each(function () {
-                this.value = '';
-            });
-        });
-
-    }
-
-    function args(elem) {
-        // Return an object of element attributes
-        var newAttrs = {},
-            rinlinejQuery = /^jQuery\d+$/;
-        $.each(elem.attributes, function (i, attr) {
-            if (attr.specified && !rinlinejQuery.test(attr.name)) {
-                newAttrs[attr.name] = attr.value;
-            }
-        });
-        return newAttrs;
-    }
-
-    function clearPlaceholder(event, value) {
-        var input = this,
-            $input = $(input);
-        if (input.value == $input.attr('placeholder') && $input.hasClass('placeholder')) {
-            if ($input.data('placeholder-password')) {
-                $input = $input.hide().next().show().attr('id', $input.removeAttr('id').data('placeholder-id'));
-                // If `clearPlaceholder` was called from `$.valHooks.input.set`
-                if (event === true) {
-                    return $input[0].value = value;
-                }
-                $input.focus();
-            } else {
-                input.value = '';
-                $input.removeClass('placeholder');
-                input == document.activeElement && input.select();
-            }
-        }
-    }
-
-    function setPlaceholder() {
-        var $replacement,
-            input = this,
-            $input = $(input),
-            $origInput = $input,
-            id = this.id;
-        if (input.value == '') {
-            if (input.type == 'password') {
-                if (!$input.data('placeholder-textinput')) {
-                    try {
-                        $replacement = $input.clone().attr({ 'type': 'text' });
-                    } catch (e) {
-                        $replacement = $('<input>').attr($.extend(args(this), { 'type': 'text' }));
-                    }
-                    $replacement
-                        .removeAttr('name')
-                        .data({
-                            'placeholder-password': true,
-                            'placeholder-id': id
-                        })
-                        .bind('focus.placeholder', clearPlaceholder);
-                    $input
-                        .data({
-                            'placeholder-textinput': $replacement,
-                            'placeholder-id': id
-                        })
-                        .before($replacement);
-                }
-                $input = $input.removeAttr('id').hide().prev().attr('id', id).show();
-                // Note: `$input[0] != input` now!
-            }
-            $input.addClass('placeholder');
-            $input[0].value = $input.attr('placeholder');
-        } else {
-            $input.removeClass('placeholder');
-        }
-    }
-
-} (this, document, jQuery));;actiGuide.mainModule = angular.module('mainModule', []);;actiGuide.mainModule.controller('TestFormCtrl', function ($scope, $timeout, alertBox) {
+})(jQuery);;actiGuide.mainModule = angular.module('mainModule', []);;actiGuide.mainModule.controller('TestFormCtrl', function ($scope, $timeout, alertBox) {
 
 	$scope.Model = {};
 
@@ -1602,27 +1446,25 @@ actiGuide.mainModule.directive('btn', function () {
  *  @name dateField
  *  @restrict EA
  *
- *  @description Директива для поля ввода денежных сумм.
+ *  @description Директива для ввода даты
  *  Переход между полями может осуществлятся с помощью стрелок влево/вправо
- *  К полям подключены модификаторы RegExpFilter и Money, а также валидатор checkRange со значением 0
+ *  К полям подключен модификатор RegExpFilter
  *
  *  @param {string} ngModel Привязка к модели
- *  @param {string} [showKop] Показываем поле с копейками, если указан параметр
- *  @param {string} [id] Стандартный атрибут id. На поля для рублей и копеек будут проставлены атрибуты id
- *  соответственно как {id}_Rub и {id}_Kop
- *  @param {string} [name] Стандартный атрибут name. На поля для рублей и копеек будут проставлены атрибуты name
- *  соответственно как {id}_Rub и {id}_Kop
+ *  @param {string} [id] Стандартный атрибут id. На поля будут проставлены атрибуты id
+ *  соответственно как {id}_Day, {id}_Month и {id}_Year
+ *  @param {string} [name] Стандартный атрибут name. На поля будут проставлены атрибуты name
+ *  соответственно как {name}.Day, {name}.Month и {name}.Year
  *  @param {string} [disabled] Стандартный атрибут
  *  @param {string} [readonly] Стандартный атрибут
  *  @param {string} [required] Стандартный параметр AngularJs
  *  @param {string} [ngRequired] Стандартный параметр AngularJs
  *  @param {string} [ngReadonly] Стандартный параметр AngularJs
  *  @param {string} [ngDisabled] Стандартный параметр AngularJs
- *  @param {string} [zeroAble] По умолчанию значение 0 не валидно. Если указан параметр, значение 0 становится валидным
  *
  */
 
-actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeout, $filter, $caretPosition) {
+actiGuide.mainModule.directive('dateField', function($sniffer, $browser) {
 
     var options = {
         yearLimitMax: 2100,
@@ -1637,10 +1479,12 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
         scope: true,
         link: function (scope, element, attrs, ngModelCtrl) {
 
-            var inputDay = element.find('input:first'),
+            var inputDay = element.find('input:eq(0)'),
                 inputMonth = element.find('input:eq(1)'),
-                inputYear = element.find('input:last'),
+                inputYear = element.find('input:eq(2)'),
                 inputs = element.find('input');
+
+            scope.groupCtrl = attrs.groupCtrl;
 
             //рендер значения из модели по инпутам
             ngModelCtrl.$render = function() {
@@ -1750,31 +1594,6 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
                 });
             }
 
-            //управление стрелками
-//            inputRub.on('keydown', function(event) {
-//                if (!scope.showKop) return;
-//
-//                var key = event.keyCode,
-//                    caretPosition = $caretPosition.get(this),
-//                    valueLength = this.value.length;
-//
-//                if (key == 39 && caretPosition == valueLength) {
-//                    $timeout(function () {
-//                        $caretPosition.$set(inputKop, 0);
-//                    }, 1);
-//                }
-//            });
-//            inputKop.on('keydown', function(event) {
-//                var key = event.keyCode,
-//                    caretPosition = $caretPosition.get(this);
-//
-//                if (key == 37 && caretPosition == 0) {
-//                    $timeout(function () {
-//                        $caretPosition.$set(inputRub, inputRub.val().length);
-//                    }, 1);
-//                }
-//            });
-
             //прокидываем событие фокус на инпут
             element.on('focus', function() {
                 inputDay.focus();
@@ -1814,9 +1633,9 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
             }
         },
         template: '<div class="dib" data-split-fields>' +
-                '<input class="t-input t-input__micro first" placeholder="ДД" maxlength="2">' +
-                '<input class="t-input t-input__micro" placeholder="ММ" maxlength="2">' +
-                '<input class="t-input t-input__mini last" placeholder="ГГГГ" maxlength="4">' +
+                '<input class="t-input t-input__micro" data-ng-class="{ first: !groupCtrl }" data-modifier=\'["RegExpFilter:[^\\\\d]"]\' autocomplete="off" placeholder="ДД" maxlength="2">' +
+                '<input class="t-input t-input__micro" data-modifier=\'["RegExpFilter:[^\\\\d]"]\' autocomplete="off" placeholder="ММ" maxlength="2">' +
+                '<input class="t-input t-input__mini last" data-modifier=\'["RegExpFilter:[^\\\\d]"]\' autocomplete="off" placeholder="ГГГГ" maxlength="4">' +
             '</div>',
         replace: true
     };
@@ -2361,17 +2180,7 @@ actiGuide.mainModule.directive('jsPlaceholder', function() {
             });
         }
     };
-});
-
-//actiGuide.mainModule.directive('placeholder', function() {
-//    return {
-//        restrict: 'A',
-//        link: function($scope, $element, $attrs) {
-//            $element.placeholder("#D7D7D7");
-//        }
-//    };
-//});
-;/**
+});;/**
  *  @ngdoc directive
  *  @name kladr
  *  @restrict E

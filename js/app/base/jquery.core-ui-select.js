@@ -69,7 +69,7 @@
         this.buildUI();
         this.hideDomSelect();
         if (this.domSelect.is(':disabled')) {
-            this.select.addClass('disabled');
+            this.select.addClass('disable');
             return this;
         }
         if (this.isJScrollPane) this.buildJScrollPane();
@@ -106,8 +106,8 @@
         this.dropdownItem = this.dropdown.find('.' + $(this.templates.dropdown.item).attr('class'));
 
         // Add classes for dropdown
-        this.dropdownItem.filter(':first-child').addClass('first');
-        this.dropdownItem.filter(':last-child').addClass('last');
+        this.dropdownItem.filter(':first-child').addClass('first-item');
+        this.dropdownItem.filter(':last-child').addClass('last-item');
 
         this.addOptionGroup();
 

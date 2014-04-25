@@ -20,12 +20,3 @@ actiGuide.mainModule.directive('jsPlaceholder', function() {
         }
     };
 });
-
-//actiGuide.mainModule.directive('placeholder', function() {
-//    return {
-//        restrict: 'A',
-//        link: function($scope, $element, $attrs) {
-//            $element.placeholder("#D7D7D7");
-//        }
-//    };
-//});

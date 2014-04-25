@@ -3,27 +3,25 @@
  *  @name dateField
  *  @restrict EA
  *
- *  @description Директива для поля ввода денежных сумм.
+ *  @description Директива для ввода даты
  *  Переход между полями может осуществлятся с помощью стрелок влево/вправо
- *  К полям подключены модификаторы RegExpFilter и Money, а также валидатор checkRange со значением 0
+ *  К полям подключен модификатор RegExpFilter
  *
  *  @param {string} ngModel Привязка к модели
- *  @param {string} [showKop] Показываем поле с копейками, если указан параметр
- *  @param {string} [id] Стандартный атрибут id. На поля для рублей и копеек будут проставлены атрибуты id
- *  соответственно как {id}_Rub и {id}_Kop
- *  @param {string} [name] Стандартный атрибут name. На поля для рублей и копеек будут проставлены атрибуты name
- *  соответственно как {id}_Rub и {id}_Kop
+ *  @param {string} [id] Стандартный атрибут id. На поля будут проставлены атрибуты id
+ *  соответственно как {id}_Day, {id}_Month и {id}_Year
+ *  @param {string} [name] Стандартный атрибут name. На поля будут проставлены атрибуты name
+ *  соответственно как {name}.Day, {name}.Month и {name}.Year
  *  @param {string} [disabled] Стандартный атрибут
  *  @param {string} [readonly] Стандартный атрибут
  *  @param {string} [required] Стандартный параметр AngularJs
  *  @param {string} [ngRequired] Стандартный параметр AngularJs
  *  @param {string} [ngReadonly] Стандартный параметр AngularJs
  *  @param {string} [ngDisabled] Стандартный параметр AngularJs
- *  @param {string} [zeroAble] По умолчанию значение 0 не валидно. Если указан параметр, значение 0 становится валидным
  *
  */
 
-actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeout, $filter, $caretPosition) {
+actiGuide.mainModule.directive('dateField', function($sniffer, $browser) {
 
     var options = {
         yearLimitMax: 2100,
@@ -38,10 +36,12 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
         scope: true,
         link: function (scope, element, attrs, ngModelCtrl) {
 
-            var inputDay = element.find('input:first'),
+            var inputDay = element.find('input:eq(0)'),
                 inputMonth = element.find('input:eq(1)'),
-                inputYear = element.find('input:last'),
+                inputYear = element.find('input:eq(2)'),
                 inputs = element.find('input');
+
+            scope.groupCtrl = attrs.groupCtrl;
 
             //рендер значения из модели по инпутам
             ngModelCtrl.$render = function() {
@@ -151,31 +151,6 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
                 });
             }
 
-            //управление стрелками
-//            inputRub.on('keydown', function(event) {
-//                if (!scope.showKop) return;
-//
-//                var key = event.keyCode,
-//                    caretPosition = $caretPosition.get(this),
-//                    valueLength = this.value.length;
-//
-//                if (key == 39 && caretPosition == valueLength) {
-//                    $timeout(function () {
-//                        $caretPosition.$set(inputKop, 0);
-//                    }, 1);
-//                }
-//            });
-//            inputKop.on('keydown', function(event) {
-//                var key = event.keyCode,
-//                    caretPosition = $caretPosition.get(this);
-//
-//                if (key == 37 && caretPosition == 0) {
-//                    $timeout(function () {
-//                        $caretPosition.$set(inputRub, inputRub.val().length);
-//                    }, 1);
-//                }
-//            });
-
             //прокидываем событие фокус на инпут
             element.on('focus', function() {
                 inputDay.focus();
@@ -215,9 +190,9 @@ actiGuide.mainModule.directive('dateField', function($sniffer, $browser, $timeou
             }
         },
         template: '<div class="dib" data-split-fields>' +
-                '<input class="t-input t-input__micro first" placeholder="ДД" maxlength="2">' +
-                '<input class="t-input t-input__micro" placeholder="ММ" maxlength="2">' +
-                '<input class="t-input t-input__mini last" placeholder="ГГГГ" maxlength="4">' +
+                '<input class="t-input t-input__micro" data-ng-class="{ first: !groupCtrl }" data-modifier=\'["RegExpFilter:[^\\\\d]"]\' autocomplete="off" placeholder="ДД" maxlength="2">' +
+                '<input class="t-input t-input__micro" data-modifier=\'["RegExpFilter:[^\\\\d]"]\' autocomplete="off" placeholder="ММ" maxlength="2">' +
+                '<input class="t-input t-input__mini last" data-modifier=\'["RegExpFilter:[^\\\\d]"]\' autocomplete="off" placeholder="ГГГГ" maxlength="4">' +
             '</div>',
         replace: true
     };

@@ -79,7 +79,7 @@
   border-radius: 5px;
 }
 .tipbox.tipbox__notice {
-  padding: 15px 20px;
+  padding: 10px 20px;
   background: #fffdc7;
   border: 1px solid #E1D282;
   -webkit-box-shadow: 0 2px 3px rgba(77, 47, 0, 0.1);

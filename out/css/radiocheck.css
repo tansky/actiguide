@@ -65,16 +65,19 @@
 /* отменяет выделение текста при нажатии на кнопку */
 .radio-box {
   margin-bottom: 10px;
+  font-size: 0;
 }
 .radio-box input {
-  margin: 2px 7px 0 0;
+  margin: 2px 0 0 0;
   vertical-align: top;
   height: auto;
 }
 .radio-box label {
-  display: inline !important;
+  display: inline-block !important;
   margin-left: 0;
   vertical-align: top;
   padding: 0;
   line-height: normal;
+  padding-left: 7px;
+  font-size: 16px;
 }

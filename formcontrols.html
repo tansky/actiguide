@@ -7,6 +7,15 @@
         <script type="text/javascript" src="out/libs.min.js"></script>
         <script type="text/javascript" src="out/app.min.js"></script>
 
+        <!--[if lte IE 9]>
+        <script src="js/misc/jquery.placeholder.js" type="text/javascript"></script>
+        <script>
+        $(function () {
+            $("input[placeholder], textarea[placeholder]").placeholder("#D7D7D7");
+        });
+        </script>
+        <![endif]-->
+
     </head>
     <body>
 	
@@ -52,7 +61,7 @@
                         </div>
 
                         <div>
-                            <input type="text" placeholder="Среднее" class="t-input t-input__medium"/>
+                            <input type="text" placeholder="Среднее" value="Текст" class="t-input t-input__medium disable" disabled />
                         </div>
 
                         <div>
@@ -60,7 +69,7 @@
                         </div>
 
                         <div>
-                            <input type="text" placeholder="Большое" class="t-input t-input__big"/>
+                            <input type="text" placeholder="Большое" class="t-input t-input__big disable" disabled />
                         </div>
 
                         <div>
@@ -110,13 +119,12 @@
                             </div>
                         </div>
 
-                        <!-- тут пока косяк
                         <div class="input-block">
                             <div class="ctrl-group" data-split-fields>
                                 <money-field name="Value2" data-ng-model="Model.Value2"></money-field>
                                 <input class="t-input t-input__big last" data-ng-model="Model.Name2" name="Name2" placeholder="Название надбавки">
                             </div>
-                        </div>-->
+                        </div>
 
                         <div class="input-block">
                             <div class="ctrl-group" data-split-fields>
@@ -129,7 +137,7 @@
                             <div class="ctrl-group m-micro" data-split-fields>
                                 <input class="t-input t-input__bigger first" placeholder="Кем выдан">
                                 <div class="ctrl-group dib last">
-                                    <date-field name="Date" data-ng-model="Model.Date"></date-field>
+                                    <date-field name="Date" data-ng-model="Model.Date" data-group-ctrl="true"></date-field>
                                 </div>
                             </div>
                         </div>
@@ -138,13 +146,16 @@
 
                         <div class="m-big">
                             <div class="radio-box">
-                                <label><input type="radio" name="a1" id="a1">Основной<br>длинный лейбл</label>
+                                <input type="radio" name="a1" id="a1">
+                                <label for="a1">Основной<br>длинный лейбл</label>
                             </div>
                             <div class="radio-box">
-                                <label><input type="radio" name="a1" id="a2">Улучшенный</label>
+                                <input type="radio" name="a1" id="a2">
+                                <label for="a2">Улучшенный</label>
                             </div>
                             <div class="radio-box">
-                                <label><input type="checkbox" name="a3" id="a3">Доставка на дом</label>
+                                <input type="checkbox" name="a3" id="a3">
+                                <label for="a3">Доставка на дом</label>
                             </div>
                         </div>
 
@@ -152,25 +163,28 @@
 
                         <kladr class="m-big" data-adress="Model.Address" data-label="Адрес"></kladr>
 
-                        <!--<p>Документ</p>
+                        <p>Документ</p>
 
-                        <div class="m-big">
-                            <div class="input-block ctrl-group">
+                        <div class="m-big" data-split-fields>
+                            <div class="input-block ctrl-group m-micro">
                                 <div class="custom-select custom-select__medium dib first">
-                                    <select>
+                                    <select data-autofocus="Document_Series">
                                         <option>Паспорт гражданина РФ</option>
                                         <option>Военный билет</option>
                                     </select>
                                 </div>
-                                <input type="text" placeholder="Серия" class="t-input t-input__mini"/>
-                                <input type="text" placeholder="Номер" class="t-input t-input__medium"/>
+                                <input type="text" class="t-input t-input__mini" id="Document_Series" name="Document.Series" placeholder="Серия" />
+                                <input type="text" class="t-input t-input__medium" id="Document_Number" name="Document.Number" placeholder="Номер" />
                             </div>
 
-                            <div class="input-block ctrl-group">
-                                <input type="text" placeholder="Кем выдан" class="t-input t-input__normal first"/>
-                                <date-field name="Date" data-ng-model="Model.Date"></date-field>
+                            <div class="input-block ctrl-group m-micro">
+                                <input type="text" class="t-input t-input__document first" placeholder="Кем выдан"  />
+                                <date-field name="Date" data-ng-model="Model.Date" data-group-ctrl="true"></date-field>
                             </div>
-                        </div>-->
+                            <div class="input-block">
+                                <input type="text" class="t-input t-input__document-code" placeholder="Код подразделения"  />
+                            </div>
+                        </div>
 
                         <p>Сплит-кнопки</p>
 
@@ -179,7 +193,8 @@
                                 Отпуск
                             </button>
 
-                            <button class="btn">
+                            <button class="btn btn__select btn__negative">
+                                <span class="btn-ugl"></span>
                                 Больничный
                             </button>
 
@@ -191,7 +206,7 @@
                                 Невыход
                             </button>
 
-                            <button class="btn">
+                            <button class="btn btn__positive">
                                 Премия
                             </button>
                         </div>
@@ -212,20 +227,22 @@
                             </select>
                         </div>
 
-                        <div class="custom-select custom-select__small m-small">
-                            <select>
+                        <div class="custom-select custom-select__small m-small ">
+                            <select disabled>
                                 <option>Малый</option>
                             </select>
                         </div>
 
                         <div class="custom-select custom-select__medium m-small">
                             <select>
+                                <option disabled>Малый</option>
                                 <option>Средний</option>
+                                <option disabled>Большой</option>
                             </select>
                         </div>
 
                         <div class="custom-select custom-select__big m-small">
-                            <select>
+                            <select disabled>
                                 <option>Большой</option>
                             </select>
                         </div>
@@ -248,9 +265,9 @@
                             Обычный
                             <span class="btn-ugl"></span>
                             <ul class="select-dropdown nav-list">
-                                <li><a href="#">Пункт 1</a></li>
-                                <li><a href="#">Пункт 2</a></li>
-                                <li><a href="#">Пункт 3</a></li>
+                                <li><a href="">Пункт 1</a></li>
+                                <li><a href="">Пункт 2</a></li>
+                                <li><a href="">Пункт 3</a></li>
                             </ul>
                         </button>
 
@@ -259,9 +276,9 @@
                             <span class="btn-ugl"></span>
 
                             <ul class="select-dropdown nav-list">
-                                <li><a href="#">Пункт 1</a></li>
-                                <li><a href="#">Пункт 2</a></li>
-                                <li><a href="#">Пункт 3</a></li>
+                                <li><a href="">Пункт 1</a></li>
+                                <li><a href="">Пункт 2</a></li>
+                                <li><a href="">Пункт 3</a></li>
                             </ul>
                         </button>
                     </div>
