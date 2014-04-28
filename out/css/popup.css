@@ -147,12 +147,12 @@
 .popup_sidebar LI.is-active:after {
   position: absolute;
   display: block;
+  vertical-align: middle;
   content: '×';
   top: 50%;
   right: 20px;
   margin-top: -11px;
-  height: 13px;
-  padding-top: 9px;
+  height: 23px;
   width: 23px;
   text-align: center;
   background-color: #929ea1;
@@ -160,7 +160,7 @@
   color: #ffffff;
   font-size: 20px;
   font-family: 'Web Symbols';
-  line-height: 1px;
+  line-height: 1;
 }
 .popup_container {
   padding: 20px 30px;
